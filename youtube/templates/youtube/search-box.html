@@ -1,0 +1,7 @@
+{% with input_id='searchboxinput' %}
+<input id="{{ input_id }}" class="form-control search-box-input" type="text"
+       placeholder="Search" value="{{ query }}" dir="auto" />
+<script type="text/javascript">
+  {% include 'youtube/js/search-box.js' with input_id=input_id list_id=list_id %}
+</script>
+{% endwith %}

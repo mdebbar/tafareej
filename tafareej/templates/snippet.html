@@ -1,0 +1,7 @@
+<a class="snippet-link" href="{{ content.get_url }}">
+  {% block image %}<img class="snippet-thumb" src="{{ content.get_thumbnail }}" />{% endblock %}
+  <div class="snippet-content">
+    {% block title %}<h4 class="snippet-title">{{ content.get_title|truncatechars:60 }}</h4>{% endblock %}
+    {% block excerpt %}<p class="snippet-excerpt">{{ content.get_excerpt|truncatechars:100 }}</p>{% endblock %}
+  </div>
+</a>

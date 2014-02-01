@@ -1,0 +1,18 @@
+{% extends 'youtube/base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+{% block main %}
+  {% with snippet_list_id='suggestions' %}
+    <div class="search-box">
+      {% include 'youtube/search-box.html' with query=query list_id=snippet_list_id %}
+    </div>
+
+    <div id="{{ snippet_list_id }}">
+      {% include 'snippet-list.html' with content_list=videos %}
+    </div>
+
+    <script type="text/javascript">
+      {% include 'youtube/js/snippets.js' with snippet_list_id=snippet_list_id %}
+    </script>
+  {% endwith %}
+{% endblock %}

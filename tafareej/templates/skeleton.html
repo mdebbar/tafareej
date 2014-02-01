@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+{% load resources %}
+<html>
+<head>
+  <title>{% block title %}{% endblock %}</title>
+  {% block head %}
+    {% block meta %}{% endblock %}
+
+    {% block bootstrap %}
+      {% css 'bootstrap/css/bootstrap.min.css' %}
+      {# {% js 'bootstrap/js/bootstrap.min.js' %} #}
+    {% endblock %}
+
+    {% block global_css %}
+      {% css 'css/global.css' %}
+    {% endblock %}
+    {% block css %}{% endblock %}
+
+    {% block global_js %}
+      {% js 'js/jquery-1.10.2.min.js' %}
+      {% js 'js/util.js' %}
+    {% endblock %}
+    {% block js %}{% endblock %}
+  {% endblock %}
+</head>
+<body>
+  {% block body %}{% endblock %}
+  {% block body_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,7 @@
+<ul class="snippet-list">
+  {% for content in content_list %}
+  <li class="snippet-item snippet-{{ content.get_type }}" dir="auto" data-content="{{ content.jsonify }}">
+    {% include content.get_snippet_template %}
+  </li>
+  {% endfor %}
+</ul>

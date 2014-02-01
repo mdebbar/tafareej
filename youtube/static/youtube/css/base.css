@@ -1,0 +1,62 @@
+.youtube-aligner {
+  display: inline-block;
+  width: 642px; /* 2px for the borders of the ".ytplayer-container" */
+}
+
+.ytplayer-container {
+  border: 1px solid #70706C;
+  line-height: 0;
+}
+
+.ytplayer {
+  background: url('/static/img/spinner.gif') center center no-repeat;
+  width: 640px;
+  height: 390px;
+}
+
+.youtube-autoreplay,
+.youtube-autoreplay input {
+  cursor: pointer;
+}
+
+.youtube-title {
+  clear: both;
+}
+
+.youtube-autoreplay {
+  float: right;
+  margin: 10px 0 10px 10px;
+}
+
+.youtube-autoreplay input {
+  vertical-align: top;
+}
+
+
+/* Snippets */
+
+.youtube-thumb-container {
+  display: inline-block;
+  float: left;
+  margin-right: 8px;
+  position: relative;
+}
+
+.youtube-thumb-container .snippet-thumb {
+  float: none;
+  margin: 0;
+}
+
+.youtube-duration {
+  background-color: #000;
+  border-radius: 3px;
+  bottom: 0;
+  color: #fff;
+  font-size: 11px;
+  left: 0;
+  line-height: 1;
+  margin: 4px;
+  opacity: .75;
+  padding: 4px;
+  position: absolute;
+}
