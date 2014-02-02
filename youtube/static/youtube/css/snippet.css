@@ -1,0 +1,73 @@
+.snippet-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.snippet-item {
+  margin-bottom: 6px;
+  overflow: hidden;
+  zoom: 1;
+}
+
+.snippet-item:focus,
+.snippet-item:hover {
+  background-color: #fafaf4;
+}
+
+.snippet-link {
+  display: block;
+  overflow: hidden;
+  zoom: 1;
+}
+
+.snippet-link,
+.snippet-link:focus,
+.snippet-link:hover {
+  text-decoration: none;
+}
+
+.snippet-image-container,
+.snippet-image {
+  max-height: 90px;
+  width: 120px;
+}
+
+.snippet-image-container {
+  display: inline-block;
+  float: left;
+  margin-right: 8px;
+  position: relative;
+}
+
+.snippet-image {
+  float: none;
+  margin: 0;
+}
+
+.snippet-duration {
+  background-color: #000;
+  border-radius: 3px;
+  bottom: 0;
+  color: #fff;
+  font-size: 11px;
+  left: 0;
+  line-height: 1;
+  margin: 4px;
+  opacity: .75;
+  padding: 4px;
+  position: absolute;
+}
+
+.snippet-content {
+
+}
+
+.snippet-title {
+  margin-bottom: 4px;
+  margin-top: 0;
+}
+
+.snippet-excerpt {
+  color: #333;
+}

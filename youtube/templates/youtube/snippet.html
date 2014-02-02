@@ -1,8 +1,10 @@
-{% extends 'snippet.html' %}
-
-{% block image %}
-  <div class="youtube-thumb-container">
-    <img class="snippet-thumb" src="{{ content.get_thumbnail }}" />
-    <div class="youtube-duration">{{ content.get_duration }}</div>
+<a class="snippet-link" href="{{ video.get_url }}">
+  <div class="snippet-image-container">
+    <img class="snippet-image" src="{{ video.get_thumbnail }}" />
+    <div class="snippet-duration">{{ video.get_duration }}</div>
   </div>
-{% endblock %}
+  <div class="snippet-content">
+    <h4 class="snippet-title">{{ video.get_title|truncatechars:60 }}</h4>
+    <p class="snippet-excerpt">{{ video.get_excerpt|truncatechars:100 }}</p>
+  </div>
+</a>

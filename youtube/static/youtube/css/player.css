@@ -31,32 +31,3 @@
 .youtube-autoreplay input {
   vertical-align: top;
 }
-
-
-/* Snippets */
-
-.youtube-thumb-container {
-  display: inline-block;
-  float: left;
-  margin-right: 8px;
-  position: relative;
-}
-
-.youtube-thumb-container .snippet-thumb {
-  float: none;
-  margin: 0;
-}
-
-.youtube-duration {
-  background-color: #000;
-  border-radius: 3px;
-  bottom: 0;
-  color: #fff;
-  font-size: 11px;
-  left: 0;
-  line-height: 1;
-  margin: 4px;
-  opacity: .75;
-  padding: 4px;
-  position: absolute;
-}

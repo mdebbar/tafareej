@@ -1,0 +1,7 @@
+<ul class="snippet-list">
+  {% for video in video_list %}
+  <li class="snippet-item" dir="auto" data-video="{{ video.jsonify }}">
+    {% include 'youtube/snippet.html' %}
+  </li>
+  {% endfor %}
+</ul>

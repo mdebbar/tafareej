@@ -1,3 +1,15 @@
+/**
+ * Merge the object b into a, and return a.
+ */
+function mergeInto(a, b) {
+  for (var k in b) {
+    if (b.hasOwnProperty(k)) {
+      a[k] = b[k];
+    }
+  }
+  return a;
+}
+
 function debounce(func, delay) {
   var timer;
   var debounced = function() {
@@ -31,6 +43,26 @@ function markDirection(elem) {
   var text = $elem.val() || $elem.text();
   $elem.removeClass('rtl');
   isRTL(text) && $elem.addClass('rtl');
+}
+
+if (React) {
+  ReactSimple = function(a, b) {
+    var propTypes;
+    var render;
+    if (typeof a === 'function') {
+      render = a;
+      propTypes = b || {};
+    } else if (typeof b === 'function') {
+      render = b;
+      propTypes = a || {};
+    } else {
+      throw new Error('A simple React component must have at least a render()');
+    }
+    return React.createClass({
+      propTypes: propTypes,
+      render: render
+    });
+  }
 }
 
 var Event = {

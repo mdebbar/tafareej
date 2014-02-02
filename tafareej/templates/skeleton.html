@@ -17,8 +17,12 @@
     {% block css %}{% endblock %}
 
     {% block global_js %}
-      {% js 'js/jquery-1.10.2.min.js' %}
-      {% js 'js/util.js' %}
+      <script src="http://fb.me/react-0.8.0.min.js"></script>
+      <script src="http://fb.me/JSXTransformer-0.8.0.js"></script>
+
+      {% jsx 'js/jquery-1.10.2.min.js' 'js/components.react.js' %}
+      {% js 'js/jquery-1.10.2.min.js' 'js/util.js' %}
+      {% js 'js/jquery-1.10.2.min.js' 'js/Store.js' %}
     {% endblock %}
     {% block js %}{% endblock %}
   {% endblock %}

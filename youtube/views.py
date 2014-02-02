@@ -12,8 +12,8 @@ def search(req, query):
   if req.is_json:
     return JsonResponse(response)
   if req.is_ajax():
-    return render(req, 'snippet-list.html', {
-      'content_list': response['items'],
+    return render(req, 'youtube/snippet-list.html', {
+      'video_list': response['items'],
     })
   return render(req, 'youtube/results.html', {
     'title': query,
@@ -40,8 +40,8 @@ def related(req, video_id):
   if req.is_json:
     return JsonResponse(related_videos)
   if req.is_ajax():
-    return render(req, 'snippet-list.html', {
-      'content_list': related_videos['items'],
+    return render(req, 'youtube/snippet-list.html', {
+      'video_list': related_videos['items'],
     })
   return render(req, 'youtube/results.html', {
     'title': video_id,
@@ -69,7 +69,7 @@ def view(req, video_id):
     return JsonResponse(video.dict())
   try:
     return render_to_response('youtube/view.html', {
-      'content': video,
+      'video': video,
       'related': api.related(video.get_id())['items']
     })
   except IndexError:

@@ -1,0 +1,18 @@
+{% extends 'youtube/base.html' %}
+
+{% load resources %}
+
+{% block title %}{{ video.get_title }}{% endblock %}
+
+{% block body %}
+  <div id="reactpage" class="container"></div>
+
+  {% jsx 'youtube/js/pages/view.react.js' %}
+  <script type="text/jsx">
+    /** @jsx React.DOM */
+    React.renderComponent(
+      <ViewPage />,
+      document.getElementById('reactpage')
+    );
+  </script>
+{% endblock %}

@@ -1,7 +1,19 @@
-{% extends 'content_page.html' %}
+{% extends 'skeleton.html' %}
 
 {% load resources %}
 
 {% block css %}
-  {% css 'youtube/css/base.css' %}
+  {% css 'youtube/css/player.css' 'youtube/css/search-box.css' 'youtube/css/snippet.css' %}
+{% endblock %}
+
+{% block js %}
+  {% jsx 'youtube/js/components.react.js' %}
+  <script type="text/javascript">
+    $(function() {
+      {% if video %}
+        {# Put the video in the store so everyone has access to it #}
+        Store.set('video', {{ video.jsonify|safe }});
+      {% endif %}
+    });
+  </script>
 {% endblock %}

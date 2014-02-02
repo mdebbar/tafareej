@@ -23,9 +23,13 @@ $(function() {
     if (searchBox.value !== prevValue) {
       prevValue = searchBox.value;
       if (searchBox.value) {
-        debouncedGrabContent(searchURL.replace(':query:', encodeURIComponent(searchBox.value)));
+        debouncedGrabContent(
+          searchURL.replace(':query:', encodeURIComponent(searchBox.value))
+        );
       } else {
-        debouncedGrabContent(relatedURL.replace(':video_id:', encodeURIComponent(CONTENT.id)));
+        debouncedGrabContent(
+          relatedURL.replace(':video_id:', encodeURIComponent(Store.get('video').id))
+        );
       }
     }
   }

@@ -14,7 +14,7 @@ function onYouTubeIframeAPIReady() {
   var ytplayer = new YT.Player('{{ player_id }}', {
     height: '390',
     width: '640',
-    videoId: CONTENT.id,
+    videoId: Store.get('video').id,
     playerVars: {
       autoplay: 1,
       theme: 'light'
@@ -48,14 +48,13 @@ function onYouTubeIframeAPIReady() {
   }
 
   function setupNavigationHistory(player) {
-    history.replaceState(CONTENT, CONTENT.title);
+    var video = Store.get('video');
+    history.replaceState(video, video.title);
 
     Event.listen('youtube.show', function(_, data) {
-      var video = data.video;
-
       switching = true;
-      switchToVideo(player, video, data.play);
-      history.pushState(video, video.title, video.url);
+      switchToVideo(player, data.video, data.play);
+      history.pushState(data.video, data.video.title, data.video.url);
     });
 
     window.onpopstate = function(event) {
@@ -125,7 +124,7 @@ function onYouTubeIframeAPIReady() {
       player.loadVideoById(video.id, 0, 'medium');
     }
     updateTitle(video.title);
-    CONTENT = video;
+    Store.set('video', video);
   }
 }
 
