@@ -1,14 +1,49 @@
 (function(global) {
 
   var data = {};
+  var seqID = 1;
   var listeners = {};
   var GLOBAL_KEY = '*';
 
-  function attachListener(cb, key) {
+  function attachOneListener(cb, key) {
     if (!listeners[key]) {
-      listeners[key] = [];
+      listeners[key] = {};
     }
-    listeners[key].push(cb);
+    listeners[key][seqID] = cb;
+    return seqID++;
+  }
+
+  function detachOneListener(key, seqID) {
+    if (listeners[key] && listeners[key][seqID]) {
+      delete listeners[key][seqID];
+    }
+  }
+
+  function attachListeners(keys, cb) {
+    return createRemover(keys, keys.map(attachOneListener.bind(null, cb)));
+  }
+
+  function detachListeners(keys, seqIDs) {
+    keys.forEach(function(key, ii) {
+      detachOneListener(key, seqIDs[ii]);
+    });
+  }
+
+  function createRemover(keys, seqIDs) {
+    return {
+      remove: detachListeners.bind(null, keys, seqIDs)
+    };
+  }
+
+  function iterListeners(key, cb) {
+    if (!listeners[key]) {
+      return;
+    }
+    for (var seqID in listeners[key]) {
+      if (listeners[key].hasOwnProperty(seqID)) {
+        cb(listeners[key][seqID], seqID);
+      }
+    }
   }
 
   global.Store = {
@@ -58,18 +93,18 @@
       if (keys.length == 0) {
         keys = [GLOBAL_KEY];
       }
-      keys.forEach(attachListener.bind(null, callback));
+      return attachListeners(keys, callback);
     },
 
     _notify: function(key, val) {
       if (listeners[key]) {
-        listeners[key].forEach(function(cb) {
-          cb(val, key);
+        iterListeners(key, function(listener) {
+          listener(val, key);
         });
       }
       if (listeners[GLOBAL_KEY]) {
-        listeners[GLOBAL_KEY].forEach(function(cb) {
-          cb(val, key);
+        iterListeners(GLOBAL_KEY, function(listener) {
+          listener(val, key);
         });
       }
     }
