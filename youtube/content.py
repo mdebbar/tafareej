@@ -119,4 +119,3 @@ def test():
   thumbnails = r.get_thumbnails()
   print thumbnails
   print dict(thumbnails)
-  print {k: v for k, v in thumbnails.iteritems()}
