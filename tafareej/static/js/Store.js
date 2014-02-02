@@ -64,12 +64,12 @@
     _notify: function(key, val) {
       if (listeners[key]) {
         listeners[key].forEach(function(cb) {
-          cb(key, val);
+          cb(val, key);
         });
       }
       if (listeners[GLOBAL_KEY]) {
         listeners[GLOBAL_KEY].forEach(function(cb) {
-          cb(key, val);
+          cb(val, key);
         });
       }
     }

@@ -7,13 +7,12 @@
 {% endblock %}
 
 {% block js %}
+  {% js 'youtube/js/api.js' %}
   {% jsx 'youtube/js/components.react.js' %}
   <script type="text/javascript">
-    $(function() {
-      {% if video %}
-        {# Put the video in the store so everyone has access to it #}
-        Store.set('video', {{ video.jsonify|safe }});
-      {% endif %}
-    });
+    {% if video %}
+      {# Put the video in the store so everyone has access to it #}
+      Store.set('video', {{ video.jsonify|safe }});
+    {% endif %}
   </script>
 {% endblock %}

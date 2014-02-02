@@ -109,7 +109,7 @@ MIDDLEWARE_CLASSES = (
   # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'tafareej.urls'
+ROOT_URLCONF = 'youtube.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'tafareej.wsgi.application'

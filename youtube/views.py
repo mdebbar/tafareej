@@ -5,6 +5,17 @@ from tafareej.decorators import jsonable
 from youtube import api
 
 
+def api_search(req, query):
+  response = api.searchWithDetails(query)
+  return JsonResponse([video.dict() for video in response['items']])
+
+def api_related(req, video_id):
+  response = api.related(video_id)
+  return JsonResponse([video.dict() for video in response['items']])
+
+def api_one(req, video_id):
+  return JsonResponse(api.one_video(video_id).dict())
+
 @jsonable
 def search(req, query):
   response = api.search(query, part='id,snippet', **req.GET)
@@ -69,6 +80,17 @@ def view(req, video_id):
     return JsonResponse(video.dict())
   try:
     return render_to_response('youtube/view.html', {
+      'video': video,
+      'related': api.related(video.get_id())['items']
+    })
+  except IndexError:
+    raise Http404()
+
+def react(req, video_id):
+  video = api.one_video(video_id)
+
+  try:
+    return render_to_response('youtube/react/view.html', {
       'video': video,
       'related': api.related(video.get_id())['items']
     })

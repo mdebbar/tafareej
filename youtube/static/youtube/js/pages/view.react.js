@@ -12,7 +12,7 @@
             <YoutubePlayer />
           </Column>
           <Column className="right-side" size={5}>
-            <SnippetList videoList={Store.get('video_list', [])} />
+            <SearchableSnippetList />
           </Column>
         </MultiColumn>
       );

@@ -17,12 +17,13 @@
     {% block css %}{% endblock %}
 
     {% block global_js %}
-      <script src="http://fb.me/react-0.8.0.min.js"></script>
+      <script src="http://fb.me/react-0.8.0.js"></script>
       <script src="http://fb.me/JSXTransformer-0.8.0.js"></script>
 
-      {% jsx 'js/jquery-1.10.2.min.js' 'js/components.react.js' %}
-      {% js 'js/jquery-1.10.2.min.js' 'js/util.js' %}
-      {% js 'js/jquery-1.10.2.min.js' 'js/Store.js' %}
+      {% js 'js/jquery-1.10.2.min.js' %}
+      {% js 'js/qwest-0.5.4.min.js' %}
+      {% js 'js/util.js' 'js/Store.js' %}
+      {% jsx 'js/components.react.js' %}
     {% endblock %}
     {% block js %}{% endblock %}
   {% endblock %}

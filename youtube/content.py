@@ -1,10 +1,15 @@
+import json
 import re
 from django.core.urlresolvers import reverse
-from tafareej.content import DataObject, AbstractContent
-from tafareej.maps import iter_for_key, xget, merge
+from tafareej.maps import iter_for_key, xget, merge, FrozenDict
 
 DURATION_SPLIT = re.compile('(\d+)')
 UNITS = ['H', 'M', 'S']
+
+MAX_IMG_NUM = 3
+IMAGE_PATTERN = 'http://img.youtube.com/vi/%(id)s/%(num)s.jpg'
+def genImage(video_id, img_num):
+  return IMAGE_PATTERN % {'id': video_id, 'num': img_num}
 
 def _find_unit(str, unit):
   search = re.search('(\d+)%s' % unit, str)
@@ -33,10 +38,36 @@ def _parse_duration(duration_str):
   parts[1:] = [p.zfill(2) for p in parts[1:]]
   return ':'.join(parts)
 
-class SearchResult(AbstractContent):
 
-  def get_type(self):
-    return 'youtube'
+class DataObject(FrozenDict):
+
+  def __getattr__(self, name):
+    try:
+      val = self[name]
+      if isinstance(val, dict):
+        return DataObject(val)
+      else:
+        return val
+    except KeyError, e:
+      raise AttributeError(e)
+
+  def __repr__(self):
+    return '<DataObject %s>' % super(FrozenDict, self).__repr__()
+
+
+class SearchResult(DataObject):
+  def dict(self):
+    return {
+      'id': self.get_id(),
+      'title': self.get_title(),
+      'url': self.get_url(),
+      'excerpt': self.get_excerpt(),
+      'thumbnail': self.get_thumbnail(),
+      'images': self.get_images(),
+    }
+
+  def jsonify(self):
+    return json.dumps(self.dict())
 
   def get_url(self):
     return reverse('youtube.views.view', args=(self.get_id(),))
@@ -50,7 +81,7 @@ class SearchResult(AbstractContent):
   def get_excerpt(self):
     return xget(self, 'snippet.description')
 
-  def get_thumbnails(self):
+  def get_thumbnail_versions(self):
     return DataObject(iter_for_key(xget(self, 'snippet.thumbnails'), 'url'))
 
   def get_thumbnail(self):
@@ -59,6 +90,10 @@ class SearchResult(AbstractContent):
       return xget(thumbnails, 'default', 'medium', 'high')['url']
     except (KeyError, TypeError):
       return None
+
+  def get_images(self):
+    id = self.get_id()
+    return [self.get_thumbnail()] + [genImage(id, ii) for ii in range(1, MAX_IMG_NUM + 1)]
 
 
 class Video(SearchResult):
@@ -90,32 +125,3 @@ class Video(SearchResult):
   def get_favorite_count(self):
     return xget(self, 'statistics.favoriteCount')
 
-
-
-def test():
-  r = SearchResult({
-    "snippet": {
-      "thumbnails": {
-        "default": {"url": "https://i.ytimg.com/vi/VoPPMktXCEI/default.jpg"},
-        "high": {"url": "https://i.ytimg.com/vi/VoPPMktXCEI/hqdefault.jpg"},
-        "medium": {"url": "https://i.ytimg.com/vi/VoPPMktXCEI/mqdefault.jpg"}
-      },
-      "title": "Tinariwen - \"Iswegh Attay\"",
-      "channelId": "UC4xWOwA9yoRanf8fDsNT_YA",
-      "publishedAt": "2012-01-06T22:31:52.000Z",
-      "liveBroadcastContent": "none",
-      "channelTitle": "antirecords",
-      "description": "2012 WMG \"Iswegh Attay\" by Tinariwen from their Grammy nominated album 'Tassili,' available now! Get it at http://www.anti.com/store Anti Records Official ..."
-    },
-    "kind": "youtube#searchResult",
-    "etag": "\"qQvmwbutd8GSt4eS4lhnzoWBZs0/D8Fc8W7nGxouIyS0hwVg25fm3Ao\"",
-    "id": {
-      "kind": "youtube#video",
-      "videoId": "VoPPMktXCEI"
-    }
-  })
-  print r.get_id()
-  print r.get_title()
-  thumbnails = r.get_thumbnails()
-  print thumbnails
-  print dict(thumbnails)

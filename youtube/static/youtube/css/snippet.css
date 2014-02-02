@@ -19,6 +19,9 @@
   display: block;
   overflow: hidden;
   zoom: 1;
+  max-height: 90px;
+  padding-left: 120px;
+  position: relative;
 }
 
 .snippet-link,
@@ -36,8 +39,9 @@
 .snippet-image-container {
   display: inline-block;
   float: left;
-  margin-right: 8px;
-  position: relative;
+  left: 0;
+  position: absolute;
+  top: 0;
 }
 
 .snippet-image {
@@ -60,14 +64,23 @@
 }
 
 .snippet-content {
-
+  margin-left: 4px;
+  padding-top: 24px;
+  position: relative;
 }
 
 .snippet-title {
+  height: 20px;
+  left: 0;
   margin-bottom: 4px;
   margin-top: 0;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
 }
 
 .snippet-excerpt {
   color: #333;
+  max-height: 66px; /* 90px- 24px */
+  overflow-y: auto;
 }
