@@ -1,26 +1,30 @@
 from django.conf.urls import patterns, url
 
 urlpatterns = patterns('',
-  url('^search/(?P<query>.+)/$', 'youtube.views.search'),
+  url(r'^search/(?P<query>.+)/$', 'youtube.views.search', name='video_search'),
+  url(r'^s/(?P<query>.+)/$', 'youtube.views.search'),
 
-  url('^videos/(?P<query>.+)/$', 'youtube.views.details'),
-  url('^details/(?P<query>.+)/$', 'youtube.views.details'),
+  # TODO: remove these when you don't need them anymore
+  url(r'^videos/(?P<query>.+)/$', 'youtube.views.details'),
+  url(r'^details/(?P<query>.+)/$', 'youtube.views.details'),
 
-  url('^related/(?P<video_id>.+)/$', 'youtube.views.related'),
-  url('^popular/$', 'youtube.views.popular'),
-  url('^$', 'youtube.views.popular'),
+  url(r'^related/(?P<video_id>[-_\w]+)/$', 'youtube.views.related', name='related_videos'),
+  url(r'^r/(?P<video_id>[-_\w]+)/$', 'youtube.views.related'),
 
-  url('^view/(?P<video_id>.+)/$', 'youtube.views.view'),
-  url('^(?P<video_id>[-_\w]+)/$', 'youtube.views.view'),
+  url(r'^popular/$', 'youtube.views.popular'),
+  url(r'^$', 'youtube.views.popular'),
+
+  url(r'^view/(?P<video_id>[-_\w]+)/$', 'youtube.views.view', name='view_video'),
+  url(r'^(?P<video_id>[-_\w]+)/$', 'youtube.views.view'),
 )
 
 urlpatterns += patterns('',
-  url('^react/(?P<video_id>.+)/$', 'youtube.views.react'),
+  url(r'^react/(?P<video_id>[-_\w]+)/$', 'youtube.views.react'),
 )
 
 # JSON API
 urlpatterns += patterns('',
-  url('^api/search/(?P<query>.+)/$', 'youtube.views.api_search'),
-  url('^api/related/(?P<video_id>.+)/$', 'youtube.views.api_related'),
-  url('^api/(?P<video_id>[-_\w]+)/$', 'youtube.views.api_one'),
+  url(r'^api/search/(?P<query>.+)/$', 'youtube.views.api_search'),
+  url(r'^api/related/(?P<video_id>[-_\w]+)/$', 'youtube.views.api_related'),
+  url(r'^api/(?P<video_id>[-_\w]+)/$', 'youtube.views.api_one'),
 )

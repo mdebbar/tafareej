@@ -1,8 +1,8 @@
 {% load staticfiles %}
 
 $(function() {
-  var searchURL = '{% url "youtube.views.search" ":query:" %}';
-  var relatedURL = '{% url "youtube.views.related" ":video_id:" %}';
+  var searchURL = '{% url "video_search" "__query__" %}';
+  var relatedURL = '{% url "related_videos" "__video_id__" %}';
 
   var searchBox = document.getElementById('{{ input_id }}');
 
@@ -24,11 +24,11 @@ $(function() {
       prevValue = searchBox.value;
       if (searchBox.value) {
         debouncedGrabContent(
-          searchURL.replace(':query:', encodeURIComponent(searchBox.value))
+          searchURL.replace('__query__', encodeURIComponent(searchBox.value))
         );
       } else {
         debouncedGrabContent(
-          relatedURL.replace(':video_id:', encodeURIComponent(Store.get('video').id))
+          relatedURL.replace('__video_id__', encodeURIComponent(Store.get('video').id))
         );
       }
     }
@@ -37,7 +37,7 @@ $(function() {
 
   Event.listen('youtube.show_related', function(_, videoID) {
     debouncedGrabContent.cancel();
-    grabContent(relatedURL.replace(':video_id:', encodeURIComponent(videoID)));
+    grabContent(relatedURL.replace('__video_id__', encodeURIComponent(videoID)));
     searchBox.value = prevValue = '';
   });
 });

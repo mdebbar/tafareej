@@ -9,7 +9,7 @@ function loadYoutubeAPI() {
 // This will be called by Youtube API when the player is ready.
 function onYouTubeIframeAPIReady() {
   // used to load a video's details when the user clicks it from in-player suggestions
-  const youtubeVideoURL = '{% url 'youtube.views.view' ':id:' %}';
+  const youtubeVideoURL = '{% url 'view_video' '__id__' %}';
 
   var ytplayer = new YT.Player('{{ player_id }}', {
     height: '390',
@@ -103,7 +103,7 @@ function onYouTubeIframeAPIReady() {
 
   function videoSwitchedFromPlayer(player) {
     var videoID = player.getVideoData().video_id;
-    var url = youtubeVideoURL.replace(':id:', videoID);
+    var url = youtubeVideoURL.replace('__id__', videoID);
     history.pushState({id: videoID}, null, url);
     updateTitle('');
     $.getJSON(url, {json: 1}, function(video) {

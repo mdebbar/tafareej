@@ -70,7 +70,7 @@ class SearchResult(DataObject):
     return json.dumps(self.dict())
 
   def get_url(self):
-    return reverse('youtube.views.view', args=(self.get_id(),))
+    return reverse('view_video', args=(self.get_id(),))
 
   def get_id(self):
     return xget(self, 'id.videoId')
