@@ -98,37 +98,31 @@
        * This will be used to fetch related videos when the search box is empty.
        */
       initialQuery: PropTypes.string,
-      initialVideoList: PropTypes.array,
-      searchOnMount: PropTypes.bool,
-      videoID: PropTypes.string,
-      onResults: PropTypes.func,
+      isLoading: PropTypes.bool,
+      videoList: PropTypes.array.isRequired,
+      onSearch: PropTypes.func.isRequired,
       onSnippetClick: PropTypes.func
     },
     getDefaultProps: function() {
       return {
-        searchOnMount: true,
-        onResults: emptyFunction
+        initialQuery: '',
+        isLoading: false
       };
     },
     getInitialState: function() {
       return {
-        loading: false,
-        query: this.props.initialQuery || '',
-        videoList: this.props.initialVideoList || []
+        query: this.props.initialQuery
       }
     },
+    shouldComponentUpdate: function(nextProps, nextState) {
+      return nextProps.isLoading !== this.props.isLoading ||
+        nextProps.videoList !== this.props.videoList ||
+        nextState.query !== this.state.query;
+    },
     componentDidMount: function() {
-      this._debouncedSearch = debounce(this._triggerSearch, 500);
-      this._listeners = [
-        Store.listen('search_results', this._onSearchResults),
-        Store.listen('related_videos', this._onRelatedVideos)
-      ];
-      this.props.searchOnMount && this._triggerSearch();
+      this._debouncedSearch = debounce(this.props.onSearch, 500);
     },
     componentWillUnmount: function() {
-      this._listeners.forEach(function(l) {
-        l.remove();
-      });
       this._debouncedSearch.cancel();
       delete this._debouncedSearch;
     },
@@ -144,44 +138,18 @@
           />
           <div className="snippet-list-container">
             <SnippetList
-              videoList={this.state.videoList}
+              videoList={this.props.videoList}
               onSnippetClick={this.props.onSnippetClick}
             />
-            <Spinner className="snippet-list-spinner" shown={this.state.loading} />
+            <Spinner className="snippet-list-spinner" shown={this.props.isLoading} />
           </div>
         </div>
       );
     },
     _onQueryChange: function(event) {
-      this.setState({query: event.target.value});
-      this._debouncedSearch();
-    },
-    _triggerSearch: function() {
-      this.setState({loading: true});
-      if (this.state.query) {
-        API.search(this.state.query);
-      } else {
-        var videoID = Store.get('video').id;
-        videoID && API.related(videoID);
-      }
-    },
-    _onSearchResults: function(videos) {
-      if (this.state.query) {
-        this.setState({
-          loading: false,
-          videoList: videos
-        });
-        this.props.onResults(videos);
-      }
-    },
-    _onRelatedVideos: function(videos) {
-      if (!this.state.query) {
-        this.setState({
-          loading: false,
-          videoList: videos
-        });
-        this.props.onResults(videos);
-      }
+      var query = event.target.value;
+      this._debouncedSearch(query);
+      this.setState({query: query});
     }
   });
 

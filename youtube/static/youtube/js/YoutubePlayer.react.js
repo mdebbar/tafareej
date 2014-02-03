@@ -28,14 +28,16 @@
       theme: PropTypes.oneOf(['dark', 'light']),
       width: PropTypes.number,
       height: PropTypes.number,
-      videoID: PropTypes.string.isRequired
+      videoID: PropTypes.string.isRequired,
+      onSwitchVideo: PropTypes.func
     },
     getDefaultProps: function() {
       return {
         autoplay: true,
         theme: 'light',
         width: 640,
-        height: 390
+        height: 390,
+        onSwitchVideo: emptyFunction
       };
     },
     componentWillMount: function() {
@@ -79,43 +81,45 @@
     },
     _onPlayerStateChange: function(event) {
       // Respond to player events
+      switch (event.data) {
+        case YT.PlayerState.UNSTARTED:
+          var videoID = event.target.getVideoData().video_id;
+          if (videoID !== this.props.videoID) {
+            this.props.onSwitchVideo(videoID);
+          }
+          break;
+      }
     }
   });
 
 
   global.YoutubePlayerContainer = React.createClass({
-    displayName: 'YoutubePlayer',
+    displayName: 'YoutubePlayerContainer',
     propTypes: {
       autoplay: PropTypes.bool,
-      videoStore: PropTypes.object
+      video: PropTypes.object.isRequired,
+      onSwitchVideo: PropTypes.func
     },
     getDefaultProps: function() {
       return {
-        autoplay: false,
-        videoStore: Store
+        autoplay: false
       };
     },
     getInitialState: function() {
       return {
-        autoreplay: this.props.autoreplay,
-        video: this.props.videoStore.get('video')
+        autoreplay: false
       };
     },
-    componentDidMount: function() {
-      this._listeners = [
-        this.props.videoStore.listen('video', this._onVideoChange)
-      ];
-    },
-    componentWillUnmount: function() {
-      this._listeners.forEach(function(l) {
-        l.remove();
-      });
+    shouldComponentUpdate: function(nextProps, nextState) {
+      return nextProps.video !== this.props.video || nextState !== this.state;
     },
     render: function() {
+      var video = this.props.video;
       var player = this.transferPropsTo(
         <YoutubePlayer
           autoreplay={this.state.autoreplay}
-          videoID={this.state.video.id}
+          videoID={video.id}
+          onSwitchVideo={this.props.onSwitchVideo}
         />
       );
 
@@ -132,14 +136,12 @@
             />
             AutoReplay
           </label>
+          <h1 className="youtube-title" dir="auto">{video.title}</h1>
         </div>
       );
     },
-    _onVideoChange: function(video) {
-      this.setState({video: video});
-    },
-    _onAutoreplayChange: function(enabled) {
-      Event.fire('youtube.autoreplay', enabled);
+    _onAutoreplayChange: function(event) {
+      this.setState({autoreplay: event.target.checked});
     }
   });
 })(this);

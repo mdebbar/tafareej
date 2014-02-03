@@ -5,7 +5,7 @@
 {% block title %}{{ video.get_title }}{% endblock %}
 
 {% block body %}
-  <div id="reactpage" class="container"></div>
+  <div id="reactpage" class="container-fluid"></div>
 
   {% jsx 'youtube/js/pages/view.react.js' %}
   <script type="text/jsx">

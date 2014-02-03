@@ -22,10 +22,11 @@
 }
 
 .snippet-item {
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   overflow: hidden;
   zoom: 1;
   border: 1px solid #fafaf4;
+  border-radius: 6px;
 }
 
 .snippet-item:focus,

@@ -2,7 +2,8 @@ import os
 
 PROJECT_ROOT = os.path.dirname(__file__)
 
-DEBUG = True
+PRODUCTION = bool(os.environ.get('PRODUCTION'))
+DEBUG = not PRODUCTION
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (

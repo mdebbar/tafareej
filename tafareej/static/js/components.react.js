@@ -2,7 +2,12 @@
 
 (function(global) {
   var PropTypes = React.PropTypes;
-  const COL_CLASS_PREFIXES = ['col-xs-', 'col-sm-', 'col-md-', 'col-lg-'];
+  const COL_CLASS_PREFIXES = [
+    // 'col-xs-',
+    // 'col-sm-',
+    'col-md-',
+    'col-lg-'
+  ];
 
   global.MultiColumn = React.createClass({
     displayName: 'MultiColumn',
@@ -14,11 +19,20 @@
   global.Column = React.createClass({
     displayName: 'Column',
     propType: {
-      size: PropTypes.number.isRequired
+      size: PropTypes.number.isRequired,
+      push: PropTypes.number,
+      pull: PropTypes.number
     },
     render: function() {
-      var classes = COL_CLASS_PREFIXES.map(function(cls) {
-        return cls + String(this.props.size);
+      var classes = [];
+      COL_CLASS_PREFIXES.forEach(function(prefix) {
+        classes.push(prefix + String(this.props.size));
+        if (this.props.push) {
+          classes.push(prefix + 'push-' + String(this.props.push));
+        }
+        if (this.props.pull) {
+          classes.push(prefix + 'pull-' + String(this.props.pull));
+        }
       }, this);
       return this.transferPropsTo(
         <div className={classes.join(' ')}>{this.props.children}</div>
