@@ -54,7 +54,7 @@
     render: function() {
       var style = {width: this.props.width, height: this.props.height};
       return (
-        <div id={this.playerID} className="youtube-player" style={style}></div>
+        <Spinner id={this.playerID} className="youtube-player" style={style} />
       );
     },
     _onYoutubeAPIReady: function() {

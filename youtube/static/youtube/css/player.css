@@ -7,10 +7,6 @@
   line-height: 0;
 }
 
-.youtube-player {
-  background: url('/static/img/spinner.gif') center center no-repeat;
-}
-
 .youtube-autoreplay,
 .youtube-autoreplay input {
   cursor: pointer;

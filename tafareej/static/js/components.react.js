@@ -26,4 +26,27 @@
     }
   });
 
+  global.Spinner = React.createClass({
+    displayName: 'Spinner',
+    propTypes: {
+      shown: PropTypes.bool
+    },
+    getDefaultProps: function() {
+      return {
+        shown: true
+      };
+    },
+    render: function() {
+      var classes = 'spinner';
+      if (this.props.className) {
+        classes += ' ' + this.props.className;
+      }
+      if (!this.props.shown) {
+        classes += ' nodisplay';
+      }
+      // transferPropsTo() is required in case we pass ID or style.
+      return this.transferPropsTo(<div className={classes}></div>);
+    }
+  });
+
 })(this);

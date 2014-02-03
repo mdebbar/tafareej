@@ -6,8 +6,18 @@ body {
   margin: 10px;
 }
 
+.nodisplay {
+  display: none !important;
+}
+
 /* Layout */
 
 .right-side {
   border-left: 1px dashed #70706C;
+}
+
+.spinner {
+  background: url('/static/img/spinner.gif') center center no-repeat;
+  min-height: 66px;
+  min-width: 66px;
 }

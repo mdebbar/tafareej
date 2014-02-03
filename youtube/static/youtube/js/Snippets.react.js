@@ -102,6 +102,7 @@
     },
     getInitialState: function() {
       return {
+        loading: false,
         query: this.props.initialQuery || '',
         videoList: this.props.initialVideoList || []
       }
@@ -131,7 +132,10 @@
             value={this.state.query}
             onChange={this._onQueryChange}
           />
-          <SnippetList videoList={this.state.videoList} />
+          <div className="snippet-list-container">
+            <SnippetList videoList={this.state.videoList} />
+            <Spinner className="snippet-list-spinner" shown={this.state.loading} />
+          </div>
         </div>
       );
     },
@@ -140,6 +144,7 @@
       this._debouncedSearch();
     },
     _triggerSearch: function() {
+      this.setState({loading: true});
       if (this.state.query) {
         API.search(this.state.query);
       } else {
@@ -149,12 +154,18 @@
     },
     _onSearchResults: function(videos) {
       if (this.state.query) {
-        this.setState({videoList: videos});
+        this.setState({
+          loading: false,
+          videoList: videos
+        });
       }
     },
     _onRelatedVideos: function(videos) {
       if (!this.state.query) {
-        this.setState({videoList: videos});
+        this.setState({
+          loading: false,
+          videoList: videos
+        });
       }
     }
   });
