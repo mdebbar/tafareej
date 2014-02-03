@@ -10,6 +10,10 @@ function mergeInto(a, b) {
   return a;
 }
 
+function merge(a, b) {
+  return mergeInto(mergeInto({}, a), b);
+}
+
 function debounce(func, delay) {
   var timer;
   var debounced = function() {

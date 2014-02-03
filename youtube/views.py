@@ -91,8 +91,7 @@ def react(req, video_id):
 
   try:
     return render_to_response('youtube/react/view.html', {
-      'video': video,
-      'related': api.related(video.get_id())['items']
+      'video': video
     })
   except IndexError:
     raise Http404()

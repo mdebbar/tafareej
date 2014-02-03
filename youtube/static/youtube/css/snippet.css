@@ -5,9 +5,10 @@
 }
 
 .snippet-item {
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   overflow: hidden;
   zoom: 1;
+  border: 1px solid #fafaf4;
 }
 
 .snippet-item:focus,
@@ -19,9 +20,6 @@
   display: block;
   overflow: hidden;
   zoom: 1;
-  max-height: 90px;
-  padding-left: 120px;
-  position: relative;
 }
 
 .snippet-link,
@@ -39,9 +37,7 @@
 .snippet-image-container {
   display: inline-block;
   float: left;
-  left: 0;
-  position: absolute;
-  top: 0;
+  margin-right: 4px;
 }
 
 .snippet-image {
@@ -64,23 +60,20 @@
 }
 
 .snippet-content {
-  margin-left: 4px;
-  padding-top: 24px;
-  position: relative;
+
 }
 
 .snippet-title {
-  height: 20px;
-  left: 0;
   margin-bottom: 4px;
   margin-top: 0;
   overflow: hidden;
-  position: absolute;
-  top: 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .snippet-excerpt {
   color: #333;
-  max-height: 66px; /* 90px- 24px */
-  overflow-y: auto;
+  margin: 0;
+  overflow: hidden;
+  word-wrap: break-word;
 }

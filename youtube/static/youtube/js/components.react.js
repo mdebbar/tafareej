@@ -31,7 +31,7 @@
         return (
           <div className="snippet-image-container">
             <img className="snippet-image" src={this.props.source} />
-            <div class="snippet-duration">{this.props.duration}</div>
+            <div className="snippet-duration">{this.props.duration}</div>
           </div>
         );
       } else if (this.props.forceRender) {
@@ -46,22 +46,33 @@
     if (!text) {
       return text;
     }
-    return text.length > max ? text.slice(max) : text;
+    return text.length > max ? text.slice(0, max) : text;
   }
 
   global.SnippetItem = React.createClass({
     propTypes: {
+      maxTitleLen: PropTypes.number,
+      maxExcerptLen: PropTypes.number,
       video: PropTypes.object.isRequired
     },
-
+    getDefaultProps: function() {
+      return {
+        maxTitleLen: 60,
+        maxExcerptLen: 100
+      };
+    },
     render: function() {
       var video = this.props.video;
       return (
-        <a className="snippet-link" href={video.url}>
+        <a className="snippet-link" href={video.url} title={video.title}>
           <SnippetImage source={video.images[0]} duration={video.duration} />
           <div className="snippet-content">
-            <h4 className="snippet-title">{processText(video.title, 60)}</h4>
-            <p className="snippet-excerpt">{processText(video.excerpt, 100)}</p>
+            <h4 className="snippet-title">
+              {processText(video.title, this.props.maxTitleLen)}
+            </h4>
+            <p className="snippet-excerpt" title={video.excerpt}>
+              {processText(video.excerpt, this.props.maxExcerptLen)}
+            </p>
           </div>
         </a>
       );
@@ -97,7 +108,13 @@
        */
       initialQuery: PropTypes.string,
       initialVideoList: PropTypes.array,
+      searchOnMount: PropTypes.bool,
       videoID: PropTypes.string
+    },
+    getDefaultProps: function() {
+      return {
+        searchOnMount: true
+      };
     },
     getInitialState: function() {
       return {
@@ -105,11 +122,16 @@
         videoList: this.props.initialVideoList || []
       }
     },
-    componentWillMount: function() {
-      Store.listen('search_results', this._onSearchResults);
+    componentDidMount: function() {
       this._debouncedSearch = debounce(this._triggerSearch, 500);
+      this._listeners = [
+        Store.listen('search_results', this._onSearchResults),
+        Store.listen('related_videos', this._onRelatedVideos)
+      ];
+      this.props.searchOnMount && this._triggerSearch();
     },
     componentWillUnmount: function() {
+      this._listener.remove();
       this._debouncedSearch.cancel();
       delete this._debouncedSearch;
     },
@@ -117,8 +139,9 @@
       return (
         <div>
           <input
-            type="text"
             className="form-control search-box-input"
+            dir="auto"
+            type="text"
             value={this.state.query}
             onChange={this._onQueryChange}
           />
@@ -138,8 +161,15 @@
         videoID && API.related(videoID);
       }
     },
-    _onSearchResults: function(results) {
-      this.setState({videoList: results});
+    _onSearchResults: function(videos) {
+      if (this.state.query) {
+        this.setState({videoList: videos});
+      }
+    },
+    _onRelatedVideos: function(videos) {
+      if (!this.state.query) {
+        this.setState({videoList: videos});
+      }
     }
   });
 
