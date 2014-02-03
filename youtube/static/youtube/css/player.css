@@ -1,17 +1,14 @@
 .youtube-aligner {
   display: inline-block;
-  width: 642px; /* 2px for the borders of the ".ytplayer-container" */
 }
 
-.ytplayer-container {
+.youtube-player-container {
   border: 1px solid #70706C;
   line-height: 0;
 }
 
-.ytplayer {
+.youtube-player {
   background: url('/static/img/spinner.gif') center center no-repeat;
-  width: 640px;
-  height: 390px;
 }
 
 .youtube-autoreplay,

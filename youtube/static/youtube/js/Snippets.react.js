@@ -3,17 +3,8 @@
 (function(global) {
   var PropTypes = React.PropTypes;
 
-  global.YoutubePlayer = React.createClass({
-    propType: {
-
-    },
-
-    render: function() {
-      return <div>Youtube Player</div>;
-    }
-  });
-
   global.SnippetImage = React.createClass({
+    displayName: 'SnippetImage',
     propTypes: {
       source: PropTypes.string,
       duration: PropTypes.string,
@@ -25,7 +16,6 @@
         forceRender: true
       };
     },
-
     render: function() {
       if (this.props.source) {
         return (
@@ -42,14 +32,8 @@
     }
   });
 
-  function processText(text, max) {
-    if (!text) {
-      return text;
-    }
-    return text.length > max ? text.slice(0, max) : text;
-  }
-
   global.SnippetItem = React.createClass({
+    displayName: 'SnippetItem',
     propTypes: {
       maxTitleLen: PropTypes.number,
       maxExcerptLen: PropTypes.number,
@@ -68,10 +52,10 @@
           <SnippetImage source={video.images[0]} duration={video.duration} />
           <div className="snippet-content">
             <h4 className="snippet-title">
-              {processText(video.title, this.props.maxTitleLen)}
+              {truncate(video.title, this.props.maxTitleLen)}
             </h4>
             <p className="snippet-excerpt" title={video.excerpt}>
-              {processText(video.excerpt, this.props.maxExcerptLen)}
+              {truncate(video.excerpt, this.props.maxExcerptLen)}
             </p>
           </div>
         </a>
@@ -80,10 +64,10 @@
   });
 
   global.SnippetList = React.createClass({
+    displayName: 'SnippetList',
     propTypes: {
       videoList: PropTypes.array.isRequired
     },
-
     render: function() {
       return (
         <ul className="snippet-list">
@@ -91,7 +75,6 @@
         </ul>
       )
     },
-
     _renderSnippetItem: function(video) {
       return (
         <li className="snippet-item" key={video.id}>
@@ -102,6 +85,7 @@
   });
 
   global.SearchableSnippetList = React.createClass({
+    displayName: 'SearchableSnippetList',
     propTypes: {
       /**
        * This will be used to fetch related videos when the search box is empty.
@@ -131,7 +115,9 @@
       this.props.searchOnMount && this._triggerSearch();
     },
     componentWillUnmount: function() {
-      this._listener.remove();
+      this._listeners.forEach(function(l) {
+        l.remove();
+      });
       this._debouncedSearch.cancel();
       delete this._debouncedSearch;
     },
