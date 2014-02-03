@@ -78,7 +78,11 @@
     },
     _renderSnippetItem: function(video) {
       return (
-        <li className="snippet-item" key={video.id} onClick={this._onClick.bind(this, video)}>
+        <li
+          className="snippet-item"
+          key={video.id}
+          dir="auto"
+          onClick={this._onClick.bind(this, video)}>
           <SnippetItem video={video} onClick={this.props.onSnippetClick} />
         </li>
       );

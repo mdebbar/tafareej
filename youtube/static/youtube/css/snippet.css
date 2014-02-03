@@ -27,6 +27,7 @@
   zoom: 1;
   border: 1px solid #fafaf4;
   border-radius: 6px;
+  text-align: start;
 }
 
 .snippet-item:focus,
@@ -79,7 +80,7 @@
 }
 
 .snippet-content {
-
+  padding: 0 4px;
 }
 
 .snippet-title {
