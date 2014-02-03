@@ -51,10 +51,15 @@
     componentWillUnmount: function() {
       this._listener && this._listener.remove();
     },
+    componentWillReceiveProps: function(nextProps) {
+      if (this.props.videoID !== nextProps.videoID) {
+        this.player.loadVideoById(nextProps.videoID);
+      }
+    },
     render: function() {
       var style = {width: this.props.width, height: this.props.height};
       return (
-        <Spinner id={this.playerID} className="youtube-player" style={style} />
+        <Spinner id={this.playerID} className="youtube-player" />
       );
     },
     _onYoutubeAPIReady: function() {
@@ -80,20 +85,25 @@
 
   global.YoutubePlayerContainer = React.createClass({
     displayName: 'YoutubePlayer',
+    propTypes: {
+      autoplay: PropTypes.bool,
+      videoStore: PropTypes.object
+    },
     getDefaultProps: function() {
       return {
-        autoplay: true
+        autoplay: false,
+        videoStore: Store
       };
     },
     getInitialState: function() {
       return {
         autoreplay: this.props.autoreplay,
-        video: Store.get('video')
+        video: this.props.videoStore.get('video')
       };
     },
     componentDidMount: function() {
       this._listeners = [
-        Store.listen('video', this._onVideoChange)
+        this.props.videoStore.listen('video', this._onVideoChange)
       ];
     },
     componentWillUnmount: function() {
@@ -103,11 +113,14 @@
     },
     render: function() {
       var player = this.transferPropsTo(
-        <YoutubePlayer autoreplay={this.state.autoreplay} videoID={this.state.video.id} />
+        <YoutubePlayer
+          autoreplay={this.state.autoreplay}
+          videoID={this.state.video.id}
+        />
       );
 
       return (
-        <div className="youtube-aligner">
+        <div>
           <div className="youtube-player-container">
             {player}
           </div>

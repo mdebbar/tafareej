@@ -66,7 +66,8 @@
   global.SnippetList = React.createClass({
     displayName: 'SnippetList',
     propTypes: {
-      videoList: PropTypes.array.isRequired
+      videoList: PropTypes.array.isRequired,
+      onSnippetClick: PropTypes.func
     },
     render: function() {
       return (
@@ -77,10 +78,16 @@
     },
     _renderSnippetItem: function(video) {
       return (
-        <li className="snippet-item" key={video.id}>
-          <SnippetItem video={video} />
+        <li className="snippet-item" key={video.id} onClick={this._onClick.bind(this, video)}>
+          <SnippetItem video={video} onClick={this.props.onSnippetClick} />
         </li>
       );
+    },
+    _onClick: function(video, event) {
+      if (this.props.onSnippetClick) {
+        this.props.onSnippetClick(video);
+        event.preventDefault();
+      }
     }
   });
 
@@ -93,11 +100,14 @@
       initialQuery: PropTypes.string,
       initialVideoList: PropTypes.array,
       searchOnMount: PropTypes.bool,
-      videoID: PropTypes.string
+      videoID: PropTypes.string,
+      onResults: PropTypes.func,
+      onSnippetClick: PropTypes.func
     },
     getDefaultProps: function() {
       return {
-        searchOnMount: true
+        searchOnMount: true,
+        onResults: emptyFunction
       };
     },
     getInitialState: function() {
@@ -133,7 +143,10 @@
             onChange={this._onQueryChange}
           />
           <div className="snippet-list-container">
-            <SnippetList videoList={this.state.videoList} />
+            <SnippetList
+              videoList={this.state.videoList}
+              onSnippetClick={this.props.onSnippetClick}
+            />
             <Spinner className="snippet-list-spinner" shown={this.state.loading} />
           </div>
         </div>
@@ -158,6 +171,7 @@
           loading: false,
           videoList: videos
         });
+        this.props.onResults(videos);
       }
     },
     _onRelatedVideos: function(videos) {
@@ -166,6 +180,7 @@
           loading: false,
           videoList: videos
         });
+        this.props.onResults(videos);
       }
     }
   });

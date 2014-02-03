@@ -1,10 +1,18 @@
-.youtube-aligner {
-  display: inline-block;
-}
-
 .youtube-player-container {
   border: 1px solid #70706C;
+  float: left;
   line-height: 0;
+  height: 0;
+  padding-bottom: 60%;
+  position: relative;
+  width: 100%;
+}
+
+.youtube-player {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 100%;
 }
 
 .youtube-autoreplay,

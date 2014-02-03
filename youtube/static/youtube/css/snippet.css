@@ -47,6 +47,7 @@
 
 .snippet-image-container,
 .snippet-image {
+  position: relative;
   height: 90px;
   width: 120px;
 }

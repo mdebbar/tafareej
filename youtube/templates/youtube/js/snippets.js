@@ -5,7 +5,7 @@ $(function() {
   var snippetListID = '#{{ snippet_list_id }}';
   var $snippetList = $(snippetListID);
 
-  $snippetList.on('click', '.snippet-youtube .snippet-link', function(event) {
+  $snippetList.on('click', '.snippet-item .snippet-link', function(event) {
     // if the user is trying to open in new tab or something else, let him.
     if (event.ctrlKey || event.shiftKey || event.metaKey) {
       return;

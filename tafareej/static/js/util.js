@@ -1,3 +1,5 @@
+function emptyFunction() {}
+
 /**
  * Merge the object b into a, and return a.
  */

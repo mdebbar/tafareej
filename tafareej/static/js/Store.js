@@ -113,6 +113,7 @@
     }
   };
 
-  global.Store = StoreFactory.create('GlobalStore');
+  global.GlobalStore = StoreFactory.create('GlobalStore');
+  global.Store = global.GlobalStore;
 
 })(this);
