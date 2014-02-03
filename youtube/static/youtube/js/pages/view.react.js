@@ -6,22 +6,25 @@
   global.ViewPage = React.createClass({
     displayName: 'ViewPage',
     getInitialState: function() {
-      var video = GlobalStore.get('video');
-      // put initial video in the videoMap
-      var videoMap = {};
-      videoMap[video.id] = video;
-
       return {
         isLoading: false,
         snippets: [],
-        video: video,
-        videoMap: videoMap
+        video: GlobalStore.get('video')
       };
     },
     componentDidMount: function() {
-      document.title = this.state.video.title;
       // show related videos on page load
       this._onSearch('');
+
+      // put initial video in the videoMap
+      this._cacheVideo(this.state.video);
+
+      // setup history management
+      this.hm = new HistoryManager(this.state.video, this.state.video.title);
+      this.hm.onSwitch(this._onSwitchPage.bind(this));
+    },
+    _onSwitchPage: function(event) {
+      this.setState({video: event.state});
     },
     render: function() {
       var video = this.state.video;
@@ -45,7 +48,7 @@
       );
     },
     _onSwitchVideo: function(videoID) {
-      var cachedVideo = this.state.videoMap[videoID];
+      var cachedVideo = this.videoMap[videoID];
       if (cachedVideo) {
         this._onVideo(cachedVideo);
       } else {
@@ -57,8 +60,8 @@
       }
     },
     _onVideo: function(video) {
-      document.title = video.title;
       this.setState({video: video});
+      this.hm.push(video, video.title, video.url);
     },
     _onSearch: function(query) {
       this.setState({isLoading: true});
@@ -74,13 +77,17 @@
     },
     _onSearchResults: function(videos) {
       delete this.api;
-      videos.forEach(function(video) {
-        this.state.videoMap[video.id] = video;
-      }, this);
+      videos.forEach(this._cacheVideo);
       this.setState({
         isLoading: false,
         snippets: videos
       });
+    },
+    _cacheVideo: function(video) {
+      if (!this.videoMap) {
+        this.videoMap = {};
+      }
+      this.videoMap[video.id] = video;
     }
   });
 

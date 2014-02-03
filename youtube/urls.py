@@ -14,8 +14,8 @@ urlpatterns = patterns('',
   url(r'^popular/$', 'youtube.views.popular'),
   url(r'^$', 'youtube.views.popular'),
 
-  url(r'^view/(?P<video_id>[-_\w]+)/$', 'youtube.views.view', name='view_video'),
-  url(r'^(?P<video_id>[-_\w]+)/$', 'youtube.views.view'),
+  url(r'^view/(?P<video_id>[-_\w]+)/$', 'youtube.views.react'),
+  url(r'^(?P<video_id>[-_\w]+)/$', 'youtube.views.react', name='view_video'),
 )
 
 urlpatterns += patterns('',
