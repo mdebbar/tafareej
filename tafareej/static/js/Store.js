@@ -1,75 +1,35 @@
 (function(global) {
 
-  var data = {};
-  var seqID = 1;
-  var listeners = {};
   var GLOBAL_KEY = '*';
 
-  function attachOneListener(cb, key) {
-    if (!listeners[key]) {
-      listeners[key] = {};
-    }
-    listeners[key][seqID] = cb;
-    return seqID++;
+  function StoreConstructor(name) {
+    this.name = name;
+    this.data = {};
+    this.seqID = 1;
+    this.listeners = {};
   }
 
-  function detachOneListener(key, seqID) {
-    if (listeners[key] && listeners[key][seqID]) {
-      delete listeners[key][seqID];
-    }
-  }
-
-  function attachListeners(keys, cb) {
-    return createRemover(keys, keys.map(attachOneListener.bind(null, cb)));
-  }
-
-  function detachListeners(keys, seqIDs) {
-    keys.forEach(function(key, ii) {
-      detachOneListener(key, seqIDs[ii]);
-    });
-  }
-
-  function createRemover(keys, seqIDs) {
-    return {
-      remove: detachListeners.bind(null, keys, seqIDs)
-    };
-  }
-
-  function iterListeners(key, cb) {
-    if (!listeners[key]) {
-      return;
-    }
-    for (var seqID in listeners[key]) {
-      if (listeners[key].hasOwnProperty(seqID)) {
-        cb(listeners[key][seqID], seqID);
-      }
-    }
-  }
-
-  global.Store = {
-
+  StoreConstructor.prototype = {
     get: function(key, def) {
-      return data.hasOwnProperty(key) ? data[key] : def;
+      return this.data.hasOwnProperty(key) ? this.data[key] : def;
     },
-
     /**
      * Set a new value for the specified key. This will overwrite any previous data on that key.
      */
     set: function(key, val) {
-      data[key] = val;
+      this.data[key] = val;
       this._notify(key, val);
     },
-
     /**
      * Update the data associated with the specified key. The key must have a previous
      * value of type object/array. If it's an object, the new value will be merged into the
      * old one. If it's array, the new value will just be appended.
      */
     update: function(key, val, notify) {
-      if (!data.hasOwnProperty(key)) {
+      if (!this.data.hasOwnProperty(key)) {
         throw new Error('Can\'t update `' + key + '` doesn\'t exist');
       }
-      var currVal = data[key];
+      var currVal = this.data[key];
       if (!currVal || typeof currVal !== 'object') {
         throw new Error('Can\'t update `' + key + '` type isn\'t supported', key);
       }
@@ -84,7 +44,6 @@
         this._notify(key, currVal);
       }
     },
-
     listen: function(/*args..., callback*/) {
       // pop() gets the last element in the array
       var callback = Array.prototype.pop.call(arguments);
@@ -93,22 +52,67 @@
       if (keys.length == 0) {
         keys = [GLOBAL_KEY];
       }
-      return attachListeners(keys, callback);
+      return this._attachListeners(keys, callback);
     },
-
+    _attachOneListener: function(cb, key) {
+      if (!this.listeners[key]) {
+        this.listeners[key] = {};
+      }
+      this.listeners[key][this.seqID] = cb;
+      return this.seqID++;
+    },
+    _detachOneListener: function(key, seqID) {
+      if (this.listeners[key] && this.listeners[key][seqID]) {
+        delete this.listeners[key][seqID];
+      }
+    },
+    _attachListeners: function(keys, cb) {
+      return this._createRemovable(keys, keys.map(this._attachOneListener.bind(this, cb)));
+    },
+    _detachListeners: function(keys, seqIDs) {
+      keys.forEach(function(key, ii) {
+        this._detachOneListener(key, seqIDs[ii]);
+      }, this);
+    },
+    _createRemovable: function(keys, seqIDs) {
+      return {
+        remove: this._detachListeners.bind(this, keys, seqIDs)
+      };
+    },
+    _iterListeners: function(key, cb) {
+      if (!this.listeners[key]) {
+        return;
+      }
+      for (var seqID in this.listeners[key]) {
+        if (this.listeners[key].hasOwnProperty(seqID)) {
+          cb(this.listeners[key][seqID], seqID);
+        }
+      }
+    },
     _notify: function(key, val) {
-      if (listeners[key]) {
-        iterListeners(key, function(listener) {
+      if (this.listeners[key]) {
+        this._iterListeners(key, function(listener) {
           listener(val, key);
         });
       }
-      if (listeners[GLOBAL_KEY]) {
-        iterListeners(GLOBAL_KEY, function(listener) {
+      if (this.listeners[GLOBAL_KEY]) {
+        this._iterListeners(GLOBAL_KEY, function(listener) {
           listener(val, key);
         });
       }
     }
-
   };
+
+  var stores = {};
+  global.StoreFactory = {
+    create: function(name) {
+      return stores[name] = new StoreConstructor(name);
+    },
+    get: function(name) {
+      return stores[name];
+    }
+  };
+
+  global.Store = StoreFactory.create('GlobalStore');
 
 })(this);
