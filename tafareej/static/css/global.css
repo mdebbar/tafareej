@@ -1,17 +1,33 @@
 html, body {
-  background-color: #f0f0e7;
+  margin: 0;
+  min-width: 992px;
 }
 
-body {
-  margin: 10px;
+html, body, .bkgnd {
+  background-color: #f0f0e7;
 }
 
 .nodisplay {
   display: none !important;
 }
 
+.row {
+  margin: 0;
+}
+
+.sticky-column {
+  /*overflow-y: auto;*/
+  position: fixed;
+  top: 0;
+  bottom: 0;
+}
+
+.win-height {
+  height: 100vh;
+}
+
 .spinner {
-  background: url('/static/img/spinner.gif') center center no-repeat;
+  background: url('/static/img/spinner_32.gif') center center no-repeat;
   min-height: 66px;
   min-width: 66px;
 }

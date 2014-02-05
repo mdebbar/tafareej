@@ -1,6 +1,10 @@
+.snippet-list-section {
+  /*margin-top: 10px;*/
+}
+
 .snippet-list-container {
-  position: relative;
-  margin: 16px 0 0 0;
+  margin: 63px 0 0 0;
+  background: #f0f0e7;
 }
 
 .snippet-list {
@@ -10,14 +14,12 @@
 }
 
 .snippet-list-spinner {
-  background-position-y: 5%;
+  background-position: center 80px;
   background-color: #f0f0e7;
-  opacity: 0.9;
+  opacity: 0.7;
 
-  position: absolute;
+  position: fixed;
   bottom: 0;
-  left: 0;
-  right: 0;
   top: 0;
 }
 
@@ -25,9 +27,9 @@
   margin-bottom: 6px;
   overflow: hidden;
   zoom: 1;
-  border: 1px solid #fafaf4;
-  border-radius: 6px;
+  border-radius: 0 6px 6px 0;
   text-align: start;
+  background: #fff;
 }
 
 .snippet-item:focus,
@@ -84,8 +86,9 @@
 }
 
 .snippet-title {
-  margin-bottom: 4px;
-  margin-top: 0;
+  font-size: 14px;
+  font-weight: bold;
+  margin: 4px 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -93,6 +96,7 @@
 
 .snippet-excerpt {
   color: #333;
+  font-size: 11px;
   margin: 0;
   overflow: hidden;
   word-wrap: break-word;

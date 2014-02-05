@@ -124,7 +124,7 @@
       );
 
       return (
-        <div>
+        <div className="youtube-player-section">
           <div className="youtube-player-container">
             {player}
           </div>

@@ -1,7 +1,6 @@
 (function(global) {
 
   global.HistoryManager = function(initialState, initialTitle, initialURL) {
-    console.log(history);
     initialState && history.replaceState(initialState, initialTitle, initialURL);
     window.onpopstate = this._popStateListener.bind(this);
   };

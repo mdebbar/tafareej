@@ -2,12 +2,6 @@
 
 (function(global) {
   var PropTypes = React.PropTypes;
-  const COL_CLASS_PREFIXES = [
-    // 'col-xs-',
-    // 'col-sm-',
-    'col-md-',
-    'col-lg-'
-  ];
 
   global.MultiColumn = React.createClass({
     displayName: 'MultiColumn',
@@ -24,9 +18,8 @@
       pull: PropTypes.number
     },
     render: function() {
-      var classes = [];
+      var classes = [colClass(this.props.size)];
       COL_CLASS_PREFIXES.forEach(function(prefix) {
-        classes.push(prefix + String(this.props.size));
         if (this.props.push) {
           classes.push(prefix + 'push-' + String(this.props.push));
         }
@@ -52,9 +45,6 @@
     },
     render: function() {
       var classes = 'spinner';
-      if (this.props.className) {
-        classes += ' ' + this.props.className;
-      }
       if (!this.props.shown) {
         classes += ' nodisplay';
       }

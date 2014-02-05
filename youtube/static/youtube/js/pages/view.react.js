@@ -30,13 +30,13 @@
       var video = this.state.video;
       return (
         <MultiColumn>
-          <Column size={7} push={5}>
+          <Column className="win-height sticky-column" size={7} push={5}>
             <YoutubePlayerContainer
               video={this.state.video}
               onSwitchVideo={this._onSwitchVideo}
             />
           </Column>
-          <Column size={5} pull={7}>
+          <Column size={5}>
             <SearchableSnippetList
               isLoading={this.state.isLoading}
               videoList={this.state.snippets}

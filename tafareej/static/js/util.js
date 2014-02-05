@@ -31,6 +31,18 @@ function debounce(func, delay) {
   return debounced;
 }
 
+const COL_CLASS_PREFIXES = [
+  // 'col-xs-',
+  // 'col-sm-',
+  'col-md-',
+  'col-lg-'
+];
+function colClass(size) {
+  return COL_CLASS_PREFIXES.map(function(prefix) {
+    return prefix + String(size);
+  }).join(' ');
+}
+
 function truncate(text, max, suffix) {
   suffix = suffix || '';
   if (!text) {

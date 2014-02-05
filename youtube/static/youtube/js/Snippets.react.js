@@ -132,20 +132,14 @@
     },
     render: function() {
       return (
-        <div>
-          <input
-            className="form-control search-box-input"
-            dir="auto"
-            type="text"
-            value={this.state.query}
-            onChange={this._onQueryChange}
-          />
+        <div className="snippet-list-section">
+          <SearchBox query={this.state.query} onChange={this._onQueryChange} />
           <div className="snippet-list-container">
             <SnippetList
               videoList={this.props.videoList}
               onSnippetClick={this.props.onSnippetClick}
             />
-            <Spinner className="snippet-list-spinner" shown={this.props.isLoading} />
+            <Spinner className={"snippet-list-spinner " + colClass(5)} shown={this.props.isLoading} />
           </div>
         </div>
       );
