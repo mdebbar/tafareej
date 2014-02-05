@@ -17,6 +17,7 @@
               className="form-control search-box-input"
               dir="auto"
               type="text"
+              placeholder="Search ..."
               value={this.props.query}
               onChange={this.props.onChange}
             />
