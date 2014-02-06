@@ -53,7 +53,7 @@
       if (cachedVideo) {
         this._onVideo(cachedVideo);
       } else {
-        this.hm.push({id: videoID}, undefined, constructVideoURL(videoID));
+        this.hm.push({id: videoID}, undefined, URL.video(videoID));
         API.one(videoID, function(video) {
           this._onVideo(video, true);
           // show related videos

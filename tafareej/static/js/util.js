@@ -53,10 +53,6 @@ function truncate(text, max, suffix) {
     text;
 }
 
-function constructVideoURL(videoID) {
-  return '/' + videoID + '/';
-}
-
 var Event = {
   _id: 0,
   _listeners: {},

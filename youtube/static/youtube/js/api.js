@@ -1,9 +1,5 @@
 (function(global) {
 
-  const SEARCH_URL  = '/api/search/__query__/';
-  const RELATED_URL = '/api/related/__video_id__/';
-  const ONE_URL     = '/api/__video_id__/';
-
   function errorHandler(err) {
     console.error(err);
   }
@@ -18,7 +14,7 @@
       query = cleanQuery(query);
       console.log('Searching for:', query);
       this._search && this._search.abandon();
-      this._search = new X(SEARCH_URL.replace('__query__', query))
+      this._search = new X(URL.API.search(query))
         .success(callback)
         .error(errorHandler);
       return this._search;
@@ -26,7 +22,7 @@
     related: function(videoID, callback) {
       console.log('Getting related videos for:', videoID);
       this._related && this._related.abandon();
-      this._related = new X(RELATED_URL.replace('__video_id__', videoID))
+      this._related = new X(URL.API.related(videoID))
         .success(callback)
         .error(errorHandler);
       return this._related;
@@ -34,7 +30,7 @@
     one: function(videoID, callback) {
       console.log('Getting info for:', videoID);
       this._one && this._one.abandon();
-      this._one = new X(ONE_URL.replace('__video_id__', videoID))
+      this._one = new X(URL.API.video(videoID))
         .success(callback)
         .error(errorHandler);
       return this._one;
