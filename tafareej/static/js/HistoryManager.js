@@ -7,8 +7,16 @@
 
   global.HistoryManager.prototype = {
     push: function(state, title, url) {
-      document.title = title;
+      if (typeof title !== 'undefined') {
+        document.title = title;
+      }
       history.pushState.apply(history, arguments);
+    },
+    replace: function(state, title, url) {
+      if (typeof title !== 'undefined') {
+        document.title = title;
+      }
+      history.replaceState.apply(history, arguments);
     },
     onSwitch: function(callback) {
       this._onSwitch = callback;

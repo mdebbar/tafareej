@@ -21,7 +21,7 @@
 
       // setup history management
       this.hm = new HistoryManager(this.state.video, this.state.video.title);
-      this.hm.onSwitch(this._onSwitchPage.bind(this));
+      this.hm.onSwitch(this._onSwitchPage);
     },
     _onSwitchPage: function(event) {
       this.setState({video: event.state});
@@ -30,7 +30,7 @@
       var video = this.state.video;
       return (
         <MultiColumn>
-          <Column className="win-height sticky-column" size={7} push={5}>
+          <Column className="sticky-column" size={7} push={5}>
             <YoutubePlayerContainer
               video={this.state.video}
               onSwitchVideo={this._onSwitchVideo}
@@ -47,21 +47,27 @@
         </MultiColumn>
       );
     },
+    // Called when the user clicks on a suggestion from inside the player.
     _onSwitchVideo: function(videoID) {
       var cachedVideo = this.videoMap[videoID];
       if (cachedVideo) {
         this._onVideo(cachedVideo);
       } else {
+        this.hm.push({id: videoID}, undefined, constructVideoURL(videoID));
         API.one(videoID, function(video) {
-          this._onVideo(video);
+          this._onVideo(video, true);
           // show related videos
           API.related(videoID, this._onSearchResults);
         }.bind(this));
       }
     },
-    _onVideo: function(video) {
+    _onVideo: function(video, replaceState) {
       this.setState({video: video});
-      this.hm.push(video, video.title, video.url);
+      if (replaceState) {
+        this.hm.replace(video, video.title, video.url);
+      } else {
+        this.hm.push(video, video.title, video.url);
+      }
     },
     _onSearch: function(query) {
       this.setState({isLoading: true});
