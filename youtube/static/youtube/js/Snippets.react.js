@@ -88,10 +88,12 @@
       );
     },
     _onClick: function(video, event) {
-      if (this.props.onSnippetClick) {
-        this.props.onSnippetClick(video);
-        event.preventDefault();
+      // If it's a special click, let the default behavior happen.
+      if (!this.props.onSnippetClick || event.ctrlKey || event.shiftKey || event.metaKey) {
+        return;
       }
+      this.props.onSnippetClick(video);
+      event.preventDefault();
     }
   });
 
