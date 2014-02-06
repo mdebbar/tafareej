@@ -16,6 +16,10 @@
 
     this._boundSend = this._send.bind(this);
     this._setTimer(X_DEFAULT_DELAY);
+
+    this._success = [];
+    this._error = [];
+    this._complete = [];
   };
 
   global.X.prototype = {
@@ -37,26 +41,35 @@
       return true;
     },
     success: function(func) {
-      this.active && (this._success = func);
+      this.active && (this._success.push(func));
       return this;
     },
     error: function(func) {
-      this.active && (this._error = func);
+      this.active && (this._error.push(func));
       return this;
     },
     complete: function(func) {
-      this.active && (this._complete = func);
+      this.active && (this._complete.push(func));
       return this;
     },
 
     onSuccess: function() {
-      this._success && this._success.apply(null, arguments);
+      var args = arguments;
+      this._success.forEach(function(success) {
+        success.apply(null, args);
+      });
     },
     onError: function() {
-      this._error && this._error.apply(null, arguments);
+      var args = arguments;
+      this._error && this._error.forEach(function(error) {
+        error.apply(null, args);
+      });
     },
     onComplete: function() {
-      this._complete && this._complete.apply(null, arguments);
+      var args = arguments;
+      this._complete && this._complete.forEach(function(complete) {
+        complete.apply(null, args);
+      });
     },
 
     /**

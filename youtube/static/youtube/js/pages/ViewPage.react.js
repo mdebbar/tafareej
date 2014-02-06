@@ -14,16 +14,16 @@
     },
     componentDidMount: function() {
       // show related videos on page load
-      this._onSearch('');
+      this._fetchSnippets('');
 
       // put initial video in the videoMap
       this._cacheVideo(this.state.video);
 
       // setup history management
       this.hm = new HistoryManager(this.state.video, this.state.video.title);
-      this.hm.onSwitch(this._onSwitchPage);
+      this.hm.onSwitch(this._onHistorySwitch);
     },
-    _onSwitchPage: function(event) {
+    _onHistorySwitch: function(event) {
       this.setState({video: event.state});
     },
     render: function() {
@@ -33,35 +33,35 @@
           <Column className="sticky-column" size={7} push={5}>
             <YoutubePlayerContainer
               video={this.state.video}
-              onSwitchVideo={this._onSwitchVideo}
+              onSwitchVideo={this._fetchAndSetVideo}
             />
           </Column>
           <Column size={5}>
             <SearchableSnippetList
               isLoading={this.state.isLoading}
               videoList={this.state.snippets}
-              onSearch={this._onSearch}
-              onSnippetClick={this._onVideo}
+              onSearch={this._fetchSnippets}
+              onSnippetClick={this._setVideo}
             />
           </Column>
         </MultiColumn>
       );
     },
     // Called when the user clicks on a suggestion from inside the player.
-    _onSwitchVideo: function(videoID) {
+    _fetchAndSetVideo: function(videoID) {
       var cachedVideo = this.videoMap[videoID];
       if (cachedVideo) {
-        this._onVideo(cachedVideo);
+        this._setVideo(cachedVideo);
       } else {
         this.hm.push({id: videoID}, undefined, URL.video(videoID));
         API.one(videoID, function(video) {
-          this._onVideo(video, true);
+          this._setVideo(video, true);
           // show related videos
-          API.related(videoID, this._onSearchResults);
+          API.related(videoID, this._setSnippets);
         }.bind(this));
       }
     },
-    _onVideo: function(video, replaceState) {
+    _setVideo: function(video, replaceState) {
       this.setState({video: video});
       if (replaceState) {
         this.hm.replace(video, video.title, video.url);
@@ -69,24 +69,33 @@
         this.hm.push(video, video.title, video.url);
       }
     },
-    _onSearch: function(query) {
+    _fetchSnippets: function(query) {
       this.setState({isLoading: true});
       this.api && this.api.abandon();
       if (query) {
-        this.api = API.search(query, this._onSearchResults);
+        this.api = API.search(query, this._setSnippets);
       } else {
         var videoID = this.state.video.id;
         if (videoID) {
-          this.api = API.related(videoID, this._onSearchResults);
+          this.api = API.related(videoID, this._setSnippets);
         }
       }
     },
-    _onSearchResults: function(videos) {
+    _setSnippets: function(videos) {
+      // TODO: add proper utilisation of pagination
+      // this.api.next(this._appendSnippets);
       delete this.api;
       videos.forEach(this._cacheVideo);
       this.setState({
         isLoading: false,
         snippets: videos
+      });
+    },
+    _appendSnippets: function(videos) {
+      videos.forEach(this._cacheVideo);
+      this.setState({
+        isLoading: false,
+        snippets: this.state.snippets.concat(videos)
       });
     },
     _cacheVideo: function(video) {
