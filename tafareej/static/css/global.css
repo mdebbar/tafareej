@@ -1,6 +1,5 @@
 html, body {
   margin: 0;
-  min-width: 992px;
 }
 
 html, body, .bkgnd {
@@ -15,19 +14,17 @@ html, body, .bkgnd {
   margin: 0;
 }
 
-.sticky-column {
-  /*overflow-y: auto;*/
-  position: fixed;
-  top: 0;
-  bottom: 0;
-}
-
-.win-height {
-  height: 100vh;
-}
-
 .spinner {
   background: url('/static/img/spinner_32.gif') center center no-repeat;
   min-height: 66px;
   min-width: 66px;
+}
+
+@media (min-width: 992px) {
+  .sticky-column {
+    /*overflow-y: auto;*/
+    position: fixed;
+    top: 0;
+    bottom: 0;
+  }
 }

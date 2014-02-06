@@ -1,11 +1,3 @@
-.search-box-section {
-  padding-top: 16px;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 5;
-}
-
 .search-box-container {
 
 }
@@ -79,5 +71,22 @@
 
 .corner-right .corner-thin-border {
   border-top-right-radius: 15px;
+}
+
+
+@media (min-width: 992px) {
+  .sticky-search-box-section {
+    padding-top: 16px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 5;
+  }
+}
+
+@media (max-width: 991px) {
+  .sticky-search-box-section {
+    padding: 16px 0 0 0;
+  }
 }
 

@@ -11,7 +11,7 @@
     },
     render: function() {
       return (
-        <div className={"search-box-section bkgnd " + colClass(5)}>
+        <div className={'search-box-section sticky-search-box-section bkgnd ' + colClass(5)}>
           <div className="search-box-container">
             <input
               className="form-control search-box-input"
