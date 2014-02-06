@@ -9,13 +9,19 @@
     return query.trim().replace(CLEAN_REGEX, ' ');
   }
 
+  function resultsCallback(callback) {
+    return function(response) {
+      callback(response.items);
+    };
+  }
+
   global.API = {
     search: function(query, callback) {
       query = cleanQuery(query);
       console.log('Searching for:', query);
       this._search && this._search.abandon();
       this._search = new X(URL.API.search(query))
-        .success(callback)
+        .success(resultsCallback(callback))
         .error(errorHandler);
       return this._search;
     },
@@ -23,7 +29,7 @@
       console.log('Getting related videos for:', videoID);
       this._related && this._related.abandon();
       this._related = new X(URL.API.related(videoID))
-        .success(callback)
+        .success(resultsCallback(callback))
         .error(errorHandler);
       return this._related;
     },

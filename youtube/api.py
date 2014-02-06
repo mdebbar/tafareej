@@ -33,9 +33,19 @@ def details(id_list, **options):
   )
 
 def getDetailsForResults(results):
-  return details(video.get_id() for video in results['items'])
+  response = details(video.get_id() for video in results['items'])
+  if 'nextPageToken' in results:
+    response['nextPageToken'] = results['nextPageToken']
+  if 'prevPageToken' in results:
+    response['prevPageToken'] = results['prevPageToken']
+  if 'pageInfo' in results:
+    response['pageInfo'] = results['pageInfo']
+  return response
 
-def searchWithDetails(query, **options):
+
+def searchWithDetails(query, page_token=None, **options):
+  if page_token is not None:
+    options['pageToken'] = page_token
   return getDetailsForResults(search(query, **options))
 
 @retry

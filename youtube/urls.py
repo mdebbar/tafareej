@@ -14,17 +14,19 @@ urlpatterns = patterns('',
   url(r'^popular/$', 'youtube.views.popular'),
   url(r'^$', 'youtube.views.popular'),
 
-  url(r'^view/(?P<video_id>[-_\w]+)/$', 'youtube.views.react'),
-  url(r'^(?P<video_id>[-_\w]+)/$', 'youtube.views.react', name='view_video'),
+  url(r'^view/(?P<video_id>[-_\w]+)/$', 'youtube.views.react_view'),
+  url(r'^(?P<video_id>[-_\w]+)/$', 'youtube.views.react_view', name='view_video'),
 )
 
 urlpatterns += patterns('',
-  url(r'^react/(?P<video_id>[-_\w]+)/$', 'youtube.views.react'),
+  url(r'^react/(?P<video_id>[-_\w]+)/$', 'youtube.views.react_view'),
 )
 
 # JSON API
 urlpatterns += patterns('',
+  url(r'^api/search/(?P<query>.+)/page/(?P<page_token>.+)/$', 'youtube.views.api_search'),
   url(r'^api/search/(?P<query>.+)/$', 'youtube.views.api_search'),
+
   url(r'^api/related/(?P<video_id>[-_\w]+)/$', 'youtube.views.api_related'),
   url(r'^api/(?P<video_id>[-_\w]+)/$', 'youtube.views.api_one'),
 )
