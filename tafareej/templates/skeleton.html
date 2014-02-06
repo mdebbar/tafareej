@@ -7,8 +7,8 @@
     {% block meta %}{% endblock %}
 
     {% block bootstrap %}
-      {% css 'bootstrap/css/bootstrap.min.css' %}
-      {# {% js 'bootstrap/js/bootstrap.min.js' %} #}
+      {% css 'css/bootstrap.min.css' %}
+      {# {% js 'js/3party/bootstrap.min.js' %} #}
     {% endblock %}
 
     {% block global_css %}
@@ -20,8 +20,7 @@
       <script src="http://fb.me/react-0.8.0.min.js"></script>
       <script src="http://fb.me/JSXTransformer-0.8.0.js"></script>
 
-      {% js 'js/jquery-1.10.2.min.js' %}
-      {% js 'js/qwest-0.5.4.min.js' %}
+      {% js 'js/3party/qwest-0.5.4.min.js' %}
       {% js 'js/util.js' 'js/util/URL.js' 'js/X.js' 'js/Store.js' %}
       {% js 'js/HistoryManager.js' %}
       {% jsx 'js/components.react.js' %}
