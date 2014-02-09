@@ -10,8 +10,8 @@ def api_search(req, query, page_token=None):
   response['items'] = tuple(video.dict() for video in response['items'])
   return JsonResponse(response)
 
-def api_related(req, video_id):
-  response = api.related(video_id)
+def api_related(req, video_id, page_token=None):
+  response = api.related(video_id, page_token)
   response['items'] = tuple(video.dict() for video in response['items'])
   return JsonResponse(response)
 

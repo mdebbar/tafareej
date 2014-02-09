@@ -64,5 +64,7 @@ def one_video(id, **options):
   except IndexError:
     return None
 
-def related(video_id, **options):
+def related(video_id, page_token=None, **options):
+  if page_token is not None:
+    options['pageToken'] = page_token
   return searchWithDetails(None, relatedToVideoId=video_id, **options)

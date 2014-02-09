@@ -10,7 +10,7 @@
    * - It's a wrapper around Qwest and supports all its API.
    * - You can `abandon()` an X object, which mean the response from the request will be ignored.
    */
-  global.X = function(url,data, options, before) {
+  global.X = function(url, data, options, before) {
     this.active = true;
     this.args = [url, data, merge(DEFAULT_OPTIONS, options), before];
 
@@ -56,20 +56,20 @@
     onSuccess: function() {
       var args = arguments;
       this._success.forEach(function(success) {
-        success.apply(null, args);
-      });
+        success.apply(this, args);
+      }, this);
     },
     onError: function() {
       var args = arguments;
       this._error && this._error.forEach(function(error) {
-        error.apply(null, args);
-      });
+        error.apply(this, args);
+      }, this);
     },
     onComplete: function() {
       var args = arguments;
       this._complete && this._complete.forEach(function(complete) {
-        complete.apply(null, args);
-      });
+        complete.apply(this, args);
+      }, this);
     },
 
     /**

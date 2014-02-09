@@ -8,6 +8,7 @@
   const API_SEARCH_URL  = '/api/search/' + QUERY + '/';
   const API_SEARCH_PAGE_URL  = '/api/search/' + QUERY + '/page/' + PAGE_TOKEN + '/';
   const API_RELATED_URL = '/api/related/' + VIDEO_ID + '/';
+  const API_RELATED_PAGE_URL = '/api/related/' + VIDEO_ID + '/page/' + PAGE_TOKEN + '/';
   const API_VIDEO_URL   = '/api/' + VIDEO_ID + '/';
 
   // other URLs
@@ -28,6 +29,7 @@
       search: createReplacer(API_SEARCH_URL, QUERY),
       searchPage: createReplacer(API_SEARCH_PAGE_URL, QUERY, PAGE_TOKEN),
       related: createReplacer(API_RELATED_URL, VIDEO_ID),
+      relatedPage: createReplacer(API_RELATED_PAGE_URL, VIDEO_ID, PAGE_TOKEN),
       video: createReplacer(API_VIDEO_URL, VIDEO_ID)
     },
     video: createReplacer(VIDEO_URL, VIDEO_ID)
