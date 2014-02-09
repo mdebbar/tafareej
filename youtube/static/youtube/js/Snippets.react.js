@@ -67,6 +67,7 @@
     displayName: 'SnippetList',
     propTypes: {
       videoList: PropTypes.array.isRequired,
+      selectedVideoID: PropTypes.string,
       onSnippetClick: PropTypes.func
     },
     render: function() {
@@ -77,9 +78,13 @@
       )
     },
     _renderSnippetItem: function(video) {
+      var classes = ['snippet-item'];
+      if (this.props.selectedVideoID === video.id) {
+        classes.push('snippet-item-selected');
+      }
       return (
         <li
-          className="snippet-item"
+          className={classes.join(' ')}
           key={video.id}
           dir="auto"
           onClick={this._onClick.bind(this, video)}>
@@ -105,6 +110,7 @@
        */
       initialQuery: PropTypes.string,
       isLoading: PropTypes.bool,
+      selectedVideoID: PropTypes.string,
       videoList: PropTypes.array.isRequired,
       onSearch: PropTypes.func.isRequired,
       onSnippetClick: PropTypes.func
@@ -123,6 +129,7 @@
     shouldComponentUpdate: function(nextProps, nextState) {
       return nextProps.isLoading !== this.props.isLoading ||
         nextProps.videoList !== this.props.videoList ||
+        nextProps.selectedVideoID !== this.props.selectedVideoID ||
         nextState.query !== this.state.query;
     },
     componentDidMount: function() {
@@ -139,9 +146,13 @@
           <div className="snippet-list-container">
             <SnippetList
               videoList={this.props.videoList}
+              selectedVideoID={this.props.selectedVideoID}
               onSnippetClick={this.props.onSnippetClick}
             />
-            <Spinner className={"snippet-list-spinner " + colClass(5)} shown={this.props.isLoading} />
+            <Spinner
+              className={"snippet-list-spinner " + colClass(5)}
+              shown={this.props.isLoading}
+            />
           </div>
         </div>
       );

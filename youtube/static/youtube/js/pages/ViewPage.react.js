@@ -40,6 +40,7 @@
             <SearchableSnippetList
               isLoading={this.state.isLoading}
               videoList={this.state.snippets}
+              selectedVideoID={this.state.video.id}
               onSearch={this._fetchSnippets}
               onSnippetClick={this._setVideo}
             />
