@@ -54,8 +54,14 @@
       this._listener && this._listener.remove();
     },
     componentWillReceiveProps: function(nextProps) {
-      if (this.props.videoID !== nextProps.videoID) {
+      if (this.player.getVideoData().video_id !== nextProps.videoID) {
+        // If it's a different video => stop current video + load the new one!
+        // (loading will automatically play the video)
+        this.player.stopVideo();
         this.player.loadVideoById(nextProps.videoID);
+      } else if (this.player.getPlayerState() !== YT.PlayerState.PLAYING) {
+        // If it's not playing => play it!
+        this.player.playVideo();
       }
     },
     render: function() {
@@ -65,7 +71,8 @@
       );
     },
     _onYoutubeAPIReady: function() {
-      this.player = new YT.Player(this.playerID, {
+      // TODO: remove window.player, it's just for debugging purposes.
+      window.player = this.player = new YT.Player(this.playerID, {
         width: String(this.props.width),
         height: String(this.props.height),
         videoId: this.props.videoID,
@@ -82,7 +89,7 @@
     _onPlayerStateChange: function(event) {
       // Respond to player events
       switch (event.data) {
-        case YT.PlayerState.UNSTARTED:
+        case YT.PlayerState.PLAYING:
           var videoID = event.target.getVideoData().video_id;
           if (videoID !== this.props.videoID) {
             this.props.onSwitchVideo(videoID);
