@@ -63,6 +63,13 @@
     }
   });
 
+  var SnippetNub = React.createClass({
+    displayName: 'SnippetNub',
+    render: function() {
+      return <div className="snippet-nub" />;
+    }
+  });
+
   global.SnippetList = React.createClass({
     displayName: 'SnippetList',
     propTypes: {
@@ -77,9 +84,10 @@
         </ul>
       )
     },
-    _renderSnippetItem: function(video) {
+    _renderSnippetItem: function(video, ii) {
+      var isActiveVideo = this.props.selectedVideoID === video.id;
       var classes = ['snippet-item'];
-      if (this.props.selectedVideoID === video.id) {
+      if (isActiveVideo) {
         classes.push('snippet-item-selected');
       }
       return (
@@ -88,6 +96,7 @@
           key={video.id}
           dir="auto"
           onClick={this._onClick.bind(this, video)}>
+          {isActiveVideo && <SnippetNub />}
           <SnippetItem video={video} onClick={this.props.onSnippetClick} />
         </li>
       );

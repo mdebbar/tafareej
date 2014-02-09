@@ -4,7 +4,15 @@
 
   var PropTypes = React.PropTypes;
 
+  var NubHider = React.createClass({
+    displayName: 'NubHider',
+    render: function() {
+      return <div className="search-box-nub-hider bkgnd" />;
+    }
+  });
+
   global.SearchBox = React.createClass({
+    displayName: 'SearchBox',
     propTypes: {
       query: PropTypes.string.isRequired,
       onChange: PropTypes.func.isRequired
@@ -12,6 +20,7 @@
     render: function() {
       return (
         <div className={'search-box-section sticky-search-box-section bkgnd ' + colClass(5)}>
+          <NubHider />
           <div className="search-box-container">
             <input
               className="form-control search-box-input"

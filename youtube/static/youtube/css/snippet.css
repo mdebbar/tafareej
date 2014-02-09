@@ -27,17 +27,24 @@
 }
 
 .snippet-item {
-  margin-bottom: 6px;
-  overflow: hidden;
-  zoom: 1;
-  border-radius: 0 6px 6px 0;
-  text-align: start;
   background: #fff;
+  border-radius: 0 6px 6px 0;
+  margin-bottom: 6px;
+  position: relative;
+  text-align: start;
+  zoom: 1;
 }
 
 .snippet-item:focus,
 .snippet-item:hover {
   background-color: #fafaf4;
+}
+
+.snippet-item-selected,
+.snippet-item-selected:hover,
+.snippet-item-selected:focus {
+  background-color: #def;
+  pointer-events: none;
 }
 
 .snippet-link {
@@ -117,5 +124,15 @@
     position: fixed;
     bottom: 0;
     top: 0;
+  }
+
+  .snippet-nub {
+    border-color: transparent transparent transparent #def;
+    border-style: solid;
+    border-width: 42px 0 42px 30px; /* (90{snippet-height} - 6{border-radius}) / 2 */
+    position: absolute;
+    top: 3px;
+    right: -29px;
+    width: 0;
   }
 }

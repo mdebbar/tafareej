@@ -82,6 +82,14 @@
     left: 0;
     z-index: 5;
   }
+
+  .search-box-nub-hider {
+    position: absolute;
+    top: 0;
+    right: -15px;
+    width: 15px;
+    height: 100%;
+  }
 }
 
 @media (max-width: 991px) {
