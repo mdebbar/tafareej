@@ -1,9 +1,20 @@
 .search-box-container {
-
+  position: relative;
 }
 
 .search-box-input {
   margin-bottom: 12px;
+  padding-right: 32px;
+}
+
+.search-icon {
+  color: #b0b0b0;
+  font-size: 14px;
+  line-height: 1.42;
+  margin: 7px 12px;
+  position: absolute;
+  right: 0;
+  top: 0;
 }
 
 .search-spinner {
@@ -11,20 +22,12 @@
   margin: 0 auto;
 }
 
-
-
-
-.search-box-decoration {
-  box-shadow: 0 1px 1px rgba(112, 112, 108, 0.5);
-  border-bottom: 1px solid #70706C;
-}
-
 .search-box-decoration {
 }
 
 .search-box-corner {
   position: absolute;
-  top: 0px;
+  top: 0;
   margin-top: -14px;
   width: 30px;
   height: 30px;
@@ -83,6 +86,11 @@
     z-index: 5;
   }
 
+  .search-box-decoration {
+    box-shadow: 0 2px 3px rgba(208, 208, 208, 0.9);
+    border-bottom: 1px dashed #d0d0d0;
+  }
+
   .search-box-nub-hider {
     position: absolute;
     top: 0;
@@ -97,4 +105,3 @@
     padding: 16px 0 0 0;
   }
 }
-

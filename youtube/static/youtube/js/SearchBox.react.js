@@ -26,10 +26,11 @@
               className="form-control search-box-input"
               dir="auto"
               type="text"
-              placeholder="Search ..."
+              placeholder="Search"
               value={this.props.query}
               onChange={this.props.onChange}
             />
+            <span className="search-icon glyphicon glyphicon-search" />
             <SearchBoxDecoration />
           </div>
         </div>

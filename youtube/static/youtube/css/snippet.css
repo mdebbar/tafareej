@@ -101,6 +101,7 @@
   margin: 4px 0;
   overflow: hidden;
   text-overflow: ellipsis;
+  text-shadow: 1px 1px 1px #fff;
   white-space: nowrap;
 }
 
@@ -115,7 +116,7 @@
 
 @media (min-width: 992px) {
   .snippet-list-container {
-    margin: 63px 0 0 0;
+    margin: 72px 0 0 0;
     min-height: 120px;
   }
 
