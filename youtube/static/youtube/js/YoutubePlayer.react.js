@@ -34,7 +34,7 @@
     getDefaultProps: function() {
       return {
         autoplay: true,
-        theme: 'light',
+        theme: 'dark',
         width: 640,
         height: 390,
         onSwitchVideo: emptyFunction
@@ -141,7 +141,8 @@
               checked={this.state.autoreplay}
               onChange={this._onAutoreplayChange}
             />
-            AutoReplay
+            {' '}
+            Auto Replay
           </label>
           <h1 className="youtube-title" dir="auto">{video.title}</h1>
         </div>

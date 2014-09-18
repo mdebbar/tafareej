@@ -28,8 +28,9 @@
 
 .snippet-item {
   background: #fff;
-  border-radius: 0 6px 6px 0;
-  margin-bottom: 6px;
+  border-radius: 0 4px 4px 0;
+  box-shadow: 2px 1px 1px rgba(0, 0, 0, 0.1);
+  margin-bottom: 4px;
   position: relative;
   text-align: start;
   zoom: 1;
@@ -38,6 +39,7 @@
 .snippet-item:focus,
 .snippet-item:hover {
   background-color: #fafaf4;
+  box-shadow: 2px 1px 1px rgba(0, 0, 0, 0.15);
 }
 
 .snippet-item-selected,
@@ -45,6 +47,7 @@
 .snippet-item-selected:focus {
   background-color: #def;
   pointer-events: none;
+  box-shadow: none;
 }
 
 .snippet-link {
