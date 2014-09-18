@@ -19,7 +19,7 @@
   })();
 
   // This must be global because the Youtube API needs to call it.
-  global.onYouTubeIframeAPIReady = Store.set.bind(Store, 'youtube.api.ready', true);
+  global.onYouTubeIframeAPIReady = YoutubeStore.set.bind(YoutubeStore, 'api.ready', true);
 
   global.YoutubePlayer = React.createClass({
     displayName: 'YoutubePlayer',
@@ -44,10 +44,10 @@
       this.playerID = PLAYER_ID + String(seqID++);
     },
     componentDidMount: function() {
-      if (Store.get('youtube.api.ready')) {
+      if (YoutubeStore.get('api.ready')) {
         this._onYoutubeAPIReady();
       } else {
-        this._listener = Store.listen('youtube.api.ready', this._onYoutubeAPIReady);
+        this._listener = YoutubeStore.listen('api.ready', this._onYoutubeAPIReady);
       }
     },
     componentWillUnmount: function() {

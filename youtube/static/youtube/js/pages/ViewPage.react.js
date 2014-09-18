@@ -22,14 +22,14 @@
       return {
         isLoading: false,
         snippets: [],
-        video: GlobalStore.get('video')
+        video: VideoStore.get('video')
       };
     },
     componentDidMount: function() {
       // show related videos on page load
       this._fetchSnippets('');
 
-      // put initial video in the videoMap
+      // cache initial video
       this._cacheVideo(this.state.video);
 
       // infinite scroll
@@ -66,7 +66,6 @@
       this.setState({video: event.state});
     },
     render: function() {
-      var video = this.state.video;
       return (
         <MultiColumn>
           <Column className="sticky-column" size={7} push={5}>
@@ -89,11 +88,11 @@
     },
     // Called when the user clicks on a suggestion from inside the player.
     _fetchAndSetVideo: function(videoID) {
-      var cachedVideo = this.videoMap[videoID];
+      var cachedVideo = VideoCacheStore.get(videoID);
       if (cachedVideo) {
         this._setVideo(cachedVideo);
       } else {
-        this.hm.push({id: videoID}, undefined, URL.video(videoID));
+        this.hm.push({id: videoID}, 'Loading...', URL.video(videoID));
         API.one(videoID, function(video) {
           this._setVideo(video, true);
           // show related videos
@@ -145,10 +144,7 @@
       }, this._enableInfiniteScroll);
     },
     _cacheVideo: function(video) {
-      if (!this.videoMap) {
-        this.videoMap = {};
-      }
-      this.videoMap[video.id] = video;
+      VideoCacheStore.set(video.id, video);
     }
   });
 

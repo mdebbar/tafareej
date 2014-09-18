@@ -2,14 +2,18 @@
 
   var GLOBAL_KEY = '*';
 
-  function StoreConstructor(name) {
+  function StoreClass(name) {
     this.name = name;
     this.data = {};
     this.seqID = 1;
     this.listeners = {};
   }
 
-  StoreConstructor.prototype = {
+  StoreClass.prototype = {
+    /**
+     * Get the value associated with a specific key. If that key has no value associated, `def` will
+     * be returned.
+     */
     get: function(key, def) {
       return this.data.hasOwnProperty(key) ? this.data[key] : def;
     },
@@ -104,16 +108,17 @@
   };
 
   var stores = {};
-  global.StoreFactory = {
+  var StoreFactory = {
     create: function(name) {
-      return stores[name] = new StoreConstructor(name);
+      return stores[name] = new StoreClass(name);
     },
     get: function(name) {
       return stores[name];
     }
   };
 
-  global.GlobalStore = StoreFactory.create('GlobalStore');
-  global.Store = global.GlobalStore;
+  global.YoutubeStore = StoreFactory.create('YoutubeStore');
+  global.VideoStore = StoreFactory.create('VideoStore');
+  global.VideoCacheStore = StoreFactory.create('VideoCacheStore');
 
 })(this);

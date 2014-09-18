@@ -14,7 +14,7 @@
   <script type="text/javascript">
     {% if video %}
       {# Put the video in the store so everyone has access to it #}
-      Store.set('video', {{ video.jsonify|safe }});
+      VideoStore.set('video', {{ video.jsonify|safe }});
     {% endif %}
   </script>
 {% endblock %}
