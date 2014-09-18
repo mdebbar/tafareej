@@ -85,7 +85,7 @@
     },
 
     /**
-     * Abandoning the request will cause the response to be completely ignored. If the requests hasn't
+     * Abandoning the request will cause the response to be completely ignored. If the request hasn't
      * been sent yet, it will be cancelled.
      */
     abandon: function() {
