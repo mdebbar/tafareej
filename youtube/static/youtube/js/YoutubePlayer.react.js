@@ -88,8 +88,9 @@
     },
     _onPlayerStateChange: function(event) {
       // Respond to player events
+      // Possible states: {UNSTARTED: -1, ENDED: 0, PLAYING: 1, PAUSED: 2, BUFFERING: 3, CUED: 5}
       switch (event.data) {
-        case YT.PlayerState.PLAYING:
+        case YT.PlayerState.UNSTARTED:
           var videoID = event.target.getVideoData().video_id;
           if (videoID !== this.props.videoID) {
             this.props.onSwitchVideo(videoID);

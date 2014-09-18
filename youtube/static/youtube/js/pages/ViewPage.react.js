@@ -80,7 +80,7 @@
             <YoutubePlayerContainer
               autoplay={this.props.autoplay}
               video={this.state.video}
-              onSwitchVideo={this._fetchAndSetVideo}
+              onSwitchVideo={this._videoSelectedFromPlayer}
             />
           </Column>
           <Column size={5}>
@@ -96,10 +96,12 @@
       );
     },
     // Called when the user clicks on a suggestion from inside the player.
-    _fetchAndSetVideo: function(videoID) {
+    _videoSelectedFromPlayer: function(videoID) {
       var cachedVideo = VideoCacheStore.get(videoID);
       if (cachedVideo) {
         this._setVideo(cachedVideo);
+        // show related videos
+        API.related(videoID, this._setSnippets);
       } else {
         this.hm.push({id: videoID}, 'Loading...', URL.video(videoID));
         API.one(videoID, function(video) {
