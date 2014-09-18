@@ -13,7 +13,7 @@
     React.renderComponent(
       <ViewPage
         video={ {{ video.jsonify|safe }} }
-        autoplay={true}
+        autoplay={ {% if autoplay %}true{% else %}false{% endif %} }
       />,
       document.getElementById('reactpage')
     );

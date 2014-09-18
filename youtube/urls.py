@@ -18,10 +18,6 @@ urlpatterns = patterns('',
   url(r'^(?P<video_id>[-_\w]+)/$', 'youtube.views.react_view', name='view_video'),
 )
 
-urlpatterns += patterns('',
-  url(r'^react/(?P<video_id>[-_\w]+)/$', 'youtube.views.react_view'),
-)
-
 # JSON API
 urlpatterns += patterns('',
   url(r'^api/search/(?P<query>.+)/page/(?P<page_token>.+)/$', 'youtube.views.api_search'),
