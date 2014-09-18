@@ -11,10 +11,4 @@
   {% jsx 'youtube/js/YoutubePlayer.react.js' %}
   {% jsx 'youtube/js/SearchBox.react.js' %}
   {% jsx 'youtube/js/Snippets.react.js' %}
-  <script type="text/javascript">
-    {% if video %}
-      {# Put the video in the store so everyone has access to it #}
-      VideoStore.set('video', {{ video.jsonify|safe }});
-    {% endif %}
-  </script>
 {% endblock %}

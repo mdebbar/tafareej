@@ -11,7 +11,10 @@
   <script type="text/jsx">
     /** @jsx React.DOM */
     React.renderComponent(
-      <ViewPage />,
+      <ViewPage
+        video={ {{ video.jsonify|safe }} }
+        autoplay={true}
+      />,
       document.getElementById('reactpage')
     );
   </script>

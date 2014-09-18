@@ -18,11 +18,19 @@
 
   global.ViewPage = React.createClass({
     displayName: 'ViewPage',
+    propTypes: {
+      autoplay: PropTypes.bool,
+      video: PropTypes.shape({
+        id: PropTypes.string,
+        title: PropTypes.string,
+        url: PropTypes.string
+      }).isRequired
+    },
     getInitialState: function() {
       return {
         isLoading: false,
         snippets: [],
-        video: VideoStore.get('video')
+        video: this.props.video
       };
     },
     componentDidMount: function() {
@@ -70,6 +78,7 @@
         <MultiColumn>
           <Column className="sticky-column" size={7} push={5}>
             <YoutubePlayerContainer
+              autoplay={this.props.autoplay}
               video={this.state.video}
               onSwitchVideo={this._fetchAndSetVideo}
             />

@@ -118,7 +118,6 @@
   };
 
   global.YoutubeStore = StoreFactory.create('YoutubeStore');
-  global.VideoStore = StoreFactory.create('VideoStore');
   global.VideoCacheStore = StoreFactory.create('VideoCacheStore');
 
 })(this);
