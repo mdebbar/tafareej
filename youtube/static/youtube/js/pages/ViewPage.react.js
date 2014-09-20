@@ -35,7 +35,7 @@
     },
     componentDidMount: function() {
       // show related videos on page load
-      this._fetchSnippets('');
+      this._onSearch('');
 
       // cache initial video
       this._cacheVideo(this.state.video);
@@ -86,14 +86,26 @@
           <Column size={5}>
             <SearchableSnippetList
               isLoading={this.state.isLoading}
-              videoList={this.state.snippets}
+              videoList={this.state.isLoading ? [] : this.state.snippets}
               selectedVideoID={this.state.video.id}
-              onSearch={this._fetchSnippets}
+              onSearch={this._onSearch}
               onSnippetClick={this._setVideo}
             />
           </Column>
         </MultiColumn>
       );
+    },
+    _search: function(query) {
+      this._disableInfiniteScroll();
+      this.setState({isLoading: true});
+      this.api && this.api.abandon();
+      this.api = API.search(query, this._setSnippets);
+    },
+    _related: function(videoID) {
+      this._disableInfiniteScroll();
+      this.setState({isLoading: true});
+      this.api && this.api.abandon();
+      this.api = API.related(videoID, this._setSnippets);
     },
     // Called when the user clicks on a suggestion from inside the player.
     _videoSelectedFromPlayer: function(videoID) {
@@ -101,13 +113,13 @@
       if (cachedVideo) {
         this._setVideo(cachedVideo);
         // show related videos
-        API.related(videoID, this._setSnippets);
+        this._related(videoID);
       } else {
         this.hm.push({id: videoID}, 'Loading...', URL.video(videoID));
         API.one(videoID, function(video) {
           this._setVideo(video, true);
           // show related videos
-          API.related(videoID, this._setSnippets);
+          this._related(videoID);
         }.bind(this));
       }
     },
@@ -119,21 +131,20 @@
         this.hm.push(video, video.title, video.url);
       }
     },
-    _fetchSnippets: function(query) {
-      this.setState({isLoading: true});
-      this.api && this.api.abandon();
+    _onSearch: function(query) {
+      if (query === this._query) {
+        return;
+      }
+      this._query = query;
+
       if (query) {
-        this.api = API.search(query, this._setSnippets);
+        this._search(query);
       } else {
-        var videoID = this.state.video.id;
-        if (videoID) {
-          this.api = API.related(videoID, this._setSnippets);
-        }
+        this._related(this.state.video.id);
       }
     },
     _fetchMoreSnippets: function() {
-      if (this.api) {
-        this.api.abandon();
+      if (this.api && typeof this.api.next === 'function') {
         this.api = this.api.next(this._appendSnippets);
       }
     },
@@ -149,10 +160,10 @@
         return;
       }
       videos.forEach(this._cacheVideo);
-      this.setState({
-        isLoading: false,
-        snippets: this.state.snippets.concat(videos)
-      }, this._enableInfiniteScroll);
+      this.setState(
+        {snippets: this.state.snippets.concat(videos)},
+        this._enableInfiniteScroll
+      );
     },
     _cacheVideo: function(video) {
       VideoCacheStore.set(video.id, video);

@@ -3,6 +3,11 @@
 (function(global) {
   var PropTypes = React.PropTypes;
 
+  const CLEAN_REGEX = /\s+/g;
+  function cleanQuery(query) {
+    return query.trim().replace(CLEAN_REGEX, ' ');
+  }
+
   global.SnippetImage = React.createClass({
     displayName: 'SnippetImage',
     propTypes: {
@@ -168,7 +173,7 @@
     },
     _onQueryChange: function(event) {
       var query = event.target.value;
-      this._debouncedSearch(query);
+      this._debouncedSearch(cleanQuery(query));
       this.setState({query: query});
     }
   });

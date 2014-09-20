@@ -4,11 +4,6 @@
     console.error(err);
   }
 
-  const CLEAN_REGEX = /\s+/g;
-  function cleanQuery(query) {
-    return query.trim().replace(CLEAN_REGEX, ' ');
-  }
-
   function resultsCallback(callback, response) {
     callback(response.items);
   }
@@ -34,7 +29,6 @@
         callback = pageToken;
         pageToken = null;
       }
-      query = cleanQuery(query);
       this._search && this._search.abandon();
       var url;
       if (pageToken == null) {
