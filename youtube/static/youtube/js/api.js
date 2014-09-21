@@ -20,6 +20,14 @@
     };
   }
 
+  function logResponse(response) {
+    var items = response.items;
+    console.log(
+      'Received', items.length, 'items:',
+      items.map(function(item) {return item.id}).join(',')
+    );
+  }
+
   global.API = {
     /**
      * search(query, [pageToken], callback)
@@ -40,6 +48,7 @@
       }
       return this._search = new X(url)
         .success(paginator('search', query))
+        .success(logResponse)
         .success(resultsCallback.bind(null, callback))
         .error(errorHandler);
     },
@@ -62,6 +71,7 @@
       }
       return this._related = new X(url)
         .success(paginator('related', videoID))
+        .success(logResponse)
         .success(resultsCallback.bind(null, callback))
         .error(errorHandler);
     },

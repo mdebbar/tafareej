@@ -4,7 +4,7 @@
   var PropTypes = React.PropTypes;
 
   const SCROLL_THROTTLE_DELAY = 100;
-  const INFINITE_SCROLL_BUFFER = 400;
+  const INFINITE_SCROLL_BUFFER = 800;
 
   function getDocHeight() {
     var body = document.body;

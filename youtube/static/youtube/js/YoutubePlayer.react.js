@@ -7,7 +7,7 @@
   var PropTypes = React.PropTypes;
 
   var loaded = false;
-  (function loadYoutubePlayer() {
+  function loadYoutubePlayer() {
     if (loaded) {
       return;
     }
@@ -16,7 +16,7 @@
     tag.src = "https://www.youtube.com/player_api?playerapiid=ytplayer";
     var firstScriptTag = document.getElementsByTagName('script')[0];
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-  })();
+  };
 
   // This must be global because the Youtube API needs to call it.
   global.onYouTubeIframeAPIReady = YoutubeStore.set.bind(YoutubeStore, 'api.ready', true);
@@ -42,6 +42,7 @@
     },
     componentWillMount: function() {
       this.playerID = PLAYER_ID + String(seqID++);
+      loadYoutubePlayer();
     },
     componentDidMount: function() {
       if (YoutubeStore.get('api.ready')) {

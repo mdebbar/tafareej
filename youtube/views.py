@@ -1,7 +1,6 @@
 from django.http.response import Http404
 from django.shortcuts import render_to_response, render
 from tafareej import JsonResponse
-from tafareej.decorators import jsonable
 from youtube import api
 
 

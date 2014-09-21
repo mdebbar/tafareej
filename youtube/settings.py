@@ -1,6 +1,6 @@
 GOOGLE_API_KEY = 'AIzaSyBDhbq80CkRXdbP3wvT17su77zo-gzeKRM'
 
-MAX_RESULTS = 10
+MAX_RESULTS = 15
 
 DEFAULT_OPTIONS = {
   'search': {
@@ -26,5 +26,5 @@ DEFAULT_OPTIONS = {
     'chart': 'mostPopular',
     'part': 'id,snippet,contentDetails,statistics',
     'maxResults': MAX_RESULTS,
-  }
+  },
 }
