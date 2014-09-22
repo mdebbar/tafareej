@@ -22,7 +22,6 @@ html, body, .bkgnd {
 
 @media (min-width: 992px) {
   .sticky-column {
-    /*overflow-y: auto;*/
     position: fixed;
     top: 0;
     bottom: 0;
