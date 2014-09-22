@@ -26,7 +26,12 @@
       width: PropTypes.number,
       height: PropTypes.number,
       videoID: PropTypes.string.isRequired,
-      onSwitchVideo: PropTypes.func
+      onSwitchVideo: PropTypes.func,
+      // Player events:
+      onPlay: PropTypes.func,
+      onPause: PropTypes.func,
+      onBuffering: PropTypes.func,
+      onEnd: PropTypes.func
     },
     getDefaultProps: function() {
       return {
@@ -51,6 +56,7 @@
     componentWillUnmount: function() {
       this._listener && this._listener.remove();
       this.playerLoader.abandon();
+      this.player && this.player.destroy();
     },
     componentWillReceiveProps: function(nextProps) {
       if (this.player.getVideoData().video_id !== nextProps.videoID) {
@@ -58,13 +64,15 @@
         // (loading will automatically play the video)
         this.player.stopVideo();
         this.player.loadVideoById(nextProps.videoID);
-      } else if (this.player.getPlayerState() !== YT.PlayerState.PLAYING) {
-        // If it's not playing => play it!
-        this.player.playVideo();
       }
     },
+    play: function() {
+      this.player && this.player.playVideo();
+    },
+    pause: function() {
+      this.player && this.player.pauseVideo();
+    },
     render: function() {
-      var style = {width: this.props.width, height: this.props.height};
       return (
         <Spinner id={this.playerID} className="youtube-player" />
       );
@@ -95,6 +103,18 @@
             this.props.onSwitchVideo(videoID);
           }
           break;
+        case YT.PlayerState.PLAYING:
+          this.props.onPlay && this.props.onPlay();
+          break;
+        case YT.PlayerState.PAUSED:
+          this.props.onPause && this.props.onPause();
+          break;
+        case YT.PlayerState.ENDED:
+          this.props.onEnd && this.props.onEnd();
+          break;
+        case YT.PlayerState.BUFFERING:
+          this.props.onBuffering && this.props.onBuffering();
+          break;
       }
     }
   });
@@ -124,9 +144,10 @@
       var video = this.props.video;
       var player = this.transferPropsTo(
         <YoutubePlayer
-          autoreplay={this.state.autoreplay}
+          ref="player"
           videoID={video.id}
           onSwitchVideo={this.props.onSwitchVideo}
+          onEnd={this._onEnd}
         />
       );
 
@@ -142,7 +163,7 @@
               onChange={this._onAutoreplayChange}
             />
             {' '}
-            Auto Replay
+            Repeat
           </label>
           <h1 className="youtube-title" dir="auto">{video.title}</h1>
         </div>
@@ -150,6 +171,11 @@
     },
     _onAutoreplayChange: function(event) {
       this.setState({autoreplay: event.target.checked});
+    },
+    _onEnd: function() {
+      if (this.state.autoreplay) {
+        this.refs.player.play();
+      }
     }
   });
 })(this);
