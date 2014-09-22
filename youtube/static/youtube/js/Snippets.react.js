@@ -3,6 +3,8 @@
 (function(global) {
   var PropTypes = React.PropTypes;
 
+  const IMAGE_SWITCHING_INTERVAL = 1000;
+
   const CLEAN_REGEX = /\s+/g;
   function cleanQuery(query) {
     return query.trim().replace(CLEAN_REGEX, ' ');
@@ -50,11 +52,41 @@
         maxExcerptLen: 100
       };
     },
+    getInitialState: function() {
+      return {
+        imageIndex: 0
+      };
+    },
+    componentWillUnmount: function() {
+      this._stopSwitching(false);
+    },
+    _startSwitching: function() {
+      this.imageSwitcher = setInterval(this._switchImage, IMAGE_SWITCHING_INTERVAL);
+      this._switchImage();
+    },
+    _stopSwitching: function(resetImageIndex) {
+      this.imageSwitcher && clearInterval(this.imageSwitcher);
+      if (resetImageIndex !== false) {
+        this.setState({imageIndex: 0});
+      }
+    },
+    _switchImage: function() {
+      var newIndex = this.state.imageIndex + 1;
+      if (newIndex === this.props.video.images.length) {
+        newIndex = 0;
+      }
+      this.setState({imageIndex: newIndex});
+    },
     render: function() {
       var video = this.props.video;
       return (
-        <a className="snippet-link" href={video.url} title={video.title}>
-          <SnippetImage source={video.images[0]} duration={video.duration} />
+        <a
+          className="snippet-link"
+          href={video.url}
+          title={video.title}
+          onMouseEnter={this._startSwitching}
+          onMouseLeave={this._stopSwitching}>
+          <SnippetImage source={video.images[this.state.imageIndex]} duration={video.duration} />
           <div className="snippet-content">
             <h4 className="snippet-title">
               {truncate(video.title, this.props.maxTitleLen)}
