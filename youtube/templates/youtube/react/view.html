@@ -1,8 +1,15 @@
 {% extends 'youtube/base.html' %}
 
+{% load og %}
 {% load resources %}
 
 {% block title %}{{ video.get_title }}{% endblock %}
+
+{% block og_meta %}
+  {% og 'title' video.get_title %}
+  {% og 'image' video.get_large_image %}
+  {% og 'description' video.get_excerpt %}
+{% endblock %}
 
 {% block body %}
   <div id="reactpage" class="container-fluid"></div>

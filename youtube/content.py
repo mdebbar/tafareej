@@ -91,6 +91,13 @@ class SearchResult(DataObject):
     except (KeyError, TypeError):
       return None
 
+  def get_large_image(self):
+    thumbnails = xget(self, 'snippet.thumbnails')
+    try:
+      return xget(thumbnails, 'high', 'medium', 'default')['url']
+    except (KeyError, TypeError):
+      return None
+
   def get_images(self):
     id = self.get_id()
     return [self.get_thumbnail()] + [genImage(id, ii) for ii in range(1, MAX_IMG_NUM + 1)]

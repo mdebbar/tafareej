@@ -127,6 +127,7 @@ TEMPLATE_DIRS = (
 )
 
 MY_APPS = (
+  'og',
   'resources',
   'youtube',
 )
@@ -175,3 +176,5 @@ LOGGING = {
     },
   }
 }
+
+SITE_NAME = "Tafareej"
