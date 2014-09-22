@@ -57,11 +57,18 @@
               placeholder="Search"
               value={this.props.query}
               onChange={this.props.onChange}
+              onKeyDown={this._onDown}
             />
             <span className="search-icon glyphicon glyphicon-search" />
           </div>
         </div>
       );
+    },
+    _onDown: function(event) {
+      // When the user presses Enter => close the autocomplete dropdown
+      if (event.key === 'Enter') {
+        $(this.refs.input.getDOMNode()).typeahead('close');
+      }
     }
   });
 
