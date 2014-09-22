@@ -3,19 +3,6 @@
 (function(global) {
   var PropTypes = React.PropTypes;
 
-  const SCROLL_THROTTLE_DELAY = 100;
-  const INFINITE_SCROLL_BUFFER = 800;
-
-  function getDocHeight() {
-    var body = document.body;
-    var docElem = document.documentElement;
-
-    return Math.max(
-      body.scrollHeight, body.offsetHeight,
-      docElem.clientHeight, docElem.scrollHeight, docElem.offsetHeight
-    );
-  }
-
   global.ViewPage = React.createClass({
     displayName: 'ViewPage',
     propTypes: {
@@ -40,35 +27,15 @@
       // cache initial video
       this._cacheVideo(this.state.video);
 
-      // infinite scroll
-      this._throttledOnScroll = throttle(this._onScroll, SCROLL_THROTTLE_DELAY);
-      window.addEventListener('scroll', this._throttledOnScroll);
-
       // setup history management
       this.hm = new HistoryManager(this.state.video, this.state.video.title);
       this.hm.onSwitch(this._onHistorySwitch);
     },
-    componentWillUnmount: function() {
-      window.removeEventListener('scroll', this._throttledOnScroll);
-    },
     _enableInfiniteScroll: function() {
-      this._infiniteScrollEnabled = true;
+      this.refs.scroller.enable();
     },
     _disableInfiniteScroll: function() {
-      this._infiniteScrollEnabled = false;
-    },
-    _isInfiniteScrollEnabled: function() {
-      return this._infiniteScrollEnabled;
-    },
-    _onScroll: function() {
-      if (!this._isInfiniteScrollEnabled()) {
-        return;
-      }
-      var remainingScroll = getDocHeight() - window.scrollY - window.innerHeight;
-      if (remainingScroll <= INFINITE_SCROLL_BUFFER) {
-        this._disableInfiniteScroll();
-        this._fetchMoreSnippets();
-      }
+      this.refs.scroller.disable();
     },
     _onHistorySwitch: function(event) {
       this.setState({video: event.state});
@@ -84,13 +51,18 @@
             />
           </Column>
           <Column size={5}>
-            <SearchableSnippetList
-              isLoading={this.state.isLoading}
-              videoList={this.state.isLoading ? [] : this.state.snippets}
-              selectedVideoID={this.state.video.id}
-              onSearch={this._onSearch}
-              onSnippetClick={this._setVideo}
-            />
+            <InfiniteScroll
+              ref="scroller"
+              buffer={800}
+              onTrigger={this._fetchMoreSnippets}>
+              <SearchableSnippetList
+                isLoading={this.state.isLoading}
+                videoList={this.state.isLoading ? [] : this.state.snippets}
+                selectedVideoID={this.state.video.id}
+                onSearch={this._onSearch}
+                onSnippetClick={this._setVideo}
+              />
+            </InfiniteScroll>
           </Column>
         </MultiColumn>
       );
