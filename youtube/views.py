@@ -1,4 +1,4 @@
-from django.http.response import Http404
+from django.http.response import Http404, HttpResponse
 from django.shortcuts import render_to_response, render
 from tafareej import JsonResponse
 from youtube import api
@@ -16,6 +16,9 @@ def api_related(req, video_id, page_token=None):
 
 def api_one(req, video_id):
   return JsonResponse(api.one_video(video_id).dict())
+
+def api_autocomplete(req, query):
+  return HttpResponse(api.autocomplete(query, **req.GET.dict()), content_type='text/javascript')
 
 def search(req, query):
   response = api.search(query, part='id,snippet', **req.GET.dict())

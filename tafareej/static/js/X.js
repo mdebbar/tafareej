@@ -5,6 +5,34 @@
     cache: true
   };
 
+  function toQueryString(data) {
+    var params = [];
+    for (var k in data) {
+      if (data.hasOwnProperty(k)) {
+        params.push(encodeURIComponent(k) + "=" + encodeURIComponent(data[k]));
+      }
+    }
+    return params.join('&');
+  }
+
+  function buildURL(url, data) {
+    var queryString = toQueryString(data);
+    if (url.indexOf('?') === -1) {
+      return url + '?' + queryString;
+    } else if (url[url.length - 1] === '&') {
+      return url + queryString;
+    } else {
+      return url + '&' + queryString;
+    }
+  }
+
+  function loadScript(url, data) {
+    var tag = document.createElement('script');
+    tag.src = buildURL(url, data);
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+  }
+
   /**
    * A class used to send Ajax requests. It's sophisticated in many ways:
    * - It's a wrapper around Qwest and supports all its API.
@@ -24,10 +52,18 @@
 
   global.X.prototype = {
     _send: function() {
-      this._clearTimer() && qwest.get.apply(qwest, this.args)
-        .success(this.onSuccess.bind(this))
-        .error(this.onError.bind(this))
-        .complete(this.onComplete.bind(this));
+      if (!this._clearTimer()) {
+        return;
+      }
+
+      if (this.method === 'jsonp') {
+        loadScript(this.args[0], this.args[1]); // this.args[0,1] == [url,data]
+      } else {
+        qwest.get.apply(qwest, this.args)
+          .success(this.onSuccess.bind(this))
+          .error(this.onError.bind(this))
+          .complete(this.onComplete.bind(this));
+      }
     },
     _setTimer: function(delay) {
       this.timer = setTimeout(this._boundSend, delay);
@@ -39,6 +75,10 @@
       clearTimeout(this.timer);
       delete this.timer;
       return true;
+    },
+    jsonp: function() {
+      this.method = 'jsonp';
+      return this;
     },
     success: function(func) {
       this.active && (this._success.push(func));

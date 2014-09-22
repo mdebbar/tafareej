@@ -8,6 +8,7 @@
 
     {% block bootstrap %}
       {% css 'css/bootstrap.min.css' %}
+      {% css 'css/typeaheadjs.css' %}
       {# {% js 'js/3party/bootstrap.min.js' %} #}
     {% endblock %}
 
@@ -20,6 +21,8 @@
       {% js 'js/3party/react-with-addons.min.js' %}
       {% js 'js/3party/JSXTransformer.js' %}
       {% js 'js/3party/qwest-0.5.4.min.js' %}
+      <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+      {% js 'js/3party/typeahead.bundle.min.js' %}
 
       {% js 'js/util.js' 'js/util/url.js' 'js/X.js' 'js/Store.js' %}
       {% js 'js/HistoryManager.js' %}

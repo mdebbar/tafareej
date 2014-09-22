@@ -1,5 +1,13 @@
 (function(global) {
 
+  var AUTOCOMPLETE_CALLBACK = '__ac_callback';
+  var autocompleteCallback = function() {};
+  global[AUTOCOMPLETE_CALLBACK] = function(response) { // response == [query, results, other]
+    autocompleteCallback(
+      response[1].map(function(result) {return result[0]})
+    );
+  };
+
   function errorHandler(err) {
     console.error(err);
   }
@@ -90,6 +98,14 @@
      */
     oneAndRelated: function(videoID) {
       // TODO: implement this so we fetch both the video's details and suggestions in one request
+    },
+    autocomplete: function(query, callback) {
+      autocompleteCallback = callback;
+      this._autocomplete && this._autocomplete.abandon();
+      this._autocomplete = new X(URL.API.autocomplete(query), {callback: AUTOCOMPLETE_CALLBACK})
+        .jsonp()
+        .error(errorHandler);
+      return this._autocomplete;
     }
   };
 })(this);

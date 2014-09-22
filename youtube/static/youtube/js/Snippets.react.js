@@ -156,7 +156,11 @@
     render: function() {
       return (
         <div className="snippet-list-section">
-          <SearchBox query={this.state.query} onChange={this._onQueryChange} />
+          <SearchBox
+            query={this.state.query}
+            onChange={this._onQueryChange}
+            onSelect={this._onQuerySelected}
+          />
           <div className="snippet-list-container">
             <SnippetList
               videoList={this.props.videoList}
@@ -174,6 +178,10 @@
     _onQueryChange: function(event) {
       var query = event.target.value;
       this._debouncedSearch(cleanQuery(query));
+      this.setState({query: query});
+    },
+    _onQuerySelected: function(query) {
+      this.props.onSearch(cleanQuery(query));
       this.setState({query: query});
     }
   });

@@ -1,4 +1,6 @@
+import json
 from apiclient.discovery import build
+import requests
 from tafareej.decorators import retry
 from tafareej.maps import merge, xset
 from youtube.settings import DEFAULT_OPTIONS, GOOGLE_API_KEY
@@ -68,3 +70,12 @@ def related(video_id, page_token=None, **options):
   if page_token is not None:
     options['pageToken'] = page_token
   return searchWithDetails(None, relatedToVideoId=video_id, **options)
+
+
+AUTOCOMPLETE_URL = 'http://suggestqueries.google.com/complete/search'
+
+@retry
+def autocomplete(query, **options):
+  req_options = merge_defaults('autocomplete', options)
+  req_options['q'] = unicode(query)
+  return requests.get(AUTOCOMPLETE_URL, params=req_options).text
