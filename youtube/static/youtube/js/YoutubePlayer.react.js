@@ -12,11 +12,8 @@
       return;
     }
     loaded = true;
-    var tag = document.createElement('script');
-    tag.src = "https://www.youtube.com/player_api?playerapiid=ytplayer";
-    var firstScriptTag = document.getElementsByTagName('script')[0];
-    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-  };
+    return new X(URL.youtubePlayer('ytplayer')).jsonp();
+  }
 
   // This must be global because the Youtube API needs to call it.
   global.onYouTubeIframeAPIReady = YoutubeStore.set.bind(YoutubeStore, 'api.ready', true);
@@ -42,7 +39,7 @@
     },
     componentWillMount: function() {
       this.playerID = PLAYER_ID + String(seqID++);
-      loadYoutubePlayer();
+      this.playerLoader = loadYoutubePlayer();
     },
     componentDidMount: function() {
       if (YoutubeStore.get('api.ready')) {
@@ -53,6 +50,7 @@
     },
     componentWillUnmount: function() {
       this._listener && this._listener.remove();
+      this.playerLoader.abandon();
     },
     componentWillReceiveProps: function(nextProps) {
       if (this.player.getVideoData().video_id !== nextProps.videoID) {

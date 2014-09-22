@@ -3,6 +3,7 @@
   const QUERY = '__query__';
   const PAGE_TOKEN = '__page_token__';
   const VIDEO_ID = '__video_id__';
+  const PLAYER_API_ID = '__player_id__';
 
   // API URLs
   const API_SEARCH_URL  = '/api/search/' + QUERY + '/';
@@ -14,6 +15,7 @@
 
   // other URLs
   const VIDEO_URL = '/' + VIDEO_ID + '/';
+  const YOUTUBE_PLAYER_URL = 'https://www.youtube.com/player_api?playerapiid=' + PLAYER_API_ID;
 
   function createReplacer(patternURL, var1, var2) {
     return function(val1, val2) {
@@ -34,7 +36,8 @@
       video: createReplacer(API_VIDEO_URL, VIDEO_ID),
       autocomplete: createReplacer(API_AUTOCOMPLETE, QUERY)
     },
-    video: createReplacer(VIDEO_URL, VIDEO_ID)
+    video: createReplacer(VIDEO_URL, VIDEO_ID),
+    youtubePlayer: createReplacer(YOUTUBE_PLAYER_URL, PLAYER_API_ID)
   };
 
 })(this);
