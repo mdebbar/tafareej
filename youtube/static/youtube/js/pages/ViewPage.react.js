@@ -20,16 +20,23 @@
         video: this.props.video
       };
     },
+    componentWillMount: function() {
+      // TODO: maybe try to get the query from the URL?
+      // setup history management
+      this.hm = new HistoryManager(
+        {video: this.state.video, query: HistoryManager.getState().query},
+        this.state.video.title
+      );
+      this.hm.onSwitch(this._onHistorySwitch);
+    },
     componentDidMount: function() {
-      // show related videos on page load
-      this._onSearch('');
+      // use initial query on page load
+      var query = HistoryManager.getState().query || '';
+      this.refs.searchable.setQuery(query);
+      this._onSearch(query);
 
       // cache initial video
       this._cacheVideo(this.state.video);
-
-      // setup history management
-      this.hm = new HistoryManager(this.state.video, this.state.video.title);
-      this.hm.onSwitch(this._onHistorySwitch);
     },
     _enableInfiniteScroll: function() {
       this.refs.scroller.enable();
@@ -38,7 +45,9 @@
       this.refs.scroller.disable();
     },
     _onHistorySwitch: function(event) {
-      this.setState({video: event.state});
+      this.setState({video: event.state.video});
+      this._query = event.state.query;
+      this.refs.searchable.setQuery(this._query);
     },
     render: function() {
       return (
@@ -56,6 +65,7 @@
               buffer={800}
               onTrigger={this._fetchMoreSnippets}>
               <SearchableSnippetList
+                ref="searchable"
                 isLoading={this.state.isLoading}
                 videoList={this.state.isLoading ? [] : this.state.snippets}
                 selectedVideoID={this.state.video.id}
@@ -66,6 +76,14 @@
           </Column>
         </MultiColumn>
       );
+    },
+    _buildURL: function(videoID, query) {
+      // TODO: create a URL class to handle URL building and parsing etc...
+      var url = URL.video(videoID);
+      if (query) {
+        url += '?q=' + encodeURIComponent(query);
+      }
+      return url;
     },
     _search: function(query) {
       this._disableInfiniteScroll();
@@ -81,13 +99,21 @@
     },
     // Called when the user clicks on a suggestion from inside the player.
     _videoSelectedFromPlayer: function(videoID) {
+      // Clear search query
+      this.refs.searchable.setQuery('');
+      this._query = '';
+
       var cachedVideo = VideoCacheStore.get(videoID);
       if (cachedVideo) {
         this._setVideo(cachedVideo);
         // show related videos
         this._related(videoID);
       } else {
-        this.hm.push({id: videoID}, 'Loading...', URL.video(videoID));
+        this.hm.push(
+          {video: {id: videoID}, query: this._query},
+          'Loading...',
+          this._buildURL(videoID, this._query)
+        );
         API.one(videoID, function(video) {
           this._setVideo(video, true);
           // show related videos
@@ -97,10 +123,12 @@
     },
     _setVideo: function(video, replaceState) {
       this.setState({video: video});
+      var historyState = {video: video, query: this._query};
+      var historyURL = this._buildURL(video.id, this._query);
       if (replaceState) {
-        this.hm.replace(video, video.title, video.url);
+        this.hm.replace(historyState, video.title, historyURL);
       } else {
-        this.hm.push(video, video.title, video.url);
+        this.hm.push(historyState, video.title, historyURL);
       }
     },
     _onSearch: function(query) {
@@ -109,6 +137,11 @@
       }
       this._query = query;
 
+      this.hm.replace(
+        {video: this.state.video, query: query},
+        this.state.video.title,
+        this._buildURL(this.state.video.id, query)
+      );
       if (query) {
         this._search(query);
       } else {

@@ -5,6 +5,10 @@
     window.onpopstate = this._popStateListener.bind(this);
   };
 
+  global.HistoryManager.getState = function() {
+    return history.state || {};
+  };
+
   global.HistoryManager.prototype = {
     push: function(state, title, url) {
       if (typeof title !== 'undefined') {

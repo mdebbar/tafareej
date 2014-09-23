@@ -185,6 +185,10 @@
       this._debouncedSearch.cancel();
       delete this._debouncedSearch;
     },
+    setQuery: function(query) {
+      this._debouncedSearch.cancel();
+      this.setState({query: query || ''});
+    },
     render: function() {
       return (
         <div className="snippet-list-section">
