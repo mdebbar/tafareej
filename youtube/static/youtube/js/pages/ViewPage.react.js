@@ -46,8 +46,9 @@
     },
     _onHistorySwitch: function(event) {
       this.setState({video: event.state.video});
-      this._query = event.state.query;
-      this.refs.searchable.setQuery(this._query);
+      var query = event.state.query;
+      this.refs.searchable.setQuery(query);
+      this._onSearch(query);
     },
     render: function() {
       return (
