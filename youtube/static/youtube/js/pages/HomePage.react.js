@@ -20,7 +20,9 @@
       this.hm.onSwitch(this._onHistorySwitch);
 
       // Get query from URL or history state or load popular videos
-      this._onSearch(new URI().getParam('q') || HistoryManager.getState().query || '');
+      var query = new URI().getParam('q') || HistoryManager.getState().query || '';
+      this.refs.search.setQuery(query);
+      this._onSearch(query);
     },
     _getPageTitle: function(query) {
       if (query) {
@@ -35,19 +37,22 @@
       this.refs.scroller.disable();
     },
     _onHistorySwitch: function(event) {
-      this.setState({video: event.state});
+      var query = event.state.query;
+      this.refs.search.setQuery(query);
+      this._onSearch(query);
     },
     render: function() {
       return (
         <div>
           <SearchBox
+            ref="search"
             onSearch={this._onSearch}
           />
           <InfiniteScroll
             ref="scroller"
             buffer={800}
             onTrigger={this._fetchMoreVideos}>
-            <pre>{this.state.videos}</pre>
+            <pre>{JSON.stringify(this.state.videos)}</pre>
           </InfiniteScroll>
         </div>
       );

@@ -23,7 +23,11 @@
         if (!pageToken) {
           return false;
         }
-        return API[apiMethod](apiArg, pageToken, callback);
+        if (typeof apiArg !== 'undefined') {
+          return API[apiMethod](apiArg, pageToken, callback);
+        } else {
+          return API[apiMethod](pageToken, callback);
+        }
       };
     };
   }
@@ -68,7 +72,7 @@
         callback = pageToken;
         pageToken = null;
       }
-      this._popular && this._popular.abandon();
+      this._related && this._related.abandon();
       var url;
       if (pageToken == null) {
         console.log('Related videos for:', videoID);
@@ -77,14 +81,34 @@
         console.log('Related videos page[' + pageToken + '] for:', videoID);
         url = URL.API.relatedPage(videoID, pageToken);
       }
-      return this._popular = new X(url)
+      return this._related = new X(url)
         .success(paginator('related', videoID))
         .success(logResponse)
         .success(resultsCallback.bind(null, callback))
         .error(errorHandler);
     },
-    popular: function() {
-      //TODO: implement API.popular()
+    /**
+     * popular([pageToken], callback)
+     */
+    popular: function(pageToken, callback) {
+      if (typeof pageToken === 'function') {
+        callback = pageToken;
+        pageToken = null;
+      }
+      this._popular && this._popular.abandon();
+      var url;
+      if (pageToken == null) {
+        console.log('Popular videos');
+        url = URL.API.popular();
+      } else {
+        console.log('Popular videos page[' + pageToken + ']');
+        url = URL.API.popularPage(pageToken);
+      }
+      return this._popular = new X(url)
+        .success(paginator('popular'))
+        .success(logResponse)
+        .success(resultsCallback.bind(null, callback))
+        .error(errorHandler);
     },
     one: function(videoID, callback) {
       console.log('Getting info for:', videoID);
