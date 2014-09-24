@@ -4,13 +4,21 @@
   var PropTypes = React.PropTypes;
 
   const COLUMN_WIDTH = 240;
+  const COLUMN_MARGIN = 8;
   const IMAGE_RATIO = 4/3;
+
+  const PLAYING = 1;
+  const PAUSED = 2;
+  const STOPPED = 3;
 
   global.PlayableVideo = React.createClass({
     displayName: 'PlayableVideo',
     propTypes: {
       video: PropTypes.object.isRequired,
-      width: PropTypes.number.isRequired
+      width: PropTypes.number.isRequired,
+      onPlay: PropTypes.func,
+      onPause: PropTypes.func,
+      onStop: PropTypes.func
     },
     getInitialState: function() {
       return {
@@ -23,8 +31,6 @@
           <YoutubePlayer
             autoplay={true}
             videoID={video.id}
-            onPlay={this._expandPlayer}
-            onPause={this._shrinkPlayer}
             onEnd={this._stop}
           />
         );
@@ -61,21 +67,16 @@
     },
     _play: function() {
       this.setState({isPlaying: true});
+      this.props.onPlay && this.props.onPlay(this.props.video.id);
     },
     _stop: function() {
       this.setState({isPlaying: false});
-    },
-    _shrinkPlayer: function() {
-      // TODO
-    },
-    _expandPlayer: function() {
-      // TODO
+      this.props.onStop && this.props.onStop(this.props.video.id);
     }
   });
 
   global.VideoGrid = React.createClass({
     displayName: 'VideoGrid',
-    // TODO: add `isLoading` prop and show a spinner when it's true
     propTypes: {
       isLoading: PropTypes.bool,
       videos: PropTypes.array.isRequired
@@ -86,7 +87,7 @@
       // - shrink all except the last one should be expanded
       // - when a new video is played maybe pause previous one?
       return {
-
+        players: {}
       };
     },
     render: function() {
@@ -94,7 +95,7 @@
         <Pinterest
           className="video-grid-container"
           columnWidth={COLUMN_WIDTH}
-          columnMargin={8}>
+          columnMargin={COLUMN_MARGIN}>
           {this.props.videos.map(this._renderItem)}
           <Spinner
             className="video-grid-spinner"
@@ -104,15 +105,29 @@
       );
     },
     _renderItem: function(video) {
+      var colSpan = 1;
+      if (this.state.players[video.id] === PLAYING) {
+        colSpan = 2;
+      }
       return (
-        <PinterestItem>
+        <PinterestItem columnSpan={colSpan}>
           <PlayableVideo
             className="video-grid-item"
             video={video}
-            width={COLUMN_WIDTH}
+            width={colSpan * (COLUMN_WIDTH + COLUMN_MARGIN) - COLUMN_MARGIN}
+            onPlay={this._onItemPlay}
+            onStop={this._onItemStop}
           />
         </PinterestItem>
       );
+    },
+    _onItemPlay: function(videoID) {
+      this.state.players[videoID] = PLAYING;
+      this.forceUpdate();
+    },
+    _onItemStop: function(videoID) {
+      this.state.players[videoID] = STOPPED;
+      this.forceUpdate();
     }
   });
 

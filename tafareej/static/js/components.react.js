@@ -133,10 +133,21 @@
 
   global.PinterestItem = React.createClass({
     displayName: 'PinterestItem',
+    propTypes: {
+      columnSpan: PropTypes.number
+    },
+    getDefaultProps: function() {
+      return {
+        columnSpan: 1
+      }
+    },
     render: function() {
       return React.addons.cloneWithProps(
         React.Children.only(this.props.children),
-        {className: 'pinterest-item'}
+        {
+          className: 'pinterest-item',
+          'data-column-span': this.props.columnSpan
+        }
       );
     }
   });
@@ -203,20 +214,30 @@
         if (!CSS.hasClass(node, 'pinterest-item')) {
           continue;
         }
-        var shortestColumn = this._getShortestColumn(columns);
-        CSS.setStyle(node, {
-          left: (leftOffset + shortestColumn * columnWidth) + 'px',
-          top: columns[shortestColumn] + 'px'
-        });
-        columns[shortestColumn] += node.offsetHeight + this.props.columnMargin;
+        var colSpan = parseInt(node.getAttribute('data-column-span') || 1, 10);
+        var shortestColumn = this._getShortestColumn(columns, 0, columns.length - colSpan);
+        this._positionItem(node, colSpan, leftOffset, columns, shortestColumn);
       }
     },
-    _getShortestColumn: function(columns) {
-      var shortest = 0;
-      for (var i = 1; i < columns.length; i++) {
+    _getShortestColumn: function(columns, min, max) {
+      min = min || 0;
+      max = max || columns.length;
+      var shortest = min;
+      for (var i = min + 1; i < max + 1; i++) {
         if (columns[i] < columns[shortest]) shortest = i;
       }
       return shortest;
+    },
+    _positionItem: function(node, colSpan, leftOffset, columns, pickedColumn) {
+      var top = Math.max.apply(Math, columns.slice(pickedColumn, pickedColumn + colSpan));
+      CSS.setStyle(node, {
+        left: (leftOffset + pickedColumn * this._getActualColumnWidth()) + 'px',
+        top: top + 'px'
+      });
+      var newHeight = top + node.offsetHeight + this.props.columnMargin;
+      for (var i = pickedColumn; i < pickedColumn + colSpan; i++) {
+        columns[i] = newHeight;
+      }
     }
   });
 

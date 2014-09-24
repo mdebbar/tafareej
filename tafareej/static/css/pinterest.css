@@ -9,5 +9,8 @@
 .pinterest-animate .pinterest-item {
   left: 0;
   top: 0;
-  transition: left .7s;
+  -webkit-transition: left .7s, width .7s, height .7s;
+  -moz-transition: left .7s, width .7s, height .7s;
+  -o-transition: left .7s, width .7s, height .7s;
+  transition: left .7s, width .7s, height .7s;
 }
