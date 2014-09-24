@@ -107,6 +107,11 @@
         players: {}
       };
     },
+    componentWillReceiveProps: function(nextProps) {
+      if (nextProps.isLoading) {
+        this.setState({players: {}});
+      }
+    },
     render: function() {
       return this.transferPropsTo(
         <Pinterest
@@ -154,8 +159,8 @@
     },
     _muteIfPlaying: function(videoID) {
       if (this.state.players[videoID] === PLAYING) {
-        console.log('Muting', videoID);
-        this.refs['item_' + videoID].mute();
+        var ref = this.refs['item_' + videoID];
+        ref && ref.mute();
       }
     }
   });

@@ -228,7 +228,8 @@
       var top = Math.max.apply(Math, columns.slice(pickedColumn, pickedColumn + colSpan));
       CSS.setStyle(node, {
         left: (leftOffset + pickedColumn * this._getActualColumnWidth()) + 'px',
-        top: top + 'px'
+        top: top + 'px',
+        opacity: 1
       });
       var newHeight = top + node.offsetHeight + this.props.columnMargin;
       for (var i = pickedColumn; i < pickedColumn + colSpan; i++) {
