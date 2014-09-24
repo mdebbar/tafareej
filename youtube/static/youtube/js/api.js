@@ -68,7 +68,7 @@
         callback = pageToken;
         pageToken = null;
       }
-      this._related && this._related.abandon();
+      this._popular && this._popular.abandon();
       var url;
       if (pageToken == null) {
         console.log('Related videos for:', videoID);
@@ -77,11 +77,14 @@
         console.log('Related videos page[' + pageToken + '] for:', videoID);
         url = URL.API.relatedPage(videoID, pageToken);
       }
-      return this._related = new X(url)
+      return this._popular = new X(url)
         .success(paginator('related', videoID))
         .success(logResponse)
         .success(resultsCallback.bind(null, callback))
         .error(errorHandler);
+    },
+    popular: function() {
+      //TODO: implement API.popular()
     },
     one: function(videoID, callback) {
       console.log('Getting info for:', videoID);

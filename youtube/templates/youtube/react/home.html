@@ -1,0 +1,18 @@
+{% extends 'youtube/base.html' %}
+
+{% load resources %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+  <div id="reactpage" class="container-fluid"></div>
+
+  {% jsx 'youtube/js/pages/HomePage.react.js' %}
+  <script type="text/jsx">
+    /** @jsx React.DOM */
+    React.renderComponent(
+      <HomePage siteName="{{ title }}" />,
+      document.getElementById('reactpage')
+    );
+  </script>
+{% endblock %}

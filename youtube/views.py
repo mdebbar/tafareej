@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.http.response import Http404, HttpResponse
 from django.shortcuts import render_to_response
 from tafareej import JsonResponse
@@ -32,3 +33,8 @@ def view(req, video_id):
     })
   except IndexError:
     raise Http404()
+
+def home(req):
+  return render_to_response('youtube/react/home.html', {
+    'title': settings.SITE_NAME,
+  })
