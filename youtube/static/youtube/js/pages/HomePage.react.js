@@ -10,23 +10,21 @@
     },
     getInitialState: function() {
       return {
-        query: new URI().getParam('q') || HistoryManager.getState().query || '',
         isLoading: false,
-        videos: [],
-        pageTitle: document.title
+        videos: []
       };
     },
     componentDidMount: function() {
       // setup history management
-      this.hm = new HistoryManager({query: this.state.query}, this._getPageTitle());
+      this.hm = new HistoryManager();
       this.hm.onSwitch(this._onHistorySwitch);
 
-      // show popular videos on page load
-      this._onSearch(this.state.query);
+      // Get query from URL or history state or load popular videos
+      this._onSearch(new URI().getParam('q') || HistoryManager.getState().query || '');
     },
-    _getPageTitle: function() {
-      if (this.state.query) {
-        return this.props.siteName + ' - ' + this.state.query;
+    _getPageTitle: function(query) {
+      if (query) {
+        return this.props.siteName + ' - ' + query;
       }
       return this.props.siteName;
     },
@@ -43,9 +41,7 @@
       return (
         <div>
           <SearchBox
-            query={this.state.query}
-            onChange={this._onSearch}
-            onSelect={this._onSearch}
+            onSearch={this._onSearch}
           />
           <InfiniteScroll
             ref="scroller"
@@ -69,17 +65,13 @@
       this.api = API.popular(this._setVideos);
     },
     _buildURL: function(query) {
-      return new URI().setParam('q', query);
+      var url = new URI();
+      return query ? url.setParam('q', query) : url.removeParam('q');
     },
     _onSearch: function(query) {
-      if (query === this.state.query) {
-        return;
-      }
-      this.setState({query: query});
-
       this.hm.replace(
         {query: query},
-        this.state.pageTitle,
+        this._getPageTitle(query),
         this._buildURL(query)
       );
       if (query) {

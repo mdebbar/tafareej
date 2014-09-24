@@ -5,11 +5,6 @@
 
   const IMAGE_SWITCHING_INTERVAL = 1000;
 
-  const CLEAN_REGEX = /\s+/g;
-  function cleanQuery(query) {
-    return query.trim().replace(CLEAN_REGEX, ' ');
-  }
-
   global.SnippetImage = React.createClass({
     displayName: 'SnippetImage',
     propTypes: {
@@ -151,10 +146,6 @@
   global.SearchableSnippetList = React.createClass({
     displayName: 'SearchableSnippetList',
     propTypes: {
-      /**
-       * This will be used to fetch related videos when the search box is empty.
-       */
-      initialQuery: PropTypes.string,
       isLoading: PropTypes.bool,
       selectedVideoID: PropTypes.string,
       videoList: PropTypes.array.isRequired,
@@ -163,39 +154,24 @@
     },
     getDefaultProps: function() {
       return {
-        initialQuery: '',
         isLoading: false
       };
-    },
-    getInitialState: function() {
-      return {
-        query: this.props.initialQuery
-      }
     },
     shouldComponentUpdate: function(nextProps, nextState) {
       return nextProps.isLoading !== this.props.isLoading ||
         nextProps.videoList !== this.props.videoList ||
-        nextProps.selectedVideoID !== this.props.selectedVideoID ||
-        nextState.query !== this.state.query;
-    },
-    componentDidMount: function() {
-      this._debouncedSearch = debounce(this.props.onSearch, 500);
-    },
-    componentWillUnmount: function() {
-      this._debouncedSearch.cancel();
-      delete this._debouncedSearch;
+        nextProps.selectedVideoID !== this.props.selectedVideoID;
     },
     setQuery: function(query) {
-      this._debouncedSearch.cancel();
-      this.setState({query: query || ''});
+      this.refs.searchbox.setQuery(query);
     },
     render: function() {
       return (
         <div className="snippet-list-section">
           <SearchBox
-            query={this.state.query}
-            onChange={this._onQueryChange}
-            onSelect={this._onQuerySelected}
+            ref="searchbox"
+            className={'sticky-search-box-section bkgnd ' + colClass(5)}
+            onSearch={this.props.onSearch}
           />
           <div className="snippet-list-container">
             <SnippetList
@@ -210,15 +186,6 @@
           </div>
         </div>
       );
-    },
-    _onQueryChange: function(event) {
-      var query = event.target.value;
-      this._debouncedSearch(cleanQuery(query));
-      this.setState({query: query});
-    },
-    _onQuerySelected: function(query) {
-      this.props.onSearch(cleanQuery(query));
-      this.setState({query: query});
     }
   });
 

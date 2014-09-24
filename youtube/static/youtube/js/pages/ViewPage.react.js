@@ -125,9 +125,6 @@
       }
     },
     _onSearch: function(query) {
-      if (query === this._query) {
-        return;
-      }
       this._query = query;
 
       this.hm.replace(
