@@ -3,10 +3,14 @@
 (function(global) {
   var PropTypes = React.PropTypes;
 
+  const COLUMN_WIDTH = 240;
+  const IMAGE_RATIO = 4/3;
+
   global.PlayableVideo = React.createClass({
     displayName: 'PlayableVideo',
     propTypes: {
-      video: PropTypes.object.isRequired
+      video: PropTypes.object.isRequired,
+      width: PropTypes.number.isRequired
     },
     getInitialState: function() {
       return {
@@ -34,15 +38,20 @@
     },
     render: function() {
       var video = this.props.video;
+      var mediaWidth = this.props.width - 8; /* 8px of side padding */
+      var mediaStyle = {
+        width: mediaWidth + 'px',
+        height: Math.floor(mediaWidth / IMAGE_RATIO) + 'px'
+      };
+      var rootStyle = {width: this.props.width + 'px'};
       return this.transferPropsTo(
-        <div dir="auto">
+        <div dir="auto" style={rootStyle}>
           <SmartLink
-            className="video-grid-link video-grid-image-container"
+            className="video-grid-link video-grid-media-container"
+            style={mediaStyle}
             href={video.url}
             onClick={this._play}>
-            <div className="video-grid-image-container">
-              {this._renderMedia(video)}
-            </div>
+            {this._renderMedia(video)}
           </SmartLink>
           <h4 className="video-grid-title">
             {video.title}
@@ -80,12 +89,22 @@
       };
     },
     render: function() {
+      return this.transferPropsTo(
+        <Pinterest
+          className="video-grid-container"
+          columnWidth={COLUMN_WIDTH}
+          columnMargin={8}>
+          {this.props.videos.map(this._renderItem)}
+        </Pinterest>
+      );
+    },
+    _renderItem: function(video) {
       return (
-        <div className="video-grid-container">
-          {this.props.videos.map(function(video) {
-            return <PlayableVideo className="video-grid-item" video={video} />
-          })}
-        </div>
+        <PlayableVideo
+          className="video-grid-item"
+          video={video}
+          width={COLUMN_WIDTH}
+        />
       );
     }
   });

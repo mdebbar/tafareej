@@ -1,0 +1,13 @@
+.pinterest-container {
+  position: relative;
+}
+
+.pinterest-item {
+  position: absolute;
+}
+
+.pinterest-animate .pinterest-item {
+  left: 0;
+  top: 0;
+  transition: left .7s;
+}
