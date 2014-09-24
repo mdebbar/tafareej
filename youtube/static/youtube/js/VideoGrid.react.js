@@ -16,6 +16,7 @@
     propTypes: {
       video: PropTypes.object.isRequired,
       width: PropTypes.number.isRequired,
+      onBeforePlay: PropTypes.func,
       onPlay: PropTypes.func,
       onPause: PropTypes.func,
       onStop: PropTypes.func
@@ -25,12 +26,25 @@
         isPlaying: false
       };
     },
+    mute: function() {
+      var player = this._getPlayer();
+      player && player.mute();
+    },
+    unMute: function() {
+      var player = this._getPlayer();
+      player && player.unMute();
+    },
+    _getPlayer: function() {
+      return this.refs && this.refs.player;
+    },
     _renderMedia: function(video) {
       if (this.state.isPlaying) {
         return (
           <YoutubePlayer
+            ref="player"
             autoplay={true}
             videoID={video.id}
+            onPlay={this._onPlay}
             onEnd={this._stop}
           />
         );
@@ -67,11 +81,14 @@
     },
     _play: function() {
       this.setState({isPlaying: true});
-      this.props.onPlay && this.props.onPlay(this.props.video.id);
+      this.props.onBeforePlay && this.props.onBeforePlay(this.props.video.id);
     },
     _stop: function() {
       this.setState({isPlaying: false});
       this.props.onStop && this.props.onStop(this.props.video.id);
+    },
+    _onPlay: function() {
+      this.props.onPlay && this.props.onPlay(this.props.video.id);
     }
   });
 
@@ -112,22 +129,34 @@
       return (
         <PinterestItem columnSpan={colSpan}>
           <PlayableVideo
+            ref={'item_' + video.id}
             className="video-grid-item"
             video={video}
             width={colSpan * (COLUMN_WIDTH + COLUMN_MARGIN) - COLUMN_MARGIN}
+            onBeforePlay={this._onBeforeItemPlay}
             onPlay={this._onItemPlay}
             onStop={this._onItemStop}
           />
         </PinterestItem>
       );
     },
-    _onItemPlay: function(videoID) {
+    _onBeforeItemPlay: function(videoID) {
+      Object.keys(this.state.players).forEach(this._muteIfPlaying);
       this.state.players[videoID] = PLAYING;
       this.forceUpdate();
+    },
+    _onItemPlay: function(videoID) {
+      this.refs['item_' + videoID].unMute();
     },
     _onItemStop: function(videoID) {
       this.state.players[videoID] = STOPPED;
       this.forceUpdate();
+    },
+    _muteIfPlaying: function(videoID) {
+      if (this.state.players[videoID] === PLAYING) {
+        console.log('Muting', videoID);
+        this.refs['item_' + videoID].mute();
+      }
     }
   });
 

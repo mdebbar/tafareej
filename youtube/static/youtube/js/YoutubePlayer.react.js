@@ -72,6 +72,12 @@
     pause: function() {
       this.player && this.player.pauseVideo();
     },
+    mute: function() {
+      this.player && this.player.mute();
+    },
+    unMute: function() {
+      this.player && this.player.unMute();
+    },
     render: function() {
       return this.transferPropsTo(
         <Spinner id={this.playerID} className="youtube-player" />

@@ -142,13 +142,10 @@
       }
     },
     render: function() {
-      return React.addons.cloneWithProps(
-        React.Children.only(this.props.children),
-        {
-          className: 'pinterest-item',
-          'data-column-span': this.props.columnSpan
-        }
-      );
+      var child = React.Children.only(this.props.children);
+      child.props.className = 'pinterest-item ' + (child.props.className || '');
+      child.props['data-column-span'] = this.props.columnSpan;
+      return child;
     }
   });
 
@@ -206,7 +203,6 @@
         columns.push(0);
       }
 
-      var columnWidth = this._getActualColumnWidth();
       var leftOffset = this._getOffsetForCentering();
       var childNodes = this.getDOMNode().childNodes;
       for (i = 0; i < childNodes.length; i++) {
