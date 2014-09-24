@@ -63,6 +63,7 @@ class SearchResult(DataObject):
       'url': self.get_url(),
       'excerpt': self.get_excerpt(),
       'thumbnail': self.get_thumbnail(),
+      'thumbnails': self.get_thumbnail_versions(),
       'images': self.get_images(),
     }
 

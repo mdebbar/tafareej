@@ -35,9 +35,9 @@
           />
         );
       } else {
+        var src = video.thumbnails.high || video.thumbnails.medium || video.thumbnails.default;
         return {
-          // TODO: use better image
-          image: <img className="video-grid-image" src={video.images[0]} />,
+          image: <img className="video-grid-image" src={src} />,
           duration: <div className="video-grid-duration">{video.duration}</div>
         };
       }
