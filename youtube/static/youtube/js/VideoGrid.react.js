@@ -77,6 +77,7 @@
     displayName: 'VideoGrid',
     // TODO: add `isLoading` prop and show a spinner when it's true
     propTypes: {
+      isLoading: PropTypes.bool,
       videos: PropTypes.array.isRequired
     },
     getInitialState: function() {
@@ -95,16 +96,22 @@
           columnWidth={COLUMN_WIDTH}
           columnMargin={8}>
           {this.props.videos.map(this._renderItem)}
+          <Spinner
+            className="video-grid-spinner"
+            shown={this.props.isLoading}
+          />
         </Pinterest>
       );
     },
     _renderItem: function(video) {
       return (
-        <PlayableVideo
-          className="video-grid-item"
-          video={video}
-          width={COLUMN_WIDTH}
-        />
+        <PinterestItem>
+          <PlayableVideo
+            className="video-grid-item"
+            video={video}
+            width={COLUMN_WIDTH}
+          />
+        </PinterestItem>
       );
     }
   });

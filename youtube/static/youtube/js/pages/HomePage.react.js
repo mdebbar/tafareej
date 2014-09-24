@@ -53,7 +53,10 @@
             ref="scroller"
             buffer={800}
             onTrigger={this._fetchMoreVideos}>
-            <VideoGrid videos={this.state.isLoading ? [] : this.state.videos} />
+            <VideoGrid
+              isLoading={this.state.isLoading}
+              videos={this.state.isLoading ? [] : this.state.videos}
+            />
           </InfiniteScroll>
         </div>
       );

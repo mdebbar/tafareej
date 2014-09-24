@@ -131,6 +131,16 @@
     }
   });
 
+  global.PinterestItem = React.createClass({
+    displayName: 'PinterestItem',
+    render: function() {
+      return React.addons.cloneWithProps(
+        React.Children.only(this.props.children),
+        {className: 'pinterest-item'}
+      );
+    }
+  });
+
   global.Pinterest = React.createClass({
     displayName: 'Pinterest',
     propTypes: {
@@ -160,14 +170,9 @@
       }
       return (
         <div className={classes.join(' ')}>
-          {React.Children.map(this.props.children, this._renderChild)}
+          {this.props.children}
         </div>
       );
-    },
-    _renderChild: function(child) {
-      return React.addons.cloneWithProps(child, {
-        className: 'pinterest-item'
-      });
     },
     _getColumnCount: function() {
       var totalWidth = this.getDOMNode().offsetWidth;
@@ -195,9 +200,14 @@
       var childNodes = this.getDOMNode().childNodes;
       for (i = 0; i < childNodes.length; i++) {
         var node = childNodes[i];
+        if (!CSS.hasClass(node, 'pinterest-item')) {
+          continue;
+        }
         var shortestColumn = this._getShortestColumn(columns);
-        node.style.left = (leftOffset + shortestColumn * columnWidth) + 'px';
-        node.style.top = columns[shortestColumn] + 'px';
+        CSS.setStyle(node, {
+          left: (leftOffset + shortestColumn * columnWidth) + 'px',
+          top: columns[shortestColumn] + 'px'
+        });
         columns[shortestColumn] += node.offsetHeight + this.props.columnMargin;
       }
     },
