@@ -20,18 +20,13 @@
         video: this.props.video
       };
     },
-    componentWillMount: function() {
-      // TODO: maybe try to get the query from the URL?
-      // setup history management
-      this.hm = new HistoryManager(
-        {video: this.state.video, query: HistoryManager.getState().query},
-        this.state.video.title
-      );
-      this.hm.onSwitch(this._onHistorySwitch);
-    },
     componentDidMount: function() {
+      // Initial history state will be set in _onSearch()
+      this.hm = new HistoryManager();
+      this.hm.onSwitch(this._onHistorySwitch);
+
       // use initial query on page load
-      var query = HistoryManager.getState().query || '';
+      var query = new URI().getParam('q') || HistoryManager.getState().query || '';
       this.refs.searchable.setQuery(query);
       this._onSearch(query);
 

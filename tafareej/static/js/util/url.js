@@ -1,5 +1,7 @@
 (function(global) {
 
+  // TODO: find a better way to build these URLs (maybe pass them from python .reverse() )
+
   const QUERY = '__query__';
   const PAGE_TOKEN = '__page_token__';
   const VIDEO_ID = '__video_id__';

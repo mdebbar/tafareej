@@ -71,42 +71,82 @@ function truncate(text, max, suffix) {
     text;
 }
 
-var Event = {
-  _id: 0,
-  _listeners: {},
 
-  _removable: function(id) {
-    var self = this;
-    return {
-      remove: function() {
-        this.remove = function() {};
-        delete self._listeners[event][id];
-      }
-    };
+function URI(url, params) {
+  this.uri = url || window.location.href;
+  this.params = params || {};
+  // Parse the query string into params
+  var idx = this.uri.indexOf('?');
+  if (idx != -1) {
+    this.params = merge(
+      this._parseQueryString(this.uri.substr(idx + 1)),
+      this.params
+    );
+    this.uri = this.uri.substr(0, idx);
+  }
+}
+
+URI.prototype = {
+  _parseQueryString: function(queryString) {
+    var params = {};
+    queryString.split('&').forEach(function(item) {
+      var split = item.split('=');
+      if (split.length != 2) { return; }
+      params[split[0]] = split[1].replace(/\+/g, ' ');
+    });
+    return params;
   },
-
-  listen: function(event, callback) {
-    if (typeof callback !== 'function') {
-      throw new Error('Event listeners should be only functions.');
-    }
-    var id = this._id++;
-    this._listeners[event] = this._listeners[event] || {};
-    this._listeners[event][id] = callback;
-    return this._removable(id);
+  _buildQueryString: function() {
+    return Object.keys(this.params).map(function(name) {
+      return name + '=' + (this.params[name] || '');
+    }, this).join('&');
   },
-
-  fire: function(event, data) {
-    if (!this._listeners[event]) {
-      return;
+  getParam: function(name, def) {
+    if (name in this.params) {
+      return this.decode(this.params[name]);
     }
-    for (var id in this._listeners[event]) {
-      if (this._listeners[event].hasOwnProperty(id)) {
-        this._listeners[event][id](event, data);
-      }
-    }
+    return def;
   },
-
-  hasListeners: function(event) {
-    return event in this._listeners && Object.keys(this._listeners[event]).length;
+  setParam: function(name, value) {
+    if (typeof value == 'number') {
+      value = String(value);
+    }
+    value = String(value || '');
+    this.params[name] = this.encode(value);
+    return this;
+  },
+  setParams: function(params) {
+    Object.keys(params).forEach(function(name) {
+      this.setParam(name, params[name]);
+    }, this);
+    return this;
+  },
+  removeParam: function(name) {
+    if (name in this.params) {
+      delete this.params[name];
+    }
+    return this;
+  },
+  clearParams: function() {
+    this.params = {};
+    return this;
+  },
+  encode: function(value) {
+    return encodeURIComponent(value);
+  },
+  decode: function(value) {
+    return decodeURIComponent(value.replace('+', ' '));
+  },
+  toString: function() {
+    var queryString = this._buildQueryString();
+    if (queryString) {
+      return this.uri + '?' + queryString;
+    }
+    return this.uri;
+  },
+  go: function() {
+    // TODO: Implement this to work well with HistoryManager
   }
 };
+
+
