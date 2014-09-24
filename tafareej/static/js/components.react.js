@@ -107,4 +107,28 @@
     }
   });
 
+  // TODO: use SmartLink in SnippetList
+  global.SmartLink = React.createClass({
+    displayName: 'SmartLink',
+    propTypes: {
+      href: PropTypes.string.isRequired,
+      onClick: PropTypes.func
+    },
+    render: function() {
+      return this.transferPropsTo(
+        <a href={this.props.href} onClick={this._onClick}>
+          {this.props.children}
+        </a>
+      );
+    },
+    _onClick: function(event) {
+      // If it's a special click, let the default behavior happen.
+      if (!this.props.onClick || event.ctrlKey || event.shiftKey || event.metaKey) {
+        return;
+      }
+      event.preventDefault();
+      this.props.onClick(event);
+    }
+  });
+
 })(this);

@@ -1,0 +1,87 @@
+.video-grid-container {
+  padding: 0 20px;
+}
+
+.video-grid-spinner {
+  background-color: #f0f0e7;
+  background-position: center 30px;
+  opacity: 0.7;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.video-grid-item {
+  background: #fff;
+  box-shadow: 1px 2px 2px rgba(0, 0, 0, 0.1);
+  box-sizing: content-box;
+  display: inline-block;
+  margin: 0 8px 8px 0;
+  padding: 4px 4px 8px 4px;
+  position: relative;
+  text-align: start;
+  vertical-align: top;
+  width: 240px;
+}
+
+.video-grid-item:focus,
+.video-grid-item:hover {
+  background-color: #fafaf4;
+  box-shadow: 1px 2px 2px rgba(0, 0, 0, 0.15);
+}
+
+.video-grid-link {
+  display: block;
+  overflow: hidden;
+}
+
+.video-grid-link,
+.video-grid-link:focus,
+.video-grid-link:hover {
+  text-decoration: none;
+}
+
+.video-grid-image-container,
+.video-grid-image {
+  position: relative;
+  width: 240px;
+  height: 180px;
+}
+
+.video-grid-duration {
+  background-color: #000;
+  border-radius: 3px;
+  bottom: 0;
+  color: #fff;
+  font-size: 11px;
+  left: 0;
+  line-height: 1;
+  margin: 4px;
+  opacity: .75;
+  padding: 4px;
+  position: absolute;
+}
+
+.video-grid-title {
+  font-size: 14px;
+  font-weight: bold;
+  margin-top: 8px;
+  text-shadow: 1px 1px 1px #fff;
+}
+
+
+@media (min-width: 992px) {
+  .video-grid-container {
+    margin: 72px 0 0 0;
+    min-height: 120px;
+  }
+
+  .video-grid-spinner {
+    background-position: center 80px;
+    position: fixed;
+    bottom: 0;
+    top: 0;
+  }
+}

@@ -46,13 +46,14 @@
         <div>
           <SearchBox
             ref="search"
+            className="sticky-centered-search-box bkgnd"
             onSearch={this._onSearch}
           />
           <InfiniteScroll
             ref="scroller"
             buffer={800}
             onTrigger={this._fetchMoreVideos}>
-            <pre>{JSON.stringify(this.state.videos)}</pre>
+            <VideoGrid videos={this.state.isLoading ? [] : this.state.videos} />
           </InfiniteScroll>
         </div>
       );

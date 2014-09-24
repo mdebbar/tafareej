@@ -1,6 +1,14 @@
 .search-box-container {
-  padding-bottom: 12px;
   position: relative;
+}
+
+.sticky-centered-search-box {
+  padding: 16px;
+  width: 100%;
+}
+
+.sticky-centered-search-box .search-box-nub-hider {
+  display: none;
 }
 
 .search-box-input {
@@ -20,6 +28,7 @@
 
 @media (min-width: 992px) {
   .sticky-search-box-section {
+    padding-bottom: 12px;
     padding-top: 16px;
     position: fixed;
     top: 0;
@@ -27,8 +36,17 @@
     z-index: 5;
   }
 
-  .search-box-container {
-    border-bottom: 1px dashed #d0d0d0;
+  .sticky-centered-search-box {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 99;
+  }
+
+  .sticky-centered-search-box .search-box-container {
+    margin: 0 auto;
+    width: 50%;
   }
 
   .search-box-nub-hider {

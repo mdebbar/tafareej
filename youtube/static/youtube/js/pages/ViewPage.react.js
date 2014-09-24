@@ -50,6 +50,7 @@
         <MultiColumn>
           <Column className="sticky-column" size={7} push={5}>
             <YoutubePlayerContainer
+              className="youtube-player-absolute"
               autoplay={this.props.autoplay}
               video={this.state.video}
               onSwitchVideo={this._videoSelectedFromPlayer}

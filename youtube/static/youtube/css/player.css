@@ -12,10 +12,13 @@
 }
 
 .youtube-player {
-  position: absolute;
-  top: 0;
   height: 100%;
   width: 100%;
+}
+
+.youtube-player-absolute {
+  position: absolute;
+  top: 0;
 }
 
 .youtube-autoreplay,

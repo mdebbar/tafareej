@@ -55,7 +55,7 @@
     },
     componentWillUnmount: function() {
       this._listener && this._listener.remove();
-      this.playerLoader.abandon();
+      this.playerLoader && this.playerLoader.abandon();
       this.player && this.player.destroy();
     },
     componentWillReceiveProps: function(nextProps) {
@@ -73,7 +73,7 @@
       this.player && this.player.pauseVideo();
     },
     render: function() {
-      return (
+      return this.transferPropsTo(
         <Spinner id={this.playerID} className="youtube-player" />
       );
     },
@@ -165,7 +165,7 @@
             {' '}
             Repeat
           </label>
-          <h1 className="youtube-title" dir="auto">{video.title}</h1>
+          <h2 className="youtube-title" dir="auto">{video.title}</h2>
         </div>
       );
     },

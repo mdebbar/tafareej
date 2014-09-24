@@ -4,6 +4,9 @@
 
 {% block css %}
   {% css 'youtube/css/player.css' 'youtube/css/search-box.css' 'youtube/css/snippet.css' %}
+
+  {# For home page #}
+  {% css 'youtube/css/video-grid.css' %}
 {% endblock %}
 
 {% block js %}
@@ -11,4 +14,7 @@
   {% jsx 'youtube/js/YoutubePlayer.react.js' %}
   {% jsx 'youtube/js/SearchBox.react.js' %}
   {% jsx 'youtube/js/Snippets.react.js' %}
+
+  {# For home page #}
+  {% jsx 'youtube/js/VideoGrid.react.js' %}
 {% endblock %}
