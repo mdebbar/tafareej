@@ -15,6 +15,9 @@ urlpatterns += patterns('',
   url(r'^api/related/(?P<video_id>[-_\w]+)/page/(?P<page_token>.+)/$', 'youtube.views.api_related'),
   url(r'^api/related/(?P<video_id>[-_\w]+)/$', 'youtube.views.api_related'),
 
+  url(r'^api/popular/page/(?P<page_token>.+)/$', 'youtube.views.api_popular'),
+  url(r'^api/popular/$', 'youtube.views.api_popular'),
+
   url(r'^api/autocomplete/(?P<query>.+)/$', 'youtube.views.api_autocomplete'),
 
   url(r'^api/(?P<video_id>[-_\w]+)/$', 'youtube.views.api_one'),

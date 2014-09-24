@@ -50,7 +50,9 @@ def searchWithDetails(query, page_token=None, **options):
   return getDetailsForResults(search(query, **options))
 
 @retry
-def popular(**options):
+def popular(page_token=None, **options):
+  if page_token is not None:
+    options['pageToken'] = page_token
   videos_options = merge_defaults('popular', options)
   popular_videos = youtube.videos().list(**videos_options).execute()
   return xset(
