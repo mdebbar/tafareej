@@ -107,6 +107,9 @@ URI.prototype = {
     }
     return def;
   },
+  getParams: function() {
+    return this.params;
+  },
   setParam: function(name, value) {
     if (typeof value == 'number') {
       value = String(value);

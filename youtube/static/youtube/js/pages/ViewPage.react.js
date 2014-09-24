@@ -74,12 +74,9 @@
       );
     },
     _buildURL: function(videoID, query) {
-      // TODO: create a URL class to handle URL building and parsing etc...
-      var url = URL.video(videoID);
-      if (query) {
-        url += '?q=' + encodeURIComponent(query);
-      }
-      return url;
+      var params = new URI().getParams();
+      var url = new URI(URL.video(videoID)).setParams(params);
+      return query ? url.setParam('q', query) : url.removeParam('q');
     },
     _search: function(query) {
       this._disableInfiniteScroll();
