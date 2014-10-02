@@ -16,8 +16,7 @@
     },
     componentDidMount: function() {
       // setup history management
-      this.hm = new HistoryManager();
-      this.hm.onSwitch(this._onHistorySwitch);
+      HistoryManager.onSwitch(this._onHistorySwitch);
 
       // Get query from URL or history state or load popular videos
       var query = new URI().getParam('q') || HistoryManager.getState().query || '';
@@ -78,7 +77,7 @@
       return query ? url.setParam('q', query) : url.removeParam('q');
     },
     _onSearch: function(query) {
-      this.hm.replace(
+      HistoryManager.replace(
         {query: query},
         this._getPageTitle(query),
         this._buildURL(query)

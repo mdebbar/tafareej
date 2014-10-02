@@ -22,8 +22,7 @@
     },
     componentDidMount: function() {
       // Initial history state will be set in _onSearch()
-      this.hm = new HistoryManager();
-      this.hm.onSwitch(this._onHistorySwitch);
+      HistoryManager.onSwitch(this._onHistorySwitch);
 
       // use initial query on page load
       var query = new URI().getParam('q') || HistoryManager.getState().query || '';
@@ -103,7 +102,7 @@
         // show related videos
         this._related(videoID);
       } else {
-        this.hm.push(
+        HistoryManager.push(
           {video: {id: videoID}, query: this._query},
           'Loading...',
           this._buildURL(videoID, this._query)
@@ -120,15 +119,15 @@
       var historyState = {video: video, query: this._query};
       var historyURL = this._buildURL(video.id, this._query);
       if (replaceState) {
-        this.hm.replace(historyState, video.title, historyURL);
+        HistoryManager.replace(historyState, video.title, historyURL);
       } else {
-        this.hm.push(historyState, video.title, historyURL);
+        HistoryManager.push(historyState, video.title, historyURL);
       }
     },
     _onSearch: function(query) {
       this._query = query;
 
-      this.hm.replace(
+      HistoryManager.replace(
         {video: this.state.video, query: query},
         this.state.video.title,
         this._buildURL(this.state.video.id, query)

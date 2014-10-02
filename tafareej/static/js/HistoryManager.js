@@ -1,33 +1,31 @@
 (function(global) {
 
-  global.HistoryManager = function(initialState, initialTitle, initialURL) {
-    initialState && history.replaceState(initialState, initialTitle, initialURL);
-    window.onpopstate = this._popStateListener.bind(this);
-  };
+  var onSwitch = null;
 
-  global.HistoryManager.getState = function() {
-    return history.state || {};
-  };
-
-  global.HistoryManager.prototype = {
+  global.HistoryManager = {
+    getState: function() {
+      return global.history.state || {};
+    },
     push: function(state, title, url) {
       if (typeof title !== 'undefined') {
-        document.title = title;
+        document.title = title || '';
       }
-      history.pushState.apply(history, arguments);
+      global.history.pushState.apply(global.history, arguments);
     },
     replace: function(state, title, url) {
       if (typeof title !== 'undefined') {
-        document.title = title;
+        document.title = title || '';
       }
-      history.replaceState.apply(history, arguments);
+      global.history.replaceState.apply(global.history, arguments);
     },
     onSwitch: function(callback) {
-      this._onSwitch = callback;
-    },
-    _popStateListener: function(event) {
-      event.state && this._onSwitch && this._onSwitch(event);
+      onSwitch = callback;
     }
+  };
+
+
+  window.onpopstate = function(event) {
+    event.state && onSwitch && onSwitch(event);
   };
 
 })(this);
