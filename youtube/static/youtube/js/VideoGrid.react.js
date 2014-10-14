@@ -1,6 +1,7 @@
 /** @jsx React.DOM */
 
 (function(global) {
+  var CSS = require('CSS');
   var Pinterest = require('Pinterest');
   var PinterestItem = require('PinterestItem');
   var React = require('React');
@@ -127,7 +128,7 @@
           columnMargin={COLUMN_MARGIN}>
           {this.props.videos.map(this._renderItem)}
           <Spinner
-            className="video-grid-spinner"
+            className={CSS.join('video-grid-spinner', 'bkgnd')}
             shown={this.props.isLoading}
           />
         </Pinterest>

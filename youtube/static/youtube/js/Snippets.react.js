@@ -1,6 +1,7 @@
 /** @jsx React.DOM */
 
 (function(global) {
+  var CSS = require('CSS');
   var React = require('React');
   var SearchBox = require('SearchBox');
   var Spinner = require('Spinner');
@@ -174,17 +175,22 @@
         <div className="snippet-list-section">
           <SearchBox
             ref="searchbox"
-            className={'sticky-search-box-section bkgnd ' + colClass(5)}
+            className={CSS.join('sticky-search-box-section', 'bkgnd', colClass(5))}
             onSearch={this.props.onSearch}
           />
-          <div className="snippet-list-container">
+          <div
+            className={CSS.join(
+              'snippet-list-container',
+              'bkgnd',
+              {'snippet-container-loading': this.props.isLoading}
+            )}>
             <SnippetList
               videoList={this.props.videoList}
               selectedVideoID={this.props.selectedVideoID}
               onSnippetClick={this.props.onSnippetClick}
             />
             <Spinner
-              className={"snippet-list-spinner " + colClass(5)}
+              className={CSS.join('snippet-list-spinner', colClass(5))}
               shown={this.props.isLoading}
             />
           </div>
