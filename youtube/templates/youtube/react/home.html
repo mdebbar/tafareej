@@ -10,6 +10,8 @@
   {% jsx 'youtube/js/pages/HomePage.react.js' %}
   <script type="text/jsx">
     /** @jsx React.DOM */
+    var HomePage = require('HomePage');
+
     React.renderComponent(
       <HomePage siteName="{{ title }}" />,
       document.getElementById('reactpage')

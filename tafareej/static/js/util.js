@@ -72,7 +72,7 @@ function truncate(text, max, suffix) {
 }
 
 
-function URI(url, params) {
+MODULES.URI = function(url, params) {
   this.uri = url || window.location.href;
   this.params = params || {};
   // Parse the query string into params
@@ -84,9 +84,9 @@ function URI(url, params) {
     );
     this.uri = this.uri.substr(0, idx);
   }
-}
+};
 
-URI.prototype = {
+MODULES.URI.prototype = {
   _parseQueryString: function(queryString) {
     var params = {};
     queryString.split('&').forEach(function(item) {
@@ -151,5 +151,3 @@ URI.prototype = {
     // TODO: Implement this to work well with HistoryManager
   }
 };
-
-

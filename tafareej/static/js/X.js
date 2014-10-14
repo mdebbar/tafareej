@@ -136,4 +136,4 @@
       delete this._complete;
     }
   };
-})(this);
+})(MODULES);

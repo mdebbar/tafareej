@@ -17,6 +17,8 @@
   {% jsx 'youtube/js/pages/ViewPage.react.js' %}
   <script type="text/jsx">
     /** @jsx React.DOM */
+    var ViewPage = require('ViewPage');
+
     React.renderComponent(
       <ViewPage
         video={ {{ video.jsonify|safe }} }

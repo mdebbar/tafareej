@@ -1,6 +1,12 @@
 /** @jsx React.DOM */
 
 (function(global) {
+  var React = require('React');
+  var Spinner = require('Spinner');
+  var URL = require('URL');
+  var X = require('X');
+  var YoutubeStore = require('YoutubeStore');
+
   const PLAYER_ID = 'ytplayer';
 
   var seqID = 0;
@@ -16,9 +22,9 @@
   }
 
   // This must be global because the Youtube API needs to call it.
-  global.onYouTubeIframeAPIReady = YoutubeStore.set.bind(YoutubeStore, 'api.ready', true);
+  window.onYouTubeIframeAPIReady = YoutubeStore.set.bind(YoutubeStore, 'api.ready', true);
 
-  global.YoutubePlayer = React.createClass({
+  var YoutubePlayer = global.YoutubePlayer = React.createClass({
     displayName: 'YoutubePlayer',
     propTypes: {
       autoplay: PropTypes.bool,
@@ -184,4 +190,4 @@
       }
     }
   });
-})(this);
+})(MODULES);

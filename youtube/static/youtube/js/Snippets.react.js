@@ -1,11 +1,15 @@
 /** @jsx React.DOM */
 
 (function(global) {
+  var React = require('React');
+  var SearchBox = require('SearchBox');
+  var Spinner = require('Spinner');
+
   var PropTypes = React.PropTypes;
 
   const IMAGE_SWITCHING_INTERVAL = 1000;
 
-  global.SnippetImage = React.createClass({
+  var SnippetImage = global.SnippetImage = React.createClass({
     displayName: 'SnippetImage',
     propTypes: {
       source: PropTypes.string,
@@ -34,7 +38,7 @@
     }
   });
 
-  global.SnippetItem = React.createClass({
+  var SnippetItem = global.SnippetItem = React.createClass({
     displayName: 'SnippetItem',
     propTypes: {
       maxTitleLen: PropTypes.number,
@@ -102,7 +106,7 @@
     }
   });
 
-  global.SnippetList = React.createClass({
+  var SnippetList = global.SnippetList = React.createClass({
     displayName: 'SnippetList',
     propTypes: {
       videoList: PropTypes.array.isRequired,
@@ -189,4 +193,4 @@
     }
   });
 
-})(this);
+})(MODULES);

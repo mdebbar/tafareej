@@ -1,8 +1,10 @@
 (function(global) {
+  var URL = require('URL');
+  var X = require('X');
 
   var AUTOCOMPLETE_CALLBACK = '__ac_callback';
   var autocompleteCallback = function() {};
-  global[AUTOCOMPLETE_CALLBACK] = function(response) { // response == [query, results, other]
+  window[AUTOCOMPLETE_CALLBACK] = function(response) { // response == [query, results, other]
     autocompleteCallback(
       response[1].map(function(result) {return result[0]})
     );
@@ -40,7 +42,7 @@
     );
   }
 
-  global.API = {
+  var API = global.API = {
     /**
      * search(query, [pageToken], callback)
      */
@@ -135,4 +137,4 @@
       return this._autocomplete;
     }
   };
-})(this);
+})(MODULES);

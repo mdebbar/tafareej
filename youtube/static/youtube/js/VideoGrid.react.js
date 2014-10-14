@@ -1,6 +1,13 @@
 /** @jsx React.DOM */
 
 (function(global) {
+  var Pinterest = require('Pinterest');
+  var PinterestItem = require('PinterestItem');
+  var React = require('React');
+  var SmartLink = require('SmartLink');
+  var Spinner = require('Spinner');
+  var YoutubePlayer = require('YoutubePlayer');
+
   var PropTypes = React.PropTypes;
 
   const COLUMN_WIDTH = 240;
@@ -11,7 +18,7 @@
   const PAUSED = 2;
   const STOPPED = 3;
 
-  global.PlayableVideo = React.createClass({
+  var PlayableVideo = global.PlayableVideo = React.createClass({
     displayName: 'PlayableVideo',
     propTypes: {
       video: PropTypes.object.isRequired,
@@ -165,4 +172,4 @@
     }
   });
 
-})(this);
+})(MODULES);

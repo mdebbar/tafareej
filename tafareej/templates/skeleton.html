@@ -20,6 +20,17 @@
     {% block css %}{% endblock %}
 
     {% block global_js %}
+      <script type="text/javascript">
+        // TODO: use a proper module management system
+        MODULES = {};
+        function require(moduleName) {
+          if (moduleName in MODULES) {
+            return MODULES[moduleName];
+          }
+          throw new Error('Required module "' + moduleName + '" does not exist!');
+        }
+      </script>
+
       {% js 'js/3party/react-with-addons.min.js' %}
       {% js 'js/3party/JSXTransformer.js' %}
       {% js 'js/3party/qwest-0.5.4.min.js' %}

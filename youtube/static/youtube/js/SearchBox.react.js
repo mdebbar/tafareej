@@ -1,6 +1,8 @@
 /** @jsx React.DOM */
 
 (function(global) {
+  var API = require('API');
+  var React = require('React');
 
   var PropTypes = React.PropTypes;
 
@@ -16,7 +18,7 @@
     }
   });
 
-  global.InputBox = React.createClass({
+  var InputBox = global.InputBox = React.createClass({
     displayName: 'InputBox',
     propTypes: {
       query: PropTypes.string.isRequired,
@@ -129,4 +131,4 @@
     }
   });
 
-})(this);
+})(MODULES);

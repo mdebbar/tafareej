@@ -120,4 +120,4 @@
   global.YoutubeStore = StoreFactory.create('YoutubeStore');
   global.VideoCacheStore = StoreFactory.create('VideoCacheStore');
 
-})(this);
+})(MODULES);

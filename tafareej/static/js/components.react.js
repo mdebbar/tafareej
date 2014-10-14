@@ -1,6 +1,9 @@
 /** @jsx React.DOM */
 
 (function(global) {
+  var CSS = require('CSS');
+  var React = require('React');
+
   var PropTypes = React.PropTypes;
 
   global.MultiColumn = React.createClass({
@@ -131,7 +134,7 @@
     }
   });
 
-  global.PinterestItem = React.createClass({
+  var PinterestItem = global.PinterestItem = React.createClass({
     displayName: 'PinterestItem',
     propTypes: {
       columnSpan: PropTypes.number
@@ -238,4 +241,4 @@
     }
   });
 
-})(this);
+})(MODULES);

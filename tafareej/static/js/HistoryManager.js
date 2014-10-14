@@ -4,28 +4,27 @@
 
   global.HistoryManager = {
     getState: function() {
-      return global.history.state || {};
+      return window.history.state || {};
     },
     push: function(state, title, url) {
       if (typeof title !== 'undefined') {
         document.title = title || '';
       }
-      global.history.pushState.apply(global.history, arguments);
+      window.history.pushState.apply(window.history, arguments);
     },
     replace: function(state, title, url) {
       if (typeof title !== 'undefined') {
         document.title = title || '';
       }
-      global.history.replaceState.apply(global.history, arguments);
+      window.history.replaceState.apply(window.history, arguments);
     },
     onSwitch: function(callback) {
       onSwitch = callback;
     }
   };
 
-
   window.onpopstate = function(event) {
     event.state && onSwitch && onSwitch(event);
   };
 
-})(this);
+})(MODULES);

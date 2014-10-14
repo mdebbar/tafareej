@@ -1,6 +1,18 @@
 /** @jsx React.DOM */
 
 (function(global) {
+  var API = require('API');
+  var Column = require('Column');
+  var HistoryManager = require('HistoryManager');
+  var InfiniteScroll = require('InfiniteScroll');
+  var MultiColumn = require('MultiColumn');
+  var React = require('React');
+  var SearchableSnippetList = require('SearchableSnippetList');
+  var URI = require('URI');
+  var URL = require('URL');
+  var VideoCacheStore = require('VideoCacheStore');
+  var YoutubePlayerContainer = require('YoutubePlayerContainer');
+
   var PropTypes = React.PropTypes;
 
   global.ViewPage = React.createClass({
@@ -165,4 +177,4 @@
     }
   });
 
-})(this);
+})(MODULES);

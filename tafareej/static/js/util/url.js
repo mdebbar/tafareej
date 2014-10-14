@@ -49,4 +49,4 @@
     youtubePlayer: createReplacer(YOUTUBE_PLAYER_URL, PLAYER_API_ID)
   };
 
-})(this);
+})(MODULES);

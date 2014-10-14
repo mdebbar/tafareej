@@ -1,6 +1,14 @@
 /** @jsx React.DOM */
 
 (function(global) {
+  var API = require('API');
+  var HistoryManager = require('HistoryManager');
+  var InfiniteScroll = require('InfiniteScroll');
+  var React = require('React');
+  var SearchBox = require('SearchBox');
+  var URI = require('URI');
+  var VideoGrid = require('VideoGrid');
+
   var PropTypes = React.PropTypes;
 
   global.HomePage = React.createClass({
@@ -110,4 +118,4 @@
     }
   });
 
-})(this);
+})(MODULES);
