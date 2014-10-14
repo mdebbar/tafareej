@@ -28,17 +28,20 @@
   position: relative;
   border-bottom: 1px solid #f0f0f0;
   text-align: start;
+  opacity: 0.7;
 }
 
 .snippet-item:focus,
 .snippet-item:hover {
   background-color: #f8f8f8;
+  opacity: 0.9;
 }
 
 .snippet-item-selected,
 .snippet-item-selected:hover,
 .snippet-item-selected:focus {
   background-color: #f0f0f0;
+  opacity: 1;
   pointer-events: none;
 }
 
@@ -80,22 +83,21 @@
   position: absolute;
 }
 
-.snippet-content {
-  padding: 0 4px;
-}
-
 .snippet-title {
-  font-size: 14px;
+  color: #737373;
+  font-size: 13px;
   font-weight: bold;
   margin: 4px 0;
   overflow: hidden;
+  /* Arabic titles get cut off, so we need a 1px padding to avoid that */
+  padding: 0 1px;
   text-overflow: ellipsis;
   text-shadow: 1px 1px 1px #fff;
   white-space: nowrap;
 }
 
 .snippet-excerpt {
-  color: #333;
+  color: #909090;
   font-size: 11px;
   margin: 0;
   overflow: hidden;

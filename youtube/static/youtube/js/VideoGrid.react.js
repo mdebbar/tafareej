@@ -81,9 +81,11 @@
             onClick={this._play}>
             {this._renderMedia(video)}
           </SmartLink>
-          <h4 className="video-grid-title">
-            {video.title}
-          </h4>
+          <a href={video.url} className="video-grid-link">
+            <h4 className="video-grid-title">
+              {video.title}
+            </h4>
+          </a>
         </div>
       );
     },

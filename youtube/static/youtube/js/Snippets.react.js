@@ -87,7 +87,7 @@
           onMouseEnter={this._startSwitching}
           onMouseLeave={this._stopSwitching}>
           <SnippetImage source={video.images[this.state.imageIndex]} duration={video.duration} />
-          <div className="snippet-content">
+          <div>
             <h4 className="snippet-title">
               {truncate(video.title, this.props.maxTitleLen)}
             </h4>
