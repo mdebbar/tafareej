@@ -76,7 +76,7 @@ STATIC_URL = '/static/'
 
 # This is used to avoid cache issues when we push a new release to prod.
 # It should be bumped up everytime there is a static-resource change going to prod.
-STATIC_VERSION = '0.2'
+STATIC_VERSION = '0.3'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
