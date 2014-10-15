@@ -27,6 +27,12 @@
 
 
 @media (min-width: 992px) {
+  .sticky-search-box-section,
+  .sticky-centered-search-box,
+  .search-box-nub-hider {
+    box-shadow: 0 1px 1px #fff;
+  }
+
   .sticky-search-box-section {
     padding-bottom: 12px;
     padding-top: 16px;

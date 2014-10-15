@@ -1,0 +1,53 @@
+/* Background */
+
+[data-background~="white"] {
+  background-color: #fff;
+}
+
+[data-background~="transparent"] {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+[data-background~="hover"]:focus,
+[data-background~="hover"]:hover {
+  background-color: #f8f8f8;
+}
+
+[data-background~="light"] {
+  background-color: #f0f0f0;
+}
+
+
+/* Border */
+
+[data-border] {
+  border: 0 solid #f0f0f0;
+}
+
+[data-border~="top"],
+[data-border~="vert"],
+[data-border~="all"] {
+  border-top-width: 1px;
+}
+
+[data-border~="right"],
+[data-border~="horz"],
+[data-border~="all"] {
+  border-right-width: 1px;
+}
+
+[data-border~="bottom"],
+[data-border~="vert"],
+[data-border~="all"] {
+  border-bottom-width: 1px;
+}
+
+[data-border~="left"],
+[data-border~="horz"],
+[data-border~="all"] {
+  border-left-width: 1px;
+}
+
+[data-border~="round"] {
+  border-radius: 4px;
+}

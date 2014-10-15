@@ -28,7 +28,7 @@
         return (
           <div className="snippet-image-container">
             <img className="snippet-image" src={this.props.source} />
-            <div className="snippet-duration">{this.props.duration}</div>
+            <div className="snippet-duration" data-border="round">{this.props.duration}</div>
           </div>
         );
       } else if (this.props.forceRender) {
@@ -115,7 +115,7 @@
       onSnippetClick: PropTypes.func
     },
     render: function() {
-      return (
+      return this.transferPropsTo(
         <ul className="snippet-list">
           {this.props.videoList.map(this._renderSnippetItem)}
         </ul>
@@ -123,13 +123,17 @@
     },
     _renderSnippetItem: function(video, ii) {
       var isActiveVideo = this.props.selectedVideoID === video.id;
-      var classes = ['snippet-item'];
-      if (isActiveVideo) {
-        classes.push('snippet-item-selected');
-      }
       return (
         <li
-          className={classes.join(' ')}
+          className={CSS.join({
+            'snippet-item': true,
+            'snippet-item-selected': isActiveVideo
+          })}
+          data-background={CSS.join({
+            hover: true,
+            light: isActiveVideo
+          })}
+          data-border="bottom"
           key={video.id}
           dir="auto"
           onClick={this._onClick.bind(this, video)}>
@@ -175,16 +179,13 @@
         <div className="snippet-list-section">
           <SearchBox
             ref="searchbox"
-            className={CSS.join('sticky-search-box-section', 'bkgnd', colClass(5))}
+            className={CSS.join('sticky-search-box-section', colClass(5))}
+            data-background="transparent"
             onSearch={this.props.onSearch}
           />
-          <div
-            className={CSS.join(
-              'snippet-list-container',
-              'bkgnd',
-              {'snippet-container-loading': this.props.isLoading}
-            )}>
+          <div className="snippet-list-container">
             <SnippetList
+              data-border={this.props.isLoading ? null : "all"}
               videoList={this.props.videoList}
               selectedVideoID={this.props.selectedVideoID}
               onSnippetClick={this.props.onSnippetClick}

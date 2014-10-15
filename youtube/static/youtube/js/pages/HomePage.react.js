@@ -53,7 +53,8 @@
         <div>
           <SearchBox
             ref="search"
-            className="sticky-centered-search-box bkgnd"
+            className="sticky-centered-search-box"
+            data-background="transparent"
             onSearch={this._onSearch}
           />
           <InfiniteScroll

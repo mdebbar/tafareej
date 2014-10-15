@@ -60,13 +60,13 @@
         var src = video.thumbnails.high || video.thumbnails.medium || video.thumbnails.default;
         return {
           image: <img className="video-grid-image" src={src} />,
-          duration: <div className="video-grid-duration">{video.duration}</div>
+          duration: <div className="video-grid-duration" data-border="round">{video.duration}</div>
         };
       }
     },
     render: function() {
       var video = this.props.video;
-      var mediaWidth = this.props.width - 8; /* 8px of side padding */
+      var mediaWidth = this.props.width - 10; /* 8px of side padding + 2px borders */
       var mediaStyle = {
         width: mediaWidth + 'px',
         height: Math.floor(mediaWidth / IMAGE_RATIO) + 'px'
@@ -130,7 +130,7 @@
           columnMargin={COLUMN_MARGIN}>
           {this.props.videos.map(this._renderItem)}
           <Spinner
-            className={CSS.join('video-grid-spinner', 'bkgnd')}
+            className="video-grid-spinner"
             shown={this.props.isLoading}
           />
         </Pinterest>
@@ -146,6 +146,8 @@
           <PlayableVideo
             ref={'item_' + video.id}
             className="video-grid-item"
+            data-background="hover"
+            data-border="all"
             video={video}
             width={colSpan * (COLUMN_WIDTH + COLUMN_MARGIN) - COLUMN_MARGIN}
             onBeforePlay={this._onBeforeItemPlay}

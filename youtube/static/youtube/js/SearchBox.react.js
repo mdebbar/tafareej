@@ -14,7 +14,7 @@
   var NubHider = React.createClass({
     displayName: 'NubHider',
     render: function() {
-      return <div className="search-box-nub-hider bkgnd" />;
+      return <div className="search-box-nub-hider" data-background="transparent" />;
     }
   });
 

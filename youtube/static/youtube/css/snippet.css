@@ -7,11 +7,6 @@
   list-style: none;
   margin: 0;
   padding: 0;
-  border: 1px solid #f0f0f0;
-}
-
-.snippet-container-loading .snippet-list {
-  border: none;
 }
 
 .snippet-list-spinner {
@@ -26,21 +21,18 @@
 
 .snippet-item {
   position: relative;
-  border-bottom: 1px solid #f0f0f0;
   text-align: start;
   opacity: 0.7;
 }
 
 .snippet-item:focus,
 .snippet-item:hover {
-  background-color: #f8f8f8;
   opacity: 0.9;
 }
 
 .snippet-item-selected,
 .snippet-item-selected:hover,
 .snippet-item-selected:focus {
-  background-color: #f0f0f0;
   opacity: 1;
   pointer-events: none;
 }
@@ -71,7 +63,6 @@
 
 .snippet-duration {
   background-color: #000;
-  border-radius: 3px;
   bottom: 0;
   color: #fff;
   font-size: 11px;
