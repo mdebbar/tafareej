@@ -1,23 +1,48 @@
-import json
-import sys, os
 import cherrypy
-
-APP_DIR = os.path.dirname(os.path.dirname(__file__))
-print APP_DIR
-sys.path.append(APP_DIR)
-
 from external.youtube import api
 
+def process_items(response):
+  response['items'] = tuple(video.dict() for video in response['items'])
+  return response
 
-class HelloWorld(object):
-  @cherrypy.expose
-  def index(self):
-    return "Hello World!"
 
-  @cherrypy.expose
-  def search(self):
-    response = api.searchWithDetails('rihanna')
-    response['items'] = tuple(video.dict() for video in response['items'])
-    return json.dumps(response)
+@cherrypy.tools.json_out()
+def search(query, page_token=None, **kwargs):
+  return process_items(
+    api.searchWithDetails(query, page_token)
+  )
 
-cherrypy.quickstart(HelloWorld())
+@cherrypy.tools.json_out()
+def related(video_id, page_token=None, **kwargs):
+  return process_items(
+    api.related(video_id, page_token)
+  )
+
+@cherrypy.tools.json_out()
+def popular(page_token=None, **kwargs):
+  return process_items(
+    api.popular(page_token)
+  )
+
+@cherrypy.tools.json_out()
+def one(video_id, **kwargs):
+  return api.one_video(video_id).dict()
+
+def autocomplete(query, **kwargs):
+  cherrypy.response.headers['Content-Type'] = 'text/javascript'
+  return api.autocomplete(query, **kwargs)
+
+
+routes = (
+  ('youtube.search', '/api/search/{query}/', search),
+  ('youtube.search_page', '/api/search/{query}/page/{page_token}/', search),
+
+  ('youtube.related', '/api/related/{video_id}/', related),
+  ('youtube.related_page', '/api/related/{video_id}/page/{page_token}/', related),
+
+  ('youtube.popular', '/api/popular/', popular),
+  ('youtube.popular_page', '/api/popular/page/{page_token}/', popular),
+
+  ('youtube.autocomplete', '/api/autocomplete/{query}/', autocomplete),
+  ('youtube.one', '/api/{video_id}/', one),
+)
