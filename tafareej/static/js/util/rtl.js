@@ -16,8 +16,8 @@
   global.markDirection = function(elem) {
     var $elem = elem instanceof $ ? elem : $(elem);
     var text = $elem.val() || $elem.text();
-    $elem.removeClass('rtl');
-    isRTL(text) && $elem.addClass('rtl');
+    $elem.removeAttr('dir');
+    isRTL(text) && $elem.attr('dir', 'rtl');
   };
 
-})(this);
+})(MODULES);

@@ -49,10 +49,15 @@
   text-decoration: none;
 }
 
+.snippet-content,
+.snippet-image-container,
+.snippet-image {
+  height: 90px;
+}
+
 .snippet-image-container,
 .snippet-image {
   position: relative;
-  height: 90px;
   width: 120px;
 }
 
@@ -78,7 +83,8 @@
   color: #737373;
   font-size: 13px;
   font-weight: bold;
-  margin: 4px 0;
+  height: 22px;
+  margin: 0;
   overflow: hidden;
   /* Arabic titles get cut off, so we need a 1px padding to avoid that */
   padding: 0 1px;
@@ -90,6 +96,8 @@
 .snippet-excerpt {
   color: #909090;
   font-size: 11px;
+  height: 45px; /* 3 lines */
+  line-height: 15px;
   margin: 0;
   overflow: hidden;
   word-wrap: break-word;

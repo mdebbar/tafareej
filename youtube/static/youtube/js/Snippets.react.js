@@ -42,15 +42,7 @@
   var SnippetItem = global.SnippetItem = React.createClass({
     displayName: 'SnippetItem',
     propTypes: {
-      maxTitleLen: PropTypes.number,
-      maxExcerptLen: PropTypes.number,
       video: PropTypes.object.isRequired
-    },
-    getDefaultProps: function() {
-      return {
-        maxTitleLen: 60,
-        maxExcerptLen: 100
-      };
     },
     getInitialState: function() {
       return {
@@ -87,12 +79,10 @@
           onMouseEnter={this._startSwitching}
           onMouseLeave={this._stopSwitching}>
           <SnippetImage source={video.images[this.state.imageIndex]} duration={video.duration} />
-          <div>
-            <h4 className="snippet-title">
-              {truncate(video.title, this.props.maxTitleLen)}
-            </h4>
+          <div className="snippet-content">
+            <h4 className="snippet-title">{video.title}</h4>
             <p className="snippet-excerpt" title={video.excerpt}>
-              {truncate(video.excerpt, this.props.maxExcerptLen)}
+              {video.excerpt}
             </p>
           </div>
         </a>
