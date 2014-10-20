@@ -1,0 +1,61 @@
+<%inherit file="base.html"/>
+
+<%block name="css">
+  ## 3rd party css
+  <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="/css/typeaheadjs.css" />
+
+  ## global css
+  <link rel="stylesheet" type="text/css" href="/css/global.css" />
+  <link rel="stylesheet" type="text/css" href="/css/flat.am.css" />
+  <link rel="stylesheet" type="text/css" href="/css/pinterest.css" />
+
+  ## page-specific css
+  <link rel="stylesheet" type="text/css" href="/css/player.css" />
+  <link rel="stylesheet" type="text/css" href="/css/search-box.css" />
+  <link rel="stylesheet" type="text/css" href="/css/snippet.css" />
+</%block>
+
+<%block name="head_js">
+  ## some 3rd party JS
+  <script src="/js/3party/react-with-addons.min.js"></script>
+  <script src="/js/3party/JSXTransformer.js"></script>
+  <script src="/js/3party/qwest-0.5.4.min.js"></script>
+  <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+  <script src="/js/3party/typeahead.bundle.min.js"></script>
+
+  ## some global JS
+  <script src="/js/util.js"></script>
+  <script src="/js/util/url.js"></script>
+  <script src="/js/util/dom.js"></script>
+  <script src="/js/X.js"></script>
+  <script src="/js/Store.js"></script>
+  <script src="/js/HistoryManager.js"></script>
+  <script type="text/jsx" src="/js/components.react.js"></script>
+
+  ## page-specific JS
+  <script src="/js/api.js"></script>
+  <script type="text/jsx" src="/js/YoutubePlayer.react.js"></script>
+  <script type="text/jsx" src="/js/SearchBox.react.js"></script>
+  <script type="text/jsx" src="/js/Snippets.react.js"></script>
+  <script type="text/jsx" src="/js/pages/ViewPage.react.js"></script>
+</%block>
+
+<%block name="body">
+  <div id="reactpage" class="container-fluid"></div>
+</%block>
+
+<%block name="body_js">
+  <script type="text/jsx">
+    /** @jsx React.DOM */
+    var ViewPage = require('ViewPage');
+
+    React.renderComponent(
+      <ViewPage
+        video={${video.jsonify()}}
+        autoplay={${'true' if autoplay else 'false'}}
+      />,
+      document.getElementById('reactpage')
+    );
+  </script>
+</%block>

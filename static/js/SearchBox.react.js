@@ -66,7 +66,7 @@
 
       $(this.refs.input.getInputDOMNode()).typeahead(
         {hint: false, minLength: 2},
-        {displayKey: 'value', source: this._onAutocomplete}
+        {displayKey: 'value', source: debounce(this._onAutocomplete, 500)}
       ).on(
         'typeahead:selected typeahead:autocompleted',
         this._onTypeaheadSelected
@@ -79,6 +79,7 @@
       $(this.refs.input.getInputDOMNode()).typeahead('destroy');
     },
     _onAutocomplete: function(query, process) {
+      console.log('yikes!');
       API.autocomplete(query, function(results) {
         process(results.map(function(result) {
           return {value: result};

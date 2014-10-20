@@ -1,7 +1,4 @@
-import os, sys, cherrypy
-
-sys.path.append(os.path.dirname(__file__))
-
+import cherrypy
 from conf import conf
 
 app = cherrypy.tree.mount(None, config=conf)

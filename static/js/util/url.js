@@ -1,5 +1,7 @@
 (function(global) {
 
+  var DOMAIN = '';
+
   // TODO: find a better way to build these URLs (maybe pass them from python .reverse() )
 
   const QUERY = '__query__';
@@ -30,11 +32,18 @@
           replaced = replaced.replace(var2, val2);
         }
       }
-      return replaced;
+      return DOMAIN + replaced;
     };
   }
 
   global.URL = {
+    setDomain: function(domain) {
+      // Remove trailing slash
+      if (domain[domain.length - 1] === '/') {
+        domain = domain.substr(0, domain.length - 1);
+      }
+      DOMAIN = domain;
+    },
     API: {
       search: createReplacer(API_SEARCH_URL, QUERY),
       searchPage: createReplacer(API_SEARCH_PAGE_URL, QUERY, PAGE_TOKEN),

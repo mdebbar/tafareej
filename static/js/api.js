@@ -2,13 +2,11 @@
   var URL = require('URL');
   var X = require('X');
 
-  var AUTOCOMPLETE_CALLBACK = '__ac_callback';
-  var autocompleteCallback = function() {};
-  window[AUTOCOMPLETE_CALLBACK] = function(response) { // response == [query, results, other]
-    autocompleteCallback(
+  function autocompleteCallback(callback, response) { // response == [query, results, other]
+    callback(
       response[1].map(function(result) {return result[0]})
     );
-  };
+  }
 
   function errorHandler(err) {
     console.error(err);
@@ -129,10 +127,11 @@
       // TODO: implement this so we fetch both the video's details and suggestions in one request
     },
     autocomplete: function(query, callback) {
-      autocompleteCallback = callback;
       this._autocomplete && this._autocomplete.abandon();
-      this._autocomplete = new X(URL.API.autocomplete(query), {callback: AUTOCOMPLETE_CALLBACK})
-        .jsonp()
+      console.log('autocomplete:', query);
+      this._autocomplete =
+        new X(URL.API.autocomplete(query))
+        .success(autocompleteCallback.bind(null, callback))
         .error(errorHandler);
       return this._autocomplete;
     }
