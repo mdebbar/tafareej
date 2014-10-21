@@ -8,19 +8,6 @@
 
     <%block name="css"/>
 
-    <%block name="global_js">
-      <script type="text/javascript">
-        // TODO: use a proper module management system
-        MODULES = {};
-        function require(moduleName) {
-          if (moduleName in MODULES) {
-            return MODULES[moduleName];
-          }
-          throw new Error('Required module "' + moduleName + '" does not exist!');
-        }
-      </script>
-    </%block>
-
     <%block name="head_js"/>
   </%block>
 </head>

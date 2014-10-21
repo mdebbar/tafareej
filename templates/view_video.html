@@ -17,28 +17,8 @@
 </%block>
 
 <%block name="head_js">
-  ## some 3rd party JS
-  <script src="/js/3party/react-with-addons.min.js"></script>
-  <script src="/js/3party/JSXTransformer.js"></script>
-  <script src="/js/3party/qwest-0.5.4.min.js"></script>
+  ## jQuery is required for typeahead.js
   <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
-  <script src="/js/3party/typeahead.bundle.min.js"></script>
-
-  ## some global JS
-  <script src="/js/util.js"></script>
-  <script src="/js/util/url.js"></script>
-  <script src="/js/util/dom.js"></script>
-  <script src="/js/X.js"></script>
-  <script src="/js/Store.js"></script>
-  <script src="/js/HistoryManager.js"></script>
-  <script type="text/jsx" src="/js/components.react.js"></script>
-
-  ## page-specific JS
-  <script src="/js/api.js"></script>
-  <script type="text/jsx" src="/js/YoutubePlayer.react.js"></script>
-  <script type="text/jsx" src="/js/SearchBox.react.js"></script>
-  <script type="text/jsx" src="/js/Snippets.react.js"></script>
-  <script type="text/jsx" src="/js/pages/ViewPage.react.js"></script>
 </%block>
 
 <%block name="body">
@@ -46,16 +26,15 @@
 </%block>
 
 <%block name="body_js">
-  <script type="text/jsx">
-    /** @jsx React.DOM */
-    var ViewPage = require('ViewPage');
+  <script type="application/javascript">
+    var Server = {
+      video: ${video.jsonify()},
+      autoplay: ${'true' if autoplay else 'false'}
+    };
 
-    React.renderComponent(
-      <ViewPage
-        video={${video.jsonify()}}
-        autoplay={${'true' if autoplay else 'false'}}
-      />,
-      document.getElementById('reactpage')
-    );
+    var DOM = {
+      reactPage: document.getElementById('reactpage')
+    };
   </script>
+  <script src="/build/ViewPage.js"></script>
 </%block>
