@@ -15,20 +15,4 @@ conf = {
     'tools.staticdir.on': True,
     'tools.staticdir.dir': 'build',
   },
-  '/js': {
-    'tools.staticdir.on': True,
-    'tools.staticdir.dir': 'js',
-  },
-  '/css': {
-    'tools.staticdir.on': True,
-    'tools.staticdir.dir': 'css',
-  },
-  '/img': {
-    'tools.staticdir.on': True,
-    'tools.staticdir.dir': 'img',
-  },
-  '/fonts': {
-    'tools.staticdir.on': True,
-    'tools.staticdir.dir': 'fonts',
-  },
 }

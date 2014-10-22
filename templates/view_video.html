@@ -1,28 +1,12 @@
 <%inherit file="base.html"/>
 
-<%block name="css">
-  ## 3rd party css
-  <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css" />
-  <link rel="stylesheet" type="text/css" href="/css/typeaheadjs.css" />
-
-  ## global css
-  <link rel="stylesheet" type="text/css" href="/css/global.css" />
-  <link rel="stylesheet" type="text/css" href="/css/flat.am.css" />
-  <link rel="stylesheet" type="text/css" href="/css/pinterest.css" />
-
-  ## page-specific css
-  <link rel="stylesheet" type="text/css" href="/css/player.css" />
-  <link rel="stylesheet" type="text/css" href="/css/search-box.css" />
-  <link rel="stylesheet" type="text/css" href="/css/snippet.css" />
-</%block>
-
 <%block name="head_js">
   ## jQuery is required for typeahead.js
   <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
 </%block>
 
 <%block name="body">
-  <div id="reactpage" class="container-fluid"></div>
+  <div id="reactpage"></div>
 </%block>
 
 <%block name="body_js">

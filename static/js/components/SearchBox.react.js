@@ -1,5 +1,9 @@
 /** @jsx React.DOM */
 
+// CSS
+require('../../css/typeaheadjs.css');
+require('../../css/search-box.css');
+
 var API = require('../API');
 var debounce = require('../util/debounce');
 var React = require('React');

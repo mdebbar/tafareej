@@ -1,5 +1,8 @@
 /** @jsx React.DOM */
 
+// CSS
+require('../../css/player.css');
+
 var React = require('React');
 var Spinner = require('./Spinner.react');
 var URL = require('../util/URL');

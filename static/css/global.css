@@ -15,7 +15,7 @@ html, body {
 }
 
 .spinner {
-  background: url('/img/spinner_32.gif') center center no-repeat;
+  background: url('../img/spinner_32.gif') center center no-repeat;
   min-height: 66px;
   min-width: 66px;
 }

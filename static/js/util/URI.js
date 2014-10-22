@@ -1,3 +1,5 @@
+var merge = require('./merge');
+
 function URI(url, params) {
   this.uri = url || window.location.href;
   this.params = params || {};

@@ -8,6 +8,10 @@
     "jsx-loader": "~0.11.2",
     "react": "~0.11.2",
     "recast-es6-visitors": "~0.0.1",
-    "typeahead.js": "~0.10.5"
+    "typeahead.js": "~0.10.5",
+    "css-loader": "~0.9.0",
+    "style-loader": "~0.8.1",
+    "file-loader": "~0.8.1",
+    "url-loader": "~0.5.5"
   }
 }

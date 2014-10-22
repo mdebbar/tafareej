@@ -1,5 +1,11 @@
 /** @jsx React.DOM */
 
+// CSS
+require('../../css/bootstrap.css');
+require('../../css/typeaheadjs.css');
+require('../../css/global.css');
+require('../../css/flat.am.css');
+
 var API = require('../API');
 var HistoryManager = require('../HistoryManager');
 var InfiniteScroll = require('../components/InfiniteScroll.react');

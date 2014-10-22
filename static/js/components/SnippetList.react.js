@@ -1,5 +1,8 @@
 /** @jsx React.DOM */
 
+// CSS
+require('../../css/snippet.css');
+
 var CSS = require('../util/CSS');
 var React = require('React');
 
