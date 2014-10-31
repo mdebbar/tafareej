@@ -1,5 +1,3 @@
-/** @jsx React.DOM */
-
 // CSS
 require('../../css/typeaheadjs.css');
 require('../../css/search-box.css');

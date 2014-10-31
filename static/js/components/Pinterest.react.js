@@ -1,5 +1,3 @@
-/** @jsx React.DOM */
-
 var debounce = require('./util/debounce');
 var CSS = require('./util/CSS');
 var React = require('React');

@@ -1,5 +1,3 @@
-/** @jsx React.DOM */
-
 var React = require('React');
 var throttle = require('../util/throttle');
 

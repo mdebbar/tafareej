@@ -1,5 +1,3 @@
-/** @jsx React.DOM */
-
 var React = require('React');
 
 // TODO: use SmartLink in SnippetList

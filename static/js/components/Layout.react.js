@@ -1,5 +1,3 @@
-/** @jsx React.DOM */
-
 var CSS = require('../util/CSS');
 var React = require('React');
 

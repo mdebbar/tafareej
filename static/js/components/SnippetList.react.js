@@ -1,5 +1,3 @@
-/** @jsx React.DOM */
-
 // CSS
 require('../../css/snippet.css');
 

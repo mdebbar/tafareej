@@ -9,7 +9,7 @@ module.exports = {
   },
   module: {
     loaders: [
-      {test: /\.react\.js$/, loader: 'jsx-loader'},
+      {test: /\.js$/, loader: 'jsx-loader?harmony&insertPragma=React.DOM'},
       {test: /\.css$/, loader: 'style-loader!css-loader'},
       {test: /\.(png|jpg|gif)$/, loader: 'url-loader?limit=8192'},
 

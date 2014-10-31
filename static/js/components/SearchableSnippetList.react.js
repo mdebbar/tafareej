@@ -1,5 +1,3 @@
-/** @jsx React.DOM */
-
 var CSS = require('../util/CSS');
 var colClass = require('./Layout.react').colClass;
 var React = require('React');
