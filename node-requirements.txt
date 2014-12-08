@@ -1,3 +1,0 @@
-jsx-loader
-react
-webpack

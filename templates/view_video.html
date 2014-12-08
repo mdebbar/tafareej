@@ -20,5 +20,8 @@
       reactPage: document.getElementById('reactpage')
     };
   </script>
-  <script src="/build/ViewPage.js"></script>
+
+  % for entry in jsentries:
+    <script src="/build/${entry}"></script>
+  % endfor
 </%block>

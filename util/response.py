@@ -3,6 +3,8 @@ import cherrypy
 import json as JSON
 from mako.lookup import TemplateLookup
 
+from jschunks import get_chunk_asset
+
 
 def make_decorator(deco_fn):
   """
@@ -60,11 +62,10 @@ template_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__fi
 template_lookup = TemplateLookup(directories=template_dir)
 
 @make_decorator
-def template(fn, template_name):
+def template(fn, template_name, jschunks=None):
   def actual(*args, **kwargs):
     data = fn(*args, **kwargs)
+    jsentries = [get_chunk_asset(chunk) for chunk in jschunks or []]
     temp = template_lookup.get_template(template_name)
-    res= temp.render(**data)
-    print res
-    return res
+    return temp.render(jsentries=jsentries, **data)
   return actual

@@ -3,7 +3,7 @@ from external.youtube import api
 from util import response
 
 
-@response.template('view_video.html')
+@response.template('view_video.html', jschunks=['vendor', 'ViewPage'])
 def view_video(video_id, autoplay=True, **kwargs):
   video = api.one_video(video_id)
 

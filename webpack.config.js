@@ -1,11 +1,24 @@
+var path = require('path');
+var webpack = require('webpack');
+
 module.exports = {
   entry: {
-    ViewPage: __dirname + '/static/js/pages/ViewPage.react'
+    ViewPage: path.join(__dirname, 'static/js/pages/ViewPage.react'),
+    vendor: [
+      // JS
+      'React',
+      'typeahead.js',
+      path.join(__dirname, 'static/js/3party/qwest.js'),
+      // CSS
+      path.join(__dirname, 'static/css/bootstrap.css'),
+      path.join(__dirname, 'static/css/typeaheadjs.css'),
+    ]
   },
   output: {
-    path: __dirname + '/static/build',
-    filename: '[name].js',
-    publicPath: '/build/'
+    path: path.join(__dirname, 'static/build'),
+    filename: '[name]-[hash].js',
+    publicPath: '/build/',
+    sourcePrefix: '  '
   },
   module: {
     loaders: [
@@ -15,10 +28,20 @@ module.exports = {
 
       // fonts
       { test: /\.woff$/, loader: 'url-loader?limit=8192&mimetype=application/font-woff' },
-      { test: /\.(ttf|eot|svg)$/, loader: 'file-loader' }
+      { test: /\.(ttf|eot|svg)$/, loader: 'file-loader' },
     ]
   },
   resolve: {
     extensions: ['', '.js']
-  }
+  },
+  watchDelay: 50,
+  plugins: [
+    require('./webpack/plugins/beep_error'),
+    require('./webpack/plugins/export_stats'),
+    new webpack.optimize.OccurenceOrderPlugin(),
+    new webpack.optimize.CommonsChunkPlugin(
+      /* chunkName */'vendor',
+      /* filename */'[name]-[hash].js'
+    ),
+  ]
 };
