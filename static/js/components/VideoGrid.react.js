@@ -60,7 +60,7 @@
         var src = video.thumbnails.high || video.thumbnails.medium || video.thumbnails.default;
         return {
           image: <img className="video-grid-image" src={src} />,
-          duration: <div className="video-grid-duration" data-border="round">{video.duration}</div>
+          duration: <div className="video-grid-duration" data-border-round="all">{video.duration}</div>
         };
       }
     },
@@ -146,7 +146,7 @@
           <PlayableVideo
             ref={'item_' + video.id}
             className="video-grid-item"
-            data-background="hover"
+            data-background="white hover"
             data-border="all"
             video={video}
             width={colSpan * (COLUMN_WIDTH + COLUMN_MARGIN) - COLUMN_MARGIN}

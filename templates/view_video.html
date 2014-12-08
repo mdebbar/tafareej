@@ -12,7 +12,7 @@
 <%block name="body_js">
   <script type="application/javascript">
     var Server = {
-      video: ${video.jsonify()},
+      initialVideo: ${video.jsonify()},
       autoplay: ${'true' if autoplay else 'false'}
     };
 

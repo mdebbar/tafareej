@@ -1,18 +1,19 @@
-var debounce = require('./util/debounce');
-var CSS = require('./util/CSS');
+var debounce = require('../util/debounce');
+var CSS = require('../util/CSS');
 var React = require('React');
 
 var PinterestItem = global.PinterestItem = React.createClass({
-  displayName: 'PinterestItem',
   propTypes: {
-    columnSpan: React.PropTypes.number
+    columnSpan: React.PropTypes.number,
   },
-  getDefaultProps: function() {
+
+ getDefaultProps() {
     return {
-      columnSpan: 1
+      columnSpan: 1,
     }
   },
-  render: function() {
+
+ render() {
     var child = React.Children.only(this.props.children);
     child.props.className = CSS.join(child.props.className, 'pinterest-item');
     child.props['data-column-span'] = this.props.columnSpan;
@@ -21,28 +22,32 @@ var PinterestItem = global.PinterestItem = React.createClass({
 });
 
 var Pinterest = React.createClass({
-  displayName: 'Pinterest',
   propTypes: {
     columnWidth: React.PropTypes.number.isRequired,
     columnMargin: React.PropTypes.number.isRequired,
-    animate: React.PropTypes.bool
+    animate: React.PropTypes.bool,
   },
-  getDefaultProps: function() {
+
+ getDefaultProps() {
     return {
-      animate: true
+      animate: true,
     }
   },
-  componentDidMount: function() {
+
+ componentDidMount() {
     this._positionItemsDebounced = debounce(this._positionItems, 1000);
     window.addEventListener('resize', this._positionItemsDebounced);
   },
-  componentDidUpdate: function() {
+
+ componentDidUpdate() {
     this._positionItems();
   },
-  componentWillUnmount: function() {
+
+ componentWillUnmount() {
     window.removeEventListener('resize', this._positionItemsDebounced);
   },
-  render: function() {
+
+ render() {
     var classes = CSS.join(
       this.props.className,
       'pinterest-container',
@@ -54,21 +59,25 @@ var Pinterest = React.createClass({
       </div>
       );
   },
-  _getColumnCount: function() {
+
+ _getColumnCount() {
     var totalWidth = this.getDOMNode().offsetWidth;
     var columnWidth = this._getActualColumnWidth();
     return Math.floor(totalWidth / columnWidth);
   },
-  _getOffsetForCentering: function() {
+
+ _getOffsetForCentering() {
     var count = this._getColumnCount();
     var occupiedWidth = count * this._getActualColumnWidth();
     var totalWidth = this.getDOMNode().offsetWidth;
     return Math.floor((totalWidth - occupiedWidth) /  2);
   },
-  _getActualColumnWidth: function() {
+
+ _getActualColumnWidth() {
     return this.props.columnWidth + this.props.columnMargin;
   },
-  _positionItems: function() {
+
+ _positionItems() {
     var columns = [];
     var count = this._getColumnCount();
     for (var i = 0; i < count; i++) {
@@ -87,7 +96,8 @@ var Pinterest = React.createClass({
       this._positionItem(node, colSpan, leftOffset, columns, shortestColumn);
     }
   },
-  _getShortestColumn: function(columns, min, max) {
+
+ _getShortestColumn(columns, min, max) {
     min = min || 0;
     max = max || columns.length;
     var shortest = min;
@@ -96,12 +106,13 @@ var Pinterest = React.createClass({
     }
     return shortest;
   },
-  _positionItem: function(node, colSpan, leftOffset, columns, pickedColumn) {
+
+ _positionItem(node, colSpan, leftOffset, columns, pickedColumn) {
     var top = Math.max.apply(Math, columns.slice(pickedColumn, pickedColumn + colSpan));
     CSS.setStyle(node, {
       left: (leftOffset + pickedColumn * this._getActualColumnWidth()) + 'px',
       top: top + 'px',
-      opacity: 1
+      opacity: 1,
     });
     var newHeight = top + node.offsetHeight + this.props.columnMargin;
     for (var i = pickedColumn; i < pickedColumn + colSpan; i++) {

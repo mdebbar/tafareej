@@ -1,29 +1,30 @@
 var React = require('React');
 var YoutubePlayer = require('./YoutubePlayer.react');
 
-var PropTypes = React.PropTypes;
-
 var YoutubePlayerContainer = React.createClass({
-  displayName: 'YoutubePlayerContainer',
   propTypes: {
-    autoplay: PropTypes.bool,
-    video: PropTypes.object.isRequired,
-    onSwitchVideo: PropTypes.func
+    autoplay: React.PropTypes.bool,
+    video: React.PropTypes.object.isRequired,
+    onSwitchVideo: React.PropTypes.func,
   },
-  getDefaultProps: function() {
+
+  getDefaultProps() {
     return {
-      autoplay: false
+      autoplay: false,
     };
   },
-  getInitialState: function() {
+
+  getInitialState() {
     return {
-      autoreplay: false
+      repeat: false,
     };
   },
-  shouldComponentUpdate: function(nextProps, nextState) {
-    return nextProps.video !== this.props.video || nextState !== this.state;
+
+ shouldComponentUpdate({video}, nextState) {
+    return video !== this.props.video || nextState !== this.state;
   },
-  render: function() {
+
+ render() {
     var video = this.props.video;
     var player = this.transferPropsTo(
       <YoutubePlayer
@@ -39,11 +40,15 @@ var YoutubePlayerContainer = React.createClass({
         <div className="youtube-player-container">
           {player}
         </div>
-        <label className="youtube-autoreplay">
+        <label
+          className="youtube-repeat"
+          data-background="light"
+          data-border-round="bottom"
+          data-border="horz bottom">
           <input
             type="checkbox"
-            checked={this.state.autoreplay}
-            onChange={this._onAutoreplayChange}
+            checked={this.state.repeat}
+            onChange={this._onRepeatChange}
           />
           {' '}
           Repeat
@@ -52,11 +57,13 @@ var YoutubePlayerContainer = React.createClass({
       </div>
       );
   },
-  _onAutoreplayChange: function(event) {
-    this.setState({autoreplay: event.target.checked});
+
+ _onRepeatChange(event) {
+    this.setState({repeat: event.target.checked});
   },
-  _onEnd: function() {
-    if (this.state.autoreplay) {
+
+ _onEnd() {
+    if (this.state.repeat) {
       this.refs.player.play();
     }
   }

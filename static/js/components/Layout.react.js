@@ -16,37 +16,38 @@ function colClass(size) {
 
 
 var MultiColumn = React.createClass({
-  displayName: 'MultiColumn',
-  render: function() {
+  render() {
     return this.transferPropsTo(<div className="row">{this.props.children}</div>);
-  }
+  },
 });
 
 var Column = React.createClass({
-  displayName: 'Column',
   propType: {
     size: React.PropTypes.number.isRequired,
     push: React.PropTypes.number,
-    pull: React.PropTypes.number
+    pull: React.PropTypes.number,
   },
-  render: function() {
-    var classes = [colClass(this.props.size)];
+
+  render() {
+    var {size, push, pull} = this.props;
+    var classes = [colClass(size)];
     COL_CLASS_PREFIXES.forEach(function(prefix) {
-      if (this.props.push) {
-        classes.push(prefix + 'push-' + String(this.props.push));
+      if (push) {
+        classes.push(prefix + 'push-' + String(push));
       }
-      if (this.props.pull) {
-        classes.push(prefix + 'pull-' + String(this.props.pull));
+      if (pull) {
+        classes.push(prefix + 'pull-' + String(pull));
       }
-    }, this);
+    });
+
     return this.transferPropsTo(
       <div className={CSS.join(classes)}>{this.props.children}</div>
     );
-  }
+  },
 });
 
 module.exports = {
   colClass: colClass,
   Column: Column,
-  MultiColumn: MultiColumn
+  MultiColumn: MultiColumn,
 };

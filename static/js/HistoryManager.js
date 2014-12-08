@@ -1,22 +1,25 @@
 var onSwitch = null;
 
 var HistoryManager = {
-  getState: function() {
+  getState() {
     return window.history.state || {};
   },
-  push: function(state, title, url) {
+
+  push(state, title, url) {
     if (typeof title !== 'undefined') {
       document.title = title || '';
     }
     window.history.pushState.apply(window.history, arguments);
   },
-  replace: function(state, title, url) {
+
+  replace(state, title, url) {
     if (typeof title !== 'undefined') {
       document.title = title || '';
     }
     window.history.replaceState.apply(window.history, arguments);
   },
-  onSwitch: function(callback) {
+
+  onSwitch(callback) {
     onSwitch = callback;
   }
 };

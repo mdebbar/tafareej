@@ -3,29 +3,29 @@ require('../../css/snippet.css');
 
 var CSS = require('../util/CSS');
 var React = require('React');
+var SmartLink= require('./SmartLink.react');
 
 const IMAGE_SWITCHING_INTERVAL = 1000;
 
 var SnippetImage = React.createClass({
-  displayName: 'SnippetImage',
   propTypes: {
     source: React.PropTypes.string,
     duration: React.PropTypes.string,
-    forceRender: React.PropTypes.bool
+    forceRender: React.PropTypes.bool,
   },
 
-  getDefaultProps: function() {
+  getDefaultProps() {
     return {
-      forceRender: true
+      forceRender: true,
     };
   },
 
-  render: function() {
+  render() {
     if (this.props.source) {
       return (
         <div className="snippet-image-container">
           <img className="snippet-image" src={this.props.source} />
-          <div className="snippet-duration" data-border="round">{this.props.duration}</div>
+          <div className="snippet-duration" data-border-round="all">{this.props.duration}</div>
         </div>
       );
     } else if (this.props.forceRender) {
@@ -33,46 +33,53 @@ var SnippetImage = React.createClass({
     } else {
       return <noscript />;
     }
-  }
+  },
 });
 
 var SnippetItem = React.createClass({
-  displayName: 'SnippetItem',
   propTypes: {
-    video: React.PropTypes.object.isRequired
+    video: React.PropTypes.object.isRequired,
+    onClick: React.PropTypes.func,
   },
-  getInitialState: function() {
+
+  getInitialState() {
     return {
-      imageIndex: 0
+      imageIndex: 0,
     };
   },
-  componentWillUnmount: function() {
+
+  componentWillUnmount() {
     this._stopSwitching(false);
   },
-  _startSwitching: function() {
+
+  _startSwitching() {
     this.imageSwitcher = setInterval(this._switchImage, IMAGE_SWITCHING_INTERVAL);
     this._switchImage();
   },
-  _stopSwitching: function(resetImageIndex) {
+
+  _stopSwitching(resetImageIndex) {
     this.imageSwitcher && clearInterval(this.imageSwitcher);
     if (resetImageIndex !== false) {
       this.setState({imageIndex: 0});
     }
   },
-  _switchImage: function() {
+
+  _switchImage() {
     var newIndex = this.state.imageIndex + 1;
     if (newIndex === this.props.video.images.length) {
       newIndex = 0;
     }
     this.setState({imageIndex: newIndex});
   },
-  render: function() {
+
+  render() {
     var video = this.props.video;
     return (
-      <a
+      <SmartLink
         className="snippet-link"
         href={video.url}
         title={video.title}
+        onClick={this.props.onClick}
         onMouseEnter={this._startSwitching}
         onMouseLeave={this._stopSwitching}>
         <SnippetImage source={video.images[this.state.imageIndex]} duration={video.duration} />
@@ -82,61 +89,55 @@ var SnippetItem = React.createClass({
             {video.excerpt}
           </p>
         </div>
-      </a>
+      </SmartLink>
     );
   }
 });
 
 var SnippetNub = React.createClass({
-  displayName: 'SnippetNub',
-  render: function() {
+  render() {
     return <div className="snippet-nub" />;
-  }
+  },
 });
 
 var SnippetList = React.createClass({
-  displayName: 'SnippetList',
   propTypes: {
     videoList: React.PropTypes.array.isRequired,
     selectedVideoID: React.PropTypes.string,
-    onSnippetClick: React.PropTypes.func
+    onSnippetClick: React.PropTypes.func,
   },
-  render: function() {
+
+  render() {
     return this.transferPropsTo(
       <ul className="snippet-list">
         {this.props.videoList.map(this._renderSnippetItem)}
       </ul>
     )
   },
-  _renderSnippetItem: function(video) {
+
+  _renderSnippetItem(video) {
     var isActiveVideo = this.props.selectedVideoID === video.id;
     return (
       <li
         className={CSS.join({
           'snippet-item': true,
-          'snippet-item-selected': isActiveVideo
+          'snippet-item-selected': isActiveVideo,
         })}
         data-background={CSS.join({
+          white: !isActiveVideo,
           hover: true,
-          light: isActiveVideo
         })}
         data-border="bottom"
         key={video.id}
-        dir="auto"
-        onClick={this._onClick.bind(this, video)}>
+        dir="auto">
         {isActiveVideo && <SnippetNub />}
-        <SnippetItem video={video} onClick={this.props.onSnippetClick} />
+        <SnippetItem
+          video={video}
+          onClick={this.props.onSnippetClick.bind(null, video)}
+        />
       </li>
     );
   },
-  _onClick: function(video, event) {
-    // If it's a special click, let the default behavior happen.
-    if (!this.props.onSnippetClick || event.ctrlKey || event.shiftKey || event.metaKey) {
-      return;
-    }
-    this.props.onSnippetClick(video);
-    event.preventDefault();
-  }
 });
 
 module.exports = SnippetList;

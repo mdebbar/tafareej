@@ -10,7 +10,6 @@ var YoutubeStore = require('../Stores').YoutubeStore;
 const PLAYER_ID = 'ytplayer';
 
 var seqID = 0;
-var PropTypes = React.PropTypes;
 
 var loaded = false;
 function loadYoutubePlayer() {
@@ -25,87 +24,98 @@ function loadYoutubePlayer() {
 window.onYouTubeIframeAPIReady = YoutubeStore.set.bind(YoutubeStore, 'api.ready', true);
 
 var YoutubePlayer = React.createClass({
-  displayName: 'YoutubePlayer',
   propTypes: {
-    autoplay: PropTypes.bool,
-    theme: PropTypes.oneOf(['dark', 'light']),
-    width: PropTypes.number,
-    height: PropTypes.number,
-    videoID: PropTypes.string.isRequired,
-    onSwitchVideo: PropTypes.func,
+    autoplay: React.PropTypes.bool,
+    theme: React.PropTypes.oneOf(['dark', 'light']),
+    width: React.PropTypes.number,
+    height: React.PropTypes.number,
+    videoID: React.PropTypes.string.isRequired,
+    onSwitchVideo: React.PropTypes.func,
     // Player events:
-    onPlay: PropTypes.func,
-    onPause: PropTypes.func,
-    onBuffering: PropTypes.func,
-    onEnd: PropTypes.func
+    onPlay: React.PropTypes.func,
+    onPause: React.PropTypes.func,
+    onBuffering: React.PropTypes.func,
+    onEnd: React.PropTypes.func,
   },
-  getDefaultProps: function() {
+  
+  getDefaultProps() {
     return {
       autoplay: true,
       theme: 'dark',
       width: 640,
       height: 390,
-      onSwitchVideo: function() {}
+      onSwitchVideo: () => {},
     };
   },
-  componentWillMount: function() {
+  
+  componentWillMount() {
     this.playerID = PLAYER_ID + String(seqID++);
     this.playerLoader = loadYoutubePlayer();
   },
-  componentDidMount: function() {
+  
+  componentDidMount() {
     if (YoutubeStore.get('api.ready')) {
       this._onYoutubeAPIReady();
     } else {
       this._listener = YoutubeStore.listen('api.ready', this._onYoutubeAPIReady);
     }
   },
-  componentWillUnmount: function() {
+  
+  componentWillUnmount() {
     this._listener && this._listener.remove();
     this.playerLoader && this.playerLoader.abandon();
     this.player && this.player.destroy();
   },
-  componentWillReceiveProps: function(nextProps) {
-    if (this.player.getVideoData().video_id !== nextProps.videoID) {
+  
+  componentWillReceiveProps({videoID}) {
+    if (this.player.getVideoData().video_id !== videoID) {
       // If it's a different video => stop current video + load the new one!
       // (loading will automatically play the video)
       this.player.stopVideo();
-      this.player.loadVideoById(nextProps.videoID);
+      this.player.loadVideoById(videoID);
     }
   },
-  play: function() {
+  
+  play() {
     this.player && this.player.playVideo();
   },
-  pause: function() {
+  
+  pause() {
     this.player && this.player.pauseVideo();
   },
-  mute: function() {
+  
+  mute() {
     this.player && this.player.mute();
   },
-  unMute: function() {
+  
+  unMute() {
     this.player && this.player.unMute();
   },
-  render: function() {
+  
+  render() {
     return this.transferPropsTo(
       <Spinner id={this.playerID} className="youtube-player" />
     );
   },
-  _onYoutubeAPIReady: function() {
-    // TODO: remove window.player, it's just for debugging purposes.
-    window.player = this.player = new YT.Player(this.playerID, {
-      width: String(this.props.width),
-      height: String(this.props.height),
-      videoId: this.props.videoID,
+  
+  _onYoutubeAPIReady() {
+    var {autoplay, videoID, width, height, theme} = this.props;
+    this.player = new YT.Player(this.playerID, {
+      width: String(width),
+      height: String(height),
+      videoId: videoID,
       playerVars: {
         // `autoplay` only accepts 1 or 0
-        autoplay: this.props.autoplay ? 1 : 0,
-        theme: this.props.theme
+        autoplay: autoplay ? 1 : 0,
+        theme: theme,
       },
       events: {
-        onStateChange: this._onPlayerStateChange
-      }
+        onStateChange: this._onPlayerStateChange,
+      },
     });
   },
-  _onPlayerStateChange: function(event) {
+  
+  _onPlayerStateChange(event) {
     // Respond to player events
     // Possible states: {UNSTARTED: -1, ENDED: 0, PLAYING: 1, PAUSED: 2, BUFFERING: 3, CUED: 5}
     switch (event.data) {
@@ -128,7 +138,7 @@ var YoutubePlayer = React.createClass({
         this.props.onBuffering && this.props.onBuffering();
         break;
     }
-  }
+  },
 });
 
 module.exports = YoutubePlayer;

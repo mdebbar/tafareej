@@ -2,23 +2,24 @@ var CSS = require('../util/CSS');
 var React = require('React');
 
 var Spinner = React.createClass({
-  displayName: 'Spinner',
   propTypes: {
-    shown: React.PropTypes.bool
+    shown: React.PropTypes.bool,
   },
+  
   getDefaultProps: function() {
     return {
-      shown: true
+      shown: true,
     };
   },
-  render: function() {
+  
+  render() {
     var classes = CSS.join({
       spinner: true,
-      nodisplay: !this.props.shown
+      nodisplay: !this.props.shown,
     });
     // transferPropsTo() is required in case we pass ID or style.
     return this.transferPropsTo(<div className={classes}></div>);
-  }
+  },
 });
 
 module.exports = Spinner;

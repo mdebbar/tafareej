@@ -14,23 +14,23 @@ function cleanQuery(query) {
 }
 
 var NubHider = React.createClass({
-  displayName: 'NubHider',
-  render: function() {
+  render() {
     return <div className="search-box-nub-hider" data-background="transparent" />;
-  }
+  },
 });
 
 var InputBox = React.createClass({
-  displayName: 'InputBox',
   propTypes: {
     query: React.PropTypes.string.isRequired,
     onChange: React.PropTypes.func.isRequired,
-    onKeyDown: React.PropTypes.func
+    onKeyDown: React.PropTypes.func,
   },
-  getInputDOMNode: function() {
+
+  getInputDOMNode() {
     return this.refs.input.getDOMNode();
   },
-  render: function() {
+
+  render() {
     return this.transferPropsTo(
       <div>
         <NubHider />
@@ -50,22 +50,24 @@ var InputBox = React.createClass({
         </div>
       </div>
     );
-  }
+  },
 });
 
 var SearchBox = React.createClass({
-  displayName: 'SearchBox',
   propTypes: {
-    onSearch: React.PropTypes.func.isRequired
+    onSearch: React.PropTypes.func.isRequired,
   },
-  getInitialState: function() {
+
+  getInitialState() {
     return {
-      query: ''
+      query: '',
     };
   },
-  componentDidMount: function() {
+
+  componentDidMount() {
     this._onSearchDebounced = debounce(this.props.onSearch, 500);
 
+    // TODO: implement my own typeahead
     $(this.refs.input.getInputDOMNode()).typeahead(
       {hint: false, minLength: 2},
       {displayKey: 'value', source: debounce(this._onAutocomplete, 500)}
@@ -74,23 +76,25 @@ var SearchBox = React.createClass({
       this._onTypeaheadSelected
     );
   },
-  componentWillUnmount: function() {
+
+  componentWillUnmount() {
     this._onSearchDebounced.cancel();
     delete this._onSearchDebounced;
 
     $(this.refs.input.getInputDOMNode()).typeahead('destroy');
   },
-  _onAutocomplete: function(query, process) {
+
+  _onAutocomplete(query, process) {
     API.autocomplete(query, function(results) {
-      process(results.map(function(result) {
-        return {value: result};
-      }));
+      process(results.map((value) => ({value})));
     });
   },
-  setQuery: function(query) {
-    this.setState({query: query});
+
+  setQuery(query) {
+    this.setState({query});
   },
-  render: function() {
+
+  render() {
     return this.transferPropsTo(
       <InputBox
         ref="input"
@@ -100,25 +104,27 @@ var SearchBox = React.createClass({
       />
     );
   },
-  _onDown: function(event) {
+
+  _onDown(event) {
     // When the user presses Enter => close the autocomplete dropdown
     if (event.key === 'Enter') {
       $(this.refs.input.getInputDOMNode()).typeahead('close');
     }
   },
-  _onTypeaheadSelected: function(_, suggestion) {
-    var query = suggestion.value;
-    if (this._setQueryIfDifferent(query)) {
-      this.props.onSearch(cleanQuery(query));
+
+  _onTypeaheadSelected(_, {value}) {
+    if (this._setQueryIfDifferent(value)) {
+      this.props.onSearch(cleanQuery(value));
     }
   },
-  _onChange: function(event) {
-    var query = event.target.value;
-    if (this._setQueryIfDifferent(query)) {
-      this._onSearchDebounced(cleanQuery(query));
+
+  _onChange(event) {
+    if (this._setQueryIfDifferent(event.target.value)) {
+      this._onSearchDebounced(cleanQuery(event.target.value));
     }
   },
-  _setQueryIfDifferent: function(query) {
+
+  _setQueryIfDifferent(query) {
     // Exact same query
     if (query == this.state.query) {
       return false;
@@ -130,7 +136,7 @@ var SearchBox = React.createClass({
     }
     this.setQuery(query);
     return true;
-  }
+  },
 });
 
 module.exports = SearchBox;

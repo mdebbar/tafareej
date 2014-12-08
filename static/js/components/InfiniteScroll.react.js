@@ -2,40 +2,48 @@ var React = require('React');
 var throttle = require('../util/throttle');
 
 var InfiniteScroll = React.createClass({
-  displayName: 'InfiniteScroll',
   propTypes: {
     buffer: React.PropTypes.number,
     throttle: React.PropTypes.number,
-    onTrigger: React.PropTypes.func.isRequired
+    onTrigger: React.PropTypes.func.isRequired,
   },
-  getDefaultProps: function() {
+
+  getDefaultProps() {
     return {
       buffer: 400,
-      throttle: 100
+      throttle: 100,
     };
   },
-  componentWillMount: function() {
+
+  componentWillMount() {
     this._throttledOnScroll = throttle(this._onScroll, this.props.throttle);
   },
-  componentDidMount: function() {
+
+  componentDidMount() {
     window.addEventListener('scroll', this._throttledOnScroll);
     this._enabled = true;
   },
-  componentWillUnmount: function() {
+
+  componentWillUnmount() {
     window.removeEventListener('scroll', this._throttledOnScroll);
     this._throttledOnScroll.cancel();
     delete this._throttledOnScroll;
   },
-  enable: function() {
+
+  enable() {
     this._enabled = true;
   },
-  disable: function() {
+
+  disable() {
     this._enabled = false;
   },
-  render: function() {
+
+  render() {
+    // TODO: make it so that it doesn't take any children.
     return React.Children.only(this.props.children);
   },
-  _getDocHeight: function() {
+
+  _getDocHeight() {
     var body = document.body;
     var docElem = document.documentElement;
 
@@ -44,7 +52,8 @@ var InfiniteScroll = React.createClass({
       docElem.clientHeight, docElem.scrollHeight, docElem.offsetHeight
     );
   },
-  _onScroll: function() {
+
+  _onScroll() {
     if (!this._enabled) {
       return;
     }
@@ -52,7 +61,7 @@ var InfiniteScroll = React.createClass({
     if (remainingScroll <= this.props.buffer) {
       this.props.onTrigger();
     }
-  }
+  },
 });
 
 module.exports = InfiniteScroll;

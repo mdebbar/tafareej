@@ -21,8 +21,8 @@
   top: 0;
 }
 
-.youtube-autoreplay,
-.youtube-autoreplay input {
+.youtube-repeat,
+.youtube-repeat input {
   cursor: pointer;
 }
 
@@ -30,11 +30,12 @@
   clear: both;
 }
 
-.youtube-autoreplay {
+.youtube-repeat {
   float: right;
-  margin: 10px 0 10px 10px;
+  margin: 0 -1px 10px 10px;
+  padding: 10px;
 }
 
-.youtube-autoreplay input {
+.youtube-repeat input {
   vertical-align: top;
 }

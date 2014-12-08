@@ -6,28 +6,31 @@ var SnippetList = require('./SnippetList.react');
 var Spinner = require('./Spinner.react');
 
 var SearchableSnippetList = React.createClass({
-  displayName: 'SearchableSnippetList',
   propTypes: {
     isLoading: React.PropTypes.bool,
     selectedVideoID: React.PropTypes.string,
     videoList: React.PropTypes.array.isRequired,
     onSearch: React.PropTypes.func.isRequired,
-    onSnippetClick: React.PropTypes.func
+    onSnippetClick: React.PropTypes.func,
   },
-  getDefaultProps: function() {
+
+  getDefaultProps() {
     return {
-      isLoading: false
+      isLoading: false,
     };
   },
-  shouldComponentUpdate: function(nextProps, nextState) {
-    return nextProps.isLoading !== this.props.isLoading ||
-      nextProps.videoList !== this.props.videoList ||
-      nextProps.selectedVideoID !== this.props.selectedVideoID;
+
+  shouldComponentUpdate({isLoading, videoList, selectedVideoID}) {
+    return isLoading !== this.props.isLoading ||
+      videoList !== this.props.videoList ||
+      selectedVideoID !== this.props.selectedVideoID;
   },
-  setQuery: function(query) {
+
+  setQuery(query) {
     this.refs.searchbox.setQuery(query);
   },
-  render: function() {
+
+  render() {
     return (
       <div className="snippet-list-section">
         <SearchBox
@@ -49,8 +52,8 @@ var SearchableSnippetList = React.createClass({
           />
         </div>
       </div>
-      );
-  }
+    );
+  },
 });
 
 module.exports = SearchableSnippetList;

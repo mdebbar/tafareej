@@ -1,33 +1,36 @@
 var GLOBAL_KEY = '*';
 
-function StoreClass(name) {
-  this.name = name;
-  this.data = {};
-  this.seqID = 1;
-  this.listeners = {};
-}
+class StoreClass {
 
-StoreClass.prototype = {
+  constructor(name) {
+    this.name = name;
+    this.data = {};
+    this.seqID = 1;
+    this.listeners = {};
+  }
+
   /**
    * Get the value associated with a specific key. If that key has no value associated, `def` will
    * be returned.
    */
-  get: function(key, def) {
+  get(key, def) {
     return this.data.hasOwnProperty(key) ? this.data[key] : def;
-  },
+  }
+
   /**
    * Set a new value for the specified key. This will overwrite any previous data on that key.
    */
-  set: function(key, val) {
+  set(key, val) {
     this.data[key] = val;
     this._notify(key, val);
-  },
+  }
+
   /**
    * Update the data associated with the specified key. The key must have a previous
    * value of type object/array. If it's an object, the new value will be merged into the
    * old one. If it's array, the new value will just be appended.
    */
-  update: function(key, val, notify) {
+  update(key, val, notify) {
     if (!this.data.hasOwnProperty(key)) {
       throw new Error('Can\'t update `' + key + '` doesn\'t exist');
     }
@@ -45,77 +48,75 @@ StoreClass.prototype = {
     if (notify || typeof notify === 'undefined') {
       this._notify(key, currVal);
     }
-  },
-  listen: function(/*args..., callback*/) {
-    // pop() gets the last element in the array
-    var callback = Array.prototype.pop.call(arguments);
-    var keys = Array.prototype.slice.call(arguments, 0);
+  }
 
-    if (keys.length == 0) {
-      keys = [GLOBAL_KEY];
+  listen(...args) {
+    // pop() gets the last element in the array
+    var callback = args.pop();
+
+    if (args.length == 0) {
+      args = [GLOBAL_KEY];
     }
-    return this._attachListeners(keys, callback);
-  },
-  _attachOneListener: function(cb, key) {
+    return this._attachListeners(args, callback);
+  }
+
+  _attachOneListener(cb, key) {
     if (!this.listeners[key]) {
       this.listeners[key] = {};
     }
     this.listeners[key][this.seqID] = cb;
     return this.seqID++;
-  },
-  _detachOneListener: function(key, seqID) {
+  }
+
+  _detachOneListener(key, seqID) {
     if (this.listeners[key] && this.listeners[key][seqID]) {
       delete this.listeners[key][seqID];
     }
-  },
-  _attachListeners: function(keys, cb) {
+  }
+
+  _attachListeners(keys, cb) {
     return this._createRemovable(keys, keys.map(this._attachOneListener.bind(this, cb)));
-  },
-  _detachListeners: function(keys, seqIDs) {
-    keys.forEach(function(key, ii) {
-      this._detachOneListener(key, seqIDs[ii]);
-    }, this);
-  },
-  _createRemovable: function(keys, seqIDs) {
+  }
+
+  _detachListeners(keys, seqIDs) {
+    keys.forEach((key, ii) => this._detachOneListener(key, seqIDs[ii]));
+  }
+
+  _createRemovable(keys, seqIDs) {
     return {
       remove: this._detachListeners.bind(this, keys, seqIDs)
     };
-  },
-  _iterListeners: function(key, cb) {
+  }
+
+  _iterListeners(key, cb) {
     if (!this.listeners[key]) {
       return;
     }
-    for (var seqID in this.listeners[key]) {
-      if (this.listeners[key].hasOwnProperty(seqID)) {
-        cb(this.listeners[key][seqID], seqID);
-      }
-    }
-  },
-  _notify: function(key, val) {
+    Object.keys(this.listeners[key])
+      .forEach((seqID) => cb(this.listeners[key][seqID], seqID));
+  }
+
+  _notify(key, val) {
     if (this.listeners[key]) {
-      this._iterListeners(key, function(listener) {
-        listener(val, key);
-      });
+      this._iterListeners(key, listener => listener(val, key));
     }
     if (this.listeners[GLOBAL_KEY]) {
-      this._iterListeners(GLOBAL_KEY, function(listener) {
-        listener(val, key);
-      });
+      this._iterListeners(GLOBAL_KEY, listener => listener(val, key));
     }
   }
 };
 
 var stores = {};
 var StoreFactory = {
-  create: function(name) {
+  create(name) {
     return stores[name] = new StoreClass(name);
   },
-  get: function(name) {
+  get(name) {
     return stores[name];
-  }
+  },
 };
 
 module.exports = {
   YoutubeStore: StoreFactory.create('YoutubeStore'),
-  VideoCacheStore: StoreFactory.create('VideoCacheStore')
+  VideoCacheStore: StoreFactory.create('VideoCacheStore'),
 };

@@ -1,12 +1,10 @@
 function throttle(func, delay) {
-  var timer, that, args;
-  var throttled = function() {
-    that = this;
-    args = arguments;
+  var timer;
+  var throttled = function(...args) {
     if (timer) return;
-    timer = setTimeout(function() {
+    timer = setTimeout(() => {
       timer = null;
-      func.apply(that, args);
+      func.apply(this, args);
     }, delay);
   };
   throttled.cancel = function() {

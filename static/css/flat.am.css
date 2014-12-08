@@ -1,4 +1,16 @@
+/*
+==== Colors ====
+
+default: #f0f0f0
+  light: #f8f8f8
+   dark: TBD
+*/
+
 /* Background */
+
+[data-background] {
+  background-color: #f0f0f0;
+}
 
 [data-background~="white"] {
   background-color: #fff;
@@ -8,13 +20,10 @@
   background: rgba(255, 255, 255, 0.9);
 }
 
+[data-background~="light"],
 [data-background~="hover"]:focus,
 [data-background~="hover"]:hover {
   background-color: #f8f8f8;
-}
-
-[data-background~="light"] {
-  background-color: #f0f0f0;
 }
 
 
@@ -22,6 +31,10 @@
 
 [data-border] {
   border: 0 solid #f0f0f0;
+}
+
+[data-border~="light"] {
+  border-color: #f8f8f8;
 }
 
 [data-border~="top"],
@@ -48,6 +61,32 @@
   border-left-width: 1px;
 }
 
-[data-border~="round"] {
-  border-radius: 4px;
+/* Rounded borders */
+
+[data-border-round~="topleft"],
+[data-border-round~="top"],
+[data-border-round~="left"],
+[data-border-round~="all"] {
+  border-top-left-radius: 4px;
+}
+
+[data-border-round~="topright"],
+[data-border-round~="top"],
+[data-border-round~="right"],
+[data-border-round~="all"] {
+  border-top-right-radius: 4px;
+}
+
+[data-border-round~="bottomright"],
+[data-border-round~="bottom"],
+[data-border-round~="right"],
+[data-border-round~="all"] {
+  border-bottom-right-radius: 4px;
+}
+
+[data-border-round~="bottomleft"],
+[data-border-round~="bottom"],
+[data-border-round~="left"],
+[data-border-round~="all"] {
+  border-bottom-left-radius: 4px;
 }

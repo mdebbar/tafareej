@@ -19,16 +19,12 @@ const API_AUTOCOMPLETE = '/api/autocomplete/' + QUERY + '/';
 const VIDEO_URL = '/' + VIDEO_ID + '/';
 const YOUTUBE_PLAYER_URL = 'https://www.youtube.com/player_api?playerapiid=' + PLAYER_API_ID;
 
-function createReplacer(patternURL, var1, var2) {
-  return function(val1, val2) {
-    var replaced = patternURL;
-    if (var1) {
-      replaced = replaced.replace(var1, val1);
-      if (var2) {
-        replaced = replaced.replace(var2, val2);
-      }
-    }
-    return replaced;
+function createReplacer(patternURL, ...vars) {
+  return function(...vals) {
+    return vars.reduce(
+      (str, v) => str.replace(v, vals.shift()),
+      patternURL
+    );
   };
 }
 
