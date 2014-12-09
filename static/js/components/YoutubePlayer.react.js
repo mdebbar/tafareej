@@ -2,7 +2,7 @@
 require('../../css/player.css');
 
 var CSS = require('../util/CSS');
-var React = require('React');
+var React = require('react');
 var Spinner = require('./Spinner.react');
 var URL = require('../util/URL');
 var X = require('../X');

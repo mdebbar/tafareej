@@ -4,7 +4,7 @@ require('../../css/video-grid.css');
 var CSS = require('../util/CSS');
 var Pinterest = require('./Pinterest.react');
 var PlayableVideo = require('./PlayableVideo.react');
-var React = require('React');
+var React = require('react');
 var Spinner = require('./Spinner.react');
 
 var PinterestItem = Pinterest.Item;

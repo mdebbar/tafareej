@@ -1,6 +1,6 @@
 var CSS = require('../util/CSS');
 var colClass = require('./Layout.react').colClass;
-var React = require('React');
+var React = require('react');
 var SearchBox = require('./SearchBox.react');
 var SnippetList = require('./SnippetList.react');
 var Spinner = require('./Spinner.react');

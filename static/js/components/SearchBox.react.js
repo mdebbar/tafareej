@@ -4,7 +4,7 @@ require('../../css/search-box.css');
 
 var API = require('../API');
 var debounce = require('../util/debounce');
-var React = require('React');
+var React = require('react');
 require('typeahead.js');
 
 

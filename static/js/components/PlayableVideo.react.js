@@ -1,4 +1,4 @@
-var React = require('React');
+var React = require('react');
 var SmartLink = require('./SmartLink.react');
 var YoutubePlayer = require('./YoutubePlayer.react');
 

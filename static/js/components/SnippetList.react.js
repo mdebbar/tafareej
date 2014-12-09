@@ -2,7 +2,7 @@
 require('../../css/snippet.css');
 
 var CSS = require('../util/CSS');
-var React = require('React');
+var React = require('react');
 var SmartLink= require('./SmartLink.react');
 
 const IMAGE_SWITCHING_INTERVAL = 1000;

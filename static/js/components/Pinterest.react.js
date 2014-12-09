@@ -3,7 +3,7 @@ require('../../css/pinterest.css');
 
 var debounce = require('../util/debounce');
 var CSS = require('../util/CSS');
-var React = require('React');
+var React = require('react');
 
 var PinterestItem = React.createClass({
   propTypes: {

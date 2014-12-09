@@ -1,5 +1,5 @@
 var CSS = require('../util/CSS');
-var React = require('React');
+var React = require('react');
 
 var Spinner = React.createClass({
   propTypes: {
