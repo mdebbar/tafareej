@@ -4,6 +4,7 @@ var throttle = require('../util/throttle');
 var InfiniteScroll = React.createClass({
   propTypes: {
     buffer: React.PropTypes.number,
+    checkOnEnable: React.PropTypes.bool,
     throttle: React.PropTypes.number,
     onTrigger: React.PropTypes.func.isRequired,
   },
@@ -11,17 +12,18 @@ var InfiniteScroll = React.createClass({
   getDefaultProps() {
     return {
       buffer: 400,
+      checkOnEnable: true,
       throttle: 100,
     };
   },
 
   componentWillMount() {
-    this._throttledOnScroll = throttle(this._onScroll, this.props.throttle);
+    this._throttledOnScroll = throttle(this._check, this.props.throttle);
   },
 
   componentDidMount() {
     window.addEventListener('scroll', this._throttledOnScroll);
-    this._enabled = true;
+    this.enable();
   },
 
   componentWillUnmount() {
@@ -32,6 +34,7 @@ var InfiniteScroll = React.createClass({
 
   enable() {
     this._enabled = true;
+    this.props.checkOnEnable && this._check();
   },
 
   disable() {
@@ -53,7 +56,7 @@ var InfiniteScroll = React.createClass({
     );
   },
 
-  _onScroll() {
+  _check() {
     if (!this._enabled) {
       return;
     }
