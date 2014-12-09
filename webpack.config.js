@@ -5,7 +5,7 @@ module.exports = {
   entry: {
     vendor: [
       // JS
-      'React',
+      'react',
       'typeahead.js',
       path.join(__dirname, 'static/js/3party/qwest.js'),
       // CSS
