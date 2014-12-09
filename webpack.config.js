@@ -13,6 +13,7 @@ module.exports = {
       path.join(__dirname, 'static/css/typeaheadjs.css'),
     ],
     ViewPage: path.join(__dirname, 'static/js/pages/ViewPage.react'),
+    HomePage: path.join(__dirname, 'static/js/pages/HomePage.react'),
   },
   output: {
     path: path.join(__dirname, 'static/build'),

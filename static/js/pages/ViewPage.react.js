@@ -1,5 +1,3 @@
-/** @jsx React.DOM */
-
 // CSS
 require('../../css/bootstrap.css');
 require('../../css/global.css');

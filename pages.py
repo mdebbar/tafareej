@@ -3,8 +3,14 @@ from external.youtube import api
 from util import response
 
 
-@response.template('view_video.html', jschunks=['vendor', 'ViewPage'])
-def view_video(video_id, autoplay=True, **kwargs):
+@response.template('home.html', jschunks=['vendor', 'HomePage'])
+def home_page(**kwargs):
+  return {
+    'sitename': 'Tafareej',
+  }
+
+@response.template('video.html', jschunks=['vendor', 'ViewPage'])
+def video_page(video_id, autoplay=True, **kwargs):
   video = api.one_video(video_id)
 
   if not video:
@@ -17,5 +23,6 @@ def view_video(video_id, autoplay=True, **kwargs):
 
 
 routes = (
-  ('video.view', '/{video_id}/', view_video),
+  ('home.view', '/', home_page),
+  ('video.view', '/{video_id}/', video_page),
 )
