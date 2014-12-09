@@ -7,7 +7,7 @@ require('../../css/search-box.css');
 var API = require('../API');
 var HistoryManager = require('../HistoryManager');
 var InfiniteScroll = require('../components/InfiniteScroll.react');
-var React = require('React');
+var React = require('react');
 var SearchBox = require('../components/SearchBox.react');
 var URI = require('../util/URI');
 var VideoGrid = require('../components/VideoGrid.react');
