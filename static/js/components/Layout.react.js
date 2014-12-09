@@ -17,7 +17,13 @@ function colClass(size) {
 
 var MultiColumn = React.createClass({
   render() {
-    return this.transferPropsTo(<div className="row">{this.props.children}</div>);
+    return (
+      <div
+        {...this.props}
+        className={CSS.join(this.props.className, 'row')}>
+        {this.props.children}
+      </div>
+    );
   },
 });
 
@@ -29,8 +35,8 @@ var Column = React.createClass({
   },
 
   render() {
-    var {size, push, pull} = this.props;
-    var classes = [colClass(size)];
+    var {className, size, push, pull, ...other} = this.props;
+    var classes = [className, colClass(size)];
     COL_CLASS_PREFIXES.forEach(function(prefix) {
       if (push) {
         classes.push(prefix + 'push-' + String(push));
@@ -40,8 +46,8 @@ var Column = React.createClass({
       }
     });
 
-    return this.transferPropsTo(
-      <div className={CSS.join(classes)}>{this.props.children}</div>
+    return (
+      <div {...other} className={CSS.join(classes)}>{this.props.children}</div>
     );
   },
 });

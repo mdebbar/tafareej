@@ -3,7 +3,6 @@ var webpack = require('webpack');
 
 module.exports = {
   entry: {
-    ViewPage: path.join(__dirname, 'static/js/pages/ViewPage.react'),
     vendor: [
       // JS
       'React',
@@ -12,17 +11,18 @@ module.exports = {
       // CSS
       path.join(__dirname, 'static/css/bootstrap.css'),
       path.join(__dirname, 'static/css/typeaheadjs.css'),
-    ]
+    ],
+    ViewPage: path.join(__dirname, 'static/js/pages/ViewPage.react'),
   },
   output: {
     path: path.join(__dirname, 'static/build'),
-    filename: '[name]-[hash].js',
+    filename: '[name]-[chunkhash].js',
     publicPath: '/build/',
     sourcePrefix: '  '
   },
   module: {
     loaders: [
-      {test: /\.js$/, loader: 'jsx-loader?harmony&insertPragma=React.DOM'},
+      {test: /\.js$/, loader: 'jsx-loader?harmony'},
       {test: /\.css$/, loader: 'style-loader!css-loader'},
       {test: /\.(png|jpg|gif)$/, loader: 'url-loader?limit=8192'},
 
@@ -41,7 +41,7 @@ module.exports = {
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.optimize.CommonsChunkPlugin(
       /* chunkName */'vendor',
-      /* filename */'[name]-[hash].js'
+      /* filename */'[name]-[chunkhash].js'
     ),
   ]
 };

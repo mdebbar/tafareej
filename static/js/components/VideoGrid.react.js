@@ -65,15 +65,16 @@
       }
     },
     render: function() {
-      var video = this.props.video;
-      var mediaWidth = this.props.width - 10; /* 8px of side padding + 2px borders */
+      var {video, width, ...other} = this.props;
+
+      var mediaWidth = width - 10; /* 8px of side padding + 2px borders */
       var mediaStyle = {
-        width: mediaWidth + 'px',
-        height: Math.floor(mediaWidth / IMAGE_RATIO) + 'px'
+        width: mediaWidth,
+        height: Math.floor(mediaWidth / IMAGE_RATIO),
       };
-      var rootStyle = {width: this.props.width + 'px'};
-      return this.transferPropsTo(
-        <div dir="auto" style={rootStyle}>
+
+      return (
+        <div {...other} dir="auto" style={{width}}>
           <SmartLink
             className="video-grid-link video-grid-media-container"
             style={mediaStyle}
@@ -123,15 +124,17 @@
       }
     },
     render: function() {
-      return this.transferPropsTo(
+      var {videos, isLoading, ...other} = this.props;
+      return (
         <Pinterest
-          className="video-grid-container"
+          {...other}
+          className={CSS.join(this.props.className, 'video-grid-container')}
           columnWidth={COLUMN_WIDTH}
           columnMargin={COLUMN_MARGIN}>
-          {this.props.videos.map(this._renderItem)}
+          {videos.map(this._renderItem)}
           <Spinner
             className="video-grid-spinner"
-            shown={this.props.isLoading}
+            shown={isLoading}
           />
         </Pinterest>
       );

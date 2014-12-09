@@ -1,6 +1,7 @@
 // CSS
 require('../../css/player.css');
 
+var CSS = require('../util/CSS');
 var React = require('React');
 var Spinner = require('./Spinner.react');
 var URL = require('../util/URL');
@@ -37,7 +38,7 @@ var YoutubePlayer = React.createClass({
     onBuffering: React.PropTypes.func,
     onEnd: React.PropTypes.func,
   },
-  
+
   getDefaultProps() {
     return {
       autoplay: true,
@@ -47,12 +48,12 @@ var YoutubePlayer = React.createClass({
       onSwitchVideo: () => {},
     };
   },
-  
+
   componentWillMount() {
     this.playerID = PLAYER_ID + String(seqID++);
     this.playerLoader = loadYoutubePlayer();
   },
-  
+
   componentDidMount() {
     if (YoutubeStore.get('api.ready')) {
       this._onYoutubeAPIReady();
@@ -60,13 +61,13 @@ var YoutubePlayer = React.createClass({
       this._listener = YoutubeStore.listen('api.ready', this._onYoutubeAPIReady);
     }
   },
-  
+
   componentWillUnmount() {
     this._listener && this._listener.remove();
     this.playerLoader && this.playerLoader.abandon();
     this.player && this.player.destroy();
   },
-  
+
   componentWillReceiveProps({videoID}) {
     if (this.player.getVideoData().video_id !== videoID) {
       // If it's a different video => stop current video + load the new one!
@@ -75,29 +76,34 @@ var YoutubePlayer = React.createClass({
       this.player.loadVideoById(videoID);
     }
   },
-  
+
   play() {
     this.player && this.player.playVideo();
   },
-  
+
   pause() {
     this.player && this.player.pauseVideo();
   },
-  
+
   mute() {
     this.player && this.player.mute();
   },
-  
+
   unMute() {
     this.player && this.player.unMute();
   },
-  
+
   render() {
-    return this.transferPropsTo(
-      <Spinner id={this.playerID} className="youtube-player" />
+    var {autoplay, videoID, width, height, theme, className, ...other} = this.props;
+    return (
+      <Spinner
+        {...other}
+        id={this.playerID}
+        className={CSS.join(className, 'youtube-player')}
+      />
     );
   },
-  
+
   _onYoutubeAPIReady() {
     var {autoplay, videoID, width, height, theme} = this.props;
     this.player = new YT.Player(this.playerID, {
@@ -114,7 +120,7 @@ var YoutubePlayer = React.createClass({
       },
     });
   },
-  
+
   _onPlayerStateChange(event) {
     // Respond to player events
     // Possible states: {UNSTARTED: -1, ENDED: 0, PLAYING: 1, PAUSED: 2, BUFFERING: 3, CUED: 5}

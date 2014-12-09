@@ -200,7 +200,7 @@ var ViewPage = React.createClass({
 });
 
 
-React.renderComponent(
+React.render(
   <ViewPage
     initialVideo={Server.initialVideo}
     autoplay={Server.autoplay}

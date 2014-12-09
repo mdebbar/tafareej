@@ -25,15 +25,14 @@ var YoutubePlayerContainer = React.createClass({
   },
 
  render() {
-    var video = this.props.video;
-    var player = this.transferPropsTo(
+    var {video, ...others} = this.props;
+    var player =
       <YoutubePlayer
+        {...others}
         ref="player"
         videoID={video.id}
-        onSwitchVideo={this.props.onSwitchVideo}
         onEnd={this._onEnd}
-      />
-    );
+      />;
 
     return (
       <div className="youtube-player-section">

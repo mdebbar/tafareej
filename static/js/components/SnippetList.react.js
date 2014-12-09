@@ -108,9 +108,12 @@ var SnippetList = React.createClass({
   },
 
   render() {
-    return this.transferPropsTo(
-      <ul className="snippet-list">
-        {this.props.videoList.map(this._renderSnippetItem)}
+    var {videoList, className, ...other} = this.props;
+    return (
+      <ul
+        {...other}
+        className={CSS.join(className, 'snippet-list')}>
+        {videoList.map(this._renderSnippetItem)}
       </ul>
     )
   },

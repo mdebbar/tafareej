@@ -5,7 +5,7 @@ function normalizeCSSClass(klass) {
       : Object.keys(klass).filter(c => !!klass[c]);
     return list.map(normalizeCSSClass).join(' ');
   }
-  return String(klass) || '';
+  return String(klass || '');
 }
 
 var CSS = {

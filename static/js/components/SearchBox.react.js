@@ -31,8 +31,8 @@ var InputBox = React.createClass({
   },
 
   render() {
-    return this.transferPropsTo(
-      <div>
+    return (
+      <div {...this.props}>
         <NubHider />
         <div className="search-box-container">
           <input
@@ -95,8 +95,9 @@ var SearchBox = React.createClass({
   },
 
   render() {
-    return this.transferPropsTo(
+    return (
       <InputBox
+        {...this.props}
         ref="input"
         query={this.state.query}
         onChange={this._onChange}

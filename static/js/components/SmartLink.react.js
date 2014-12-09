@@ -7,10 +7,8 @@ var SmartLink = React.createClass({
   },
 
   render() {
-    return this.transferPropsTo(
-      <a href={this.props.href} onClick={this._onClick}>
-        {this.props.children}
-      </a>
+    return (
+      <a {...this.props} onClick={this._onClick} />
     );
   },
 
