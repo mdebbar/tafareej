@@ -9,7 +9,7 @@ conf = {
   '/': {
     'request.dispatch': gen_dispatcher(*routes),
     #TODO: use better paths
-    'tools.staticdir.root': os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static')
+    'tools.staticdir.root': os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static'),
   },
   '/build': {
     'tools.staticdir.on': True,

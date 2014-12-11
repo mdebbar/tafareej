@@ -6,3 +6,4 @@ local_settings.py
 node_modules
 build
 webpack/stats
+nohup.out
