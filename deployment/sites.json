@@ -1,0 +1,14 @@
+{
+  "prod": {
+    "name": "prod",
+    "dir": "/home/mouad/sites/prod.tafareej",
+    "server_name": "tafareej.com",
+    "ports": [9000, 9001, 9002, 9003]
+  },
+  "dev": {
+    "name": "dev",
+    "dir": "/home/mouad/sites/dev.tafareej",
+    "server_name": "dev.tafareej.com",
+    "ports": [8000]
+  }
+}
