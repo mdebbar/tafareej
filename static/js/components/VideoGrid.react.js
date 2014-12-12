@@ -9,12 +9,12 @@ var Spinner = require('./Spinner.react');
 
 var PinterestItem = Pinterest.Item;
 
-const COLUMN_WIDTH = 240;
-const COLUMN_MARGIN = 8;
+var COLUMN_WIDTH = 240;
+var COLUMN_MARGIN = 8;
 
-const PLAYING = 1;
-const PAUSED = 2;
-const STOPPED = 3;
+var PLAYING = 1;
+var PAUSED = 2;
+var STOPPED = 3;
 
 
 var VideoGrid = React.createClass({

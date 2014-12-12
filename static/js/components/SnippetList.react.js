@@ -5,7 +5,7 @@ var CSS = require('../util/CSS');
 var React = require('react');
 var SmartLink= require('./SmartLink.react');
 
-const IMAGE_SWITCHING_INTERVAL = 1000;
+var IMAGE_SWITCHING_INTERVAL = 1000;
 
 var SnippetImage = React.createClass({
   propTypes: {

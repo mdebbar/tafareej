@@ -8,7 +8,7 @@ var React = require('react');
 require('typeahead.js');
 
 
-const CLEAN_REGEX = /\s+/g;
+var CLEAN_REGEX = /\s+/g;
 function cleanQuery(query) {
   return query.trim().replace(CLEAN_REGEX, ' ');
 }

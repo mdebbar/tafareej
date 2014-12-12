@@ -2,7 +2,7 @@ var React = require('react');
 var SmartLink = require('./SmartLink.react');
 var YoutubePlayer = require('./YoutubePlayer.react');
 
-const IMAGE_RATIO = 4/3;
+var IMAGE_RATIO = 4/3;
 
 // TODO: decouple this from VideoGrid.react
 var PlayableVideo = React.createClass({

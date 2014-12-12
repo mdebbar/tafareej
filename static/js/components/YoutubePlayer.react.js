@@ -8,7 +8,7 @@ var URL = require('../util/URL');
 var X = require('../X');
 var YoutubeStore = require('../Stores').YoutubeStore;
 
-const PLAYER_ID = 'ytplayer';
+var PLAYER_ID = 'ytplayer';
 
 var seqID = 0;
 

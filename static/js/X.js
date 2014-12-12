@@ -1,8 +1,8 @@
 var merge = require('./util/merge');
 var qwest = require('./3party/qwest');
 
-const X_DEFAULT_DELAY = 0;
-const DEFAULT_OPTIONS = {
+var X_DEFAULT_DELAY = 0;
+var DEFAULT_OPTIONS = {
   // this prevents qwest from adding the parameter "__t" to the url.
   cache: true
 };
@@ -21,7 +21,7 @@ function buildURL(url, data) {
   if (!queryString) {
     return url;
   }
-  
+
   var middle = '';
   if (url.indexOf('?') === -1) {
     middle = '?';

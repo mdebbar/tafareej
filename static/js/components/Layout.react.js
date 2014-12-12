@@ -1,7 +1,7 @@
 var CSS = require('../util/CSS');
 var React = require('react');
 
-const COL_CLASS_PREFIXES = [
+var COL_CLASS_PREFIXES = [
   // 'col-xs-',
   // 'col-sm-',
   'col-md-',
