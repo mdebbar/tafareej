@@ -5,7 +5,7 @@
 
 for PORT in $@
 do
-  filename="log_"$PORT"_`date +%Y%m%d-%H%M%S`"
+  filename="/var/log/cherrypy/log_"$PORT"_`date +%Y%m%d-%H%M%S`"
   nohup python server.py $PORT </dev/null >$filename 2>&1 &
   # Append the PID of the server to the .pids file
   echo $! >> .pids

@@ -23,7 +23,7 @@ def main(site, branch='master'):
   server(site_conf['ports'])
 
 def execute(command, failure_msg):
-  if subprocess.call(*command) != 0:
+  if subprocess.call(command) != 0:
     raise Exception(failure_msg)
 
 def get_site_conf(site):
@@ -86,24 +86,6 @@ def build_js(production=True):
     'webpack could not build the resources',
   )
 
-def server(ports):
-  # Kill all python processes
-  # subprocess.call('sudo pgrep python | xargs kill -KILL', shell=True)
-  #   'Could not kill running servers'
-  # )
-  subprocess.call('cat .pids | xargs kill -KILL', shell=True)
-  execute(
-    ['./multi_server.sh'] + ports,
-    'Could not start CherryPy servers',
-  )
-  execute(
-    ['sudo', 'service', 'nginx', 'restart'],
-    'Could not restart nginx service',
-  )
-
-def _get_pattern(site_conf):
-  return '{{(%s)}}' % '|'.join(site_conf.iterkeys())
-
 def setup_nginx(site, site_conf):
   with open(SITE_CONF_TEMPLATE) as f:
     content = re.sub(
@@ -113,6 +95,25 @@ def setup_nginx(site, site_conf):
     )
   with open(os.path.join(NGINX_SITES, 'nginx.%s.conf' % site), 'w+') as f:
     f.write(content)
+
+def _get_pattern(site_conf):
+  return '{{(%s)}}' % '|'.join(site_conf.iterkeys())
+
+def server(ports):
+  # Kill all python processes
+  # subprocess.call('sudo pgrep python | xargs kill -KILL', shell=True)
+  #   'Could not kill running servers'
+  # )
+  if os.path.isfile('.pids'):
+    subprocess.call('cat .pids | xargs kill -KILL', shell=True)
+  execute(
+    ['./multi_server.sh'] + [str(p) for p in ports],
+    'Could not start CherryPy servers',
+  )
+  execute(
+    ['sudo', 'service', 'nginx', 'restart'],
+    'Could not restart nginx service',
+  )
 
 
 if __name__ == '__main__':
