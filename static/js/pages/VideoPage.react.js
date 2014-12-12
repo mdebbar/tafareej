@@ -19,7 +19,7 @@ var Column = Layout.Column;
 var MultiColumn = Layout.MultiColumn;
 var VideoCacheStore = Stores.VideoCacheStore;
 
-var ViewPage = React.createClass({
+var VideoPage = React.createClass({
   propTypes: {
     autoplay: React.PropTypes.bool,
     initialVideo: React.PropTypes.shape({
@@ -199,7 +199,7 @@ var ViewPage = React.createClass({
 
 
 React.render(
-  <ViewPage
+  <VideoPage
     initialVideo={Server.initialVideo}
     autoplay={Server.autoplay}
   />,
@@ -207,4 +207,4 @@ React.render(
 );
 
 
-module.exports = ViewPage;
+module.exports = VideoPage;

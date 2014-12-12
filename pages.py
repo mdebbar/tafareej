@@ -9,7 +9,7 @@ def home_page(**kwargs):
     'sitename': 'Tafareej',
   }
 
-@response.template('video.html', jschunks=['vendor', 'ViewPage'])
+@response.template('video.html', jschunks=['vendor', 'VideoPage'])
 def video_page(video_id, autoplay=True, **kwargs):
   video = api.one_video(video_id)
 
@@ -24,5 +24,6 @@ def video_page(video_id, autoplay=True, **kwargs):
 
 routes = (
   ('home.view', '/', home_page),
+  ('video.view', '/{video_id}', video_page),
   ('video.view', '/{video_id}/', video_page),
 )
