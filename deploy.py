@@ -61,10 +61,6 @@ def install():
     'Could not install npm packages',
   )
   execute(
-    ['workon', 'tafareej'],
-    'Could not find virtual env "tafareej"',
-  )
-  execute(
     ['pip', 'install', '-r', 'requirements.txt'],
     'Could not install python packages',
   )
