@@ -1,0 +1,29 @@
+html, body {
+  margin: 0;
+}
+
+html, body {
+  background-color: #fff;
+}
+
+.nodisplay {
+  display: none !important;
+}
+
+.row {
+  margin: 0;
+}
+
+.spinner {
+  background: url('../img/spinner_32.gif') center center no-repeat;
+  min-height: 66px;
+  min-width: 66px;
+}
+
+@media (min-width: 992px) {
+  .sticky-column {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+  }
+}

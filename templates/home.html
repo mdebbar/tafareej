@@ -1,0 +1,28 @@
+<%inherit file="base.html"/>
+
+<%block name="title">${sitename}</%block>
+
+<%block name="head_js">
+  ## jQuery is required for typeahead.js
+  <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+</%block>
+
+<%block name="body">
+  <div id="reactpage"></div>
+</%block>
+
+<%block name="body_js">
+  <script type="application/javascript">
+    var Server = {
+      siteName: '${sitename}'
+    };
+
+    var DOM = {
+      reactPage: document.getElementById('reactpage')
+    };
+  </script>
+
+  % for entry in jsentries:
+    <script src="/build/${entry}"></script>
+  % endfor
+</%block>

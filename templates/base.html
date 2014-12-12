@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <%block name="head">
+    <title><%block name="title"/></title>
+
+    <%block name="meta"/>
+
+    <%block name="css"/>
+
+    <%block name="head_js"/>
+  </%block>
+</head>
+<body>
+  ${self.body()}
+  <%block name="body_js"/>
+</body>
+</html>
