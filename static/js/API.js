@@ -1,3 +1,4 @@
+var Actions = require('./flux/Actions');
 var URL = require('./util/URL');
 var X = require('./X');
 
@@ -11,8 +12,8 @@ function errorHandler(err) {
   console.error(err);
 }
 
-function resultsCallback(callback, response) {
-  callback(response.items);
+function resultsCallback(callback, {items}) {
+  callback(items);
 }
 
 function paginator(apiMethod, apiArg) {
@@ -31,13 +32,17 @@ function paginator(apiMethod, apiArg) {
   };
 }
 
-function logResponse(response) {
-  var items = response.items;
+function logResponse({items}) {
   console.log(
     `Received ${items.length} items:`,
     items.map(item => item.id).join(',')
   );
 }
+
+function receiveVideos(videos) {
+  Actions.receiveVideos(videos);
+}
+
 
 var API = {
   /**
@@ -60,6 +65,7 @@ var API = {
     return this._search = new X(url)
       .success(paginator('search', query))
       .success(logResponse)
+      .success((response) => receiveVideos(response.items))
       .success(resultsCallback.bind(null, callback))
       .error(errorHandler);
   },
@@ -84,6 +90,7 @@ var API = {
     return this._related = new X(url)
       .success(paginator('related', videoID))
       .success(logResponse)
+      .success((response) => receiveVideos(response.items))
       .success(resultsCallback.bind(null, callback))
       .error(errorHandler);
   },
@@ -108,6 +115,7 @@ var API = {
     return this._popular = new X(url)
       .success(paginator('popular'))
       .success(logResponse)
+      .success((response) => receiveVideos(response.items))
       .success(resultsCallback.bind(null, callback))
       .error(errorHandler);
   },
@@ -117,6 +125,7 @@ var API = {
     this._one && this._one.abandon();
     this._one = new X(URL.API.video(videoID))
       .success(callback)
+      .success((video) => receiveVideos([video]))
       .error(errorHandler);
     return this._one;
   },
