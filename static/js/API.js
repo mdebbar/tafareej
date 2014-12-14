@@ -39,10 +39,6 @@ function logResponse({items}) {
   );
 }
 
-function receiveVideos(videos) {
-  Actions.receiveVideos(videos);
-}
-
 
 var API = {
   /**
@@ -65,7 +61,7 @@ var API = {
     return this._search = new X(url)
       .success(paginator('search', query))
       .success(logResponse)
-      .success((response) => receiveVideos(response.items))
+      .success((response) => Actions.receiveSearchVideos(query, response.items))
       .success(resultsCallback.bind(null, callback))
       .error(errorHandler);
   },
@@ -90,7 +86,7 @@ var API = {
     return this._related = new X(url)
       .success(paginator('related', videoID))
       .success(logResponse)
-      .success((response) => receiveVideos(response.items))
+      .success((response) => Actions.receiveRelatedVideos(videoID, response.items))
       .success(resultsCallback.bind(null, callback))
       .error(errorHandler);
   },
@@ -115,7 +111,7 @@ var API = {
     return this._popular = new X(url)
       .success(paginator('popular'))
       .success(logResponse)
-      .success((response) => receiveVideos(response.items))
+      .success((response) => Actions.receivePopularVideos(response.items))
       .success(resultsCallback.bind(null, callback))
       .error(errorHandler);
   },
@@ -125,7 +121,7 @@ var API = {
     this._one && this._one.abandon();
     this._one = new X(URL.API.video(videoID))
       .success(callback)
-      .success((video) => receiveVideos([video]))
+      .success((video) => Actions.receiveVideoData(video))
       .error(errorHandler);
     return this._one;
   },

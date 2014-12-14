@@ -3,9 +3,23 @@ var EventEmitter = require('events');
 var merge = require('../util/merge');
 var TafareejDispatcher = require('./TafareejDispatcher');
 
+var CHANGE_EVENT = 'change';
 var DEBUGGING_PREFIX = 'debug__';
 
 type Payload = {action: Object; source: string};
+
+class SubscriptionReleaser {
+  constructor(emitter: EventEmitter, event: string, fn: Function) {
+    this.emitter = emitter;
+    this.event = event;
+    this.fn = fn;
+  }
+
+  release() {
+    this.emitter.removeListener(this.event, this.fn);
+  }
+}
+
 
 class BaseStore extends EventEmitter {
 
@@ -17,20 +31,25 @@ class BaseStore extends EventEmitter {
     );
   }
 
+  subscribe(fn: Function): SubscriptionReleaser {
+    this.addListener(CHANGE_EVENT, fn);
+    return new SubscriptionReleaser(this, CHANGE_EVENT, fn);
+  }
+
   onDispatch(): ?boolean {}
 
-  getDebuggingName(): string {
+  getDebugName(): string {
     return this.constructor.name;
   }
 
   _registerForDebugging() {
-    var name = this.getDebuggingName();
+    var name = this.getDebugName();
     window[DEBUGGING_PREFIX + name] = this;
   }
 
   _baseDispatchHandler(payload: Payload) {
     if (this.onDispatch(payload)) {
-      this.emit('change');
+      this.emit(CHANGE_EVENT);
     }
   }
 };

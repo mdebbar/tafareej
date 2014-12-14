@@ -10,6 +10,7 @@ var InfiniteScroll = require('../components/InfiniteScroll.react');
 var Layout = require('../components/Layout.react');
 var React = require('react');
 var SearchableSnippetList = require('../components/SearchableSnippetList.react');
+var VideoResultsStore = require('../flux/VideoResultsStore');
 var VideoDataStore = require('../flux/VideoDataStore');
 var URI = require('../util/URI');
 var URL = require('../util/URL');
@@ -41,11 +42,27 @@ var VideoPage = React.createClass({
     // Initial history state will be set in _onSearch()
     HistoryManager.onSwitch(this._onHistorySwitch);
 
+    this._subscriptions = [
+      VideoResultsStore.subscribe(this._onStoreChange),
+    ];
+
     // use initial query on page load
     // TODO: Move this logic to a store
     var query = new URI().getParam('q') || HistoryManager.getState().query || '';
     this.refs.searchable.setQuery(query);
     this._onSearch(query);
+  },
+
+  _onStoreChange() {
+    console.log('changed!', arguments);
+    if (this._query)
+      console.log(VideoResultsStore.getSearchVideos(this._query));
+    else
+      console.log(VideoResultsStore.getRelatedVideos(this.state.video.id));
+  },
+
+  componentWillUnmount() {
+    this._subscriptions.forEach(sub => sub.release());
   },
 
   _enableInfiniteScroll() {
@@ -189,7 +206,7 @@ var VideoPage = React.createClass({
 });
 
 // Add the initial video to the VideoDataStore
-Actions.receiveVideos([Server.initialVideo]);
+Actions.receiveVideoData(Server.initialVideo);
 
 React.render(
   <VideoPage

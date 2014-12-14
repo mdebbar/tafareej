@@ -8,6 +8,7 @@ var API = require('../API');
 var HistoryManager = require('../HistoryManager');
 var InfiniteScroll = require('../components/InfiniteScroll.react');
 var React = require('react');
+var VideoResultsStore = require('../flux/VideoResultsStore');
 var SearchBox = require('../components/SearchBox.react');
 var URI = require('../util/URI');
 var VideoGrid = require('../components/VideoGrid.react');
@@ -30,10 +31,21 @@ var HomePage = React.createClass({
     // setup history management
     HistoryManager.onSwitch(this._onHistorySwitch);
 
+    VideoResultsStore.subscribe(this._onStoreChange);
+
     // Get query from URL or history state or load popular videos
     var query = new URI().getParam('q') || HistoryManager.getState().query || '';
     this.refs.search.setQuery(query);
     this._onSearch(query);
+  },
+
+  componentWillUnmount() {
+    this._subscriptions.forEach(sub => sub.release());
+  },
+
+  _onStoreChange() {
+    console.log('changed!', arguments);
+    console.log(VideoResultsStore.getPopularVideos(this._query));
   },
 
   _getPageTitle(query) {
