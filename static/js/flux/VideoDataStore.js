@@ -1,34 +1,39 @@
 var ActionTypes = require('./Actions').Types;
-var EventEmitter = require('events');
-var merge = require('../util/merge');
-var TafareejDispatcher = require('./TafareejDispatcher');
+var BaseStore = require('./BaseStore');
 
-var videos = {};
 
-var VideoDataStore = merge(EventEmitter.prototype, {
+class VideoDataStore extends BaseStore {
+
+  constructor() {
+    super();
+    this.videos = {};
+  }
+
   getAllVideos(): Object {
-    return videos;
-  },
+    return this.videos;
+  }
 
   getVideoByID(videoID: string): ?Object {
-    return videos[videoID];
-  },
-});
-
-VideoDataStore.dispatchToken = TafareejDispatcher.register(function({action}) {
-  switch (action.type) {
-    case ActionTypes.RECEIVE_VIDEOS:
-      if (!action.videos || action.videos.length === 0) {
-        break;
-      }
-      action.videos.forEach(video => {
-        videos[video.id] = video;
-      });
-      this.emit('change');
-      break;
+    return this.videos[videoID];
   }
-}.bind(VideoDataStore));
 
-window.debug__VideoDataStore = VideoDataStore;
+  onDispatch({action}): boolean {
+    switch (action.type) {
+      case ActionTypes.RECEIVE_VIDEOS:
+        if (!action.videos || action.videos.length === 0) {
+          return;
+        }
 
-module.exports = VideoDataStore;
+        //mergeInto(
+        //  this.videos,
+        //  x(action.videos).map(v => [v.id, v]).zip()
+        //);
+        action.videos.forEach(video => {
+          this.videos[video.id] = video;
+        });
+        return true;
+    }
+  }
+}
+
+module.exports = new VideoDataStore();
