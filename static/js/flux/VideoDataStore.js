@@ -1,5 +1,7 @@
 var ActionTypes = require('./Actions').Types;
+var API = require('../API');
 var BaseStore = require('./BaseStore');
+var Immutable = require('immutable');
 
 
 class VideoDataStore extends BaseStore {
@@ -13,7 +15,13 @@ class VideoDataStore extends BaseStore {
     return this.videos;
   }
 
-  getVideoByID(videoID: string): ?Object {
+  getVideoByID(videoID: string): Immutable.Map<string, any> {
+    if (!this.videos[videoID]) {
+      // Fetch data for the video.
+      API.one(videoID);
+      // Put temporary video data in place.
+      this._addVideo({id: videoID, title: 'Loading video data...'});
+    }
     return this.videos[videoID];
   }
 
@@ -42,7 +50,7 @@ class VideoDataStore extends BaseStore {
   }
 
   _addVideo(video: Object) {
-    this.videos[video.id] = video;
+    this.videos[video.id] = Immutable.Map(video);
   }
 }
 

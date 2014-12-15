@@ -136,7 +136,7 @@ var SnippetList = React.createClass({
         {isActiveVideo && <SnippetNub />}
         <SnippetItem
           video={video}
-          onClick={this.props.onSnippetClick.bind(null, video)}
+          onClick={this.props.onSnippetClick.bind(null, video.id)}
         />
       </li>
     );

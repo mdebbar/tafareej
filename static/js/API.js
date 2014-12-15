@@ -116,11 +116,9 @@ var API = {
       .error(errorHandler);
   },
 
-  one(videoID, callback) {
+  one(videoID) {
     console.log('Getting info for:', videoID);
-    this._one && this._one.abandon();
     this._one = new X(URL.API.video(videoID))
-      .success(callback)
       .success((video) => Actions.receiveVideoData(video))
       .error(errorHandler);
     return this._one;

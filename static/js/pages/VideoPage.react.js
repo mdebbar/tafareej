@@ -6,6 +6,7 @@ require('../../css/flat.am.css');
 var Actions = require('../flux/Actions');
 var API = require('../API');
 var HistoryManager = require('../HistoryManager');
+var Immutable = require('immutable');
 var InfiniteScroll = require('../components/InfiniteScroll.react');
 var Layout = require('../components/Layout.react');
 var React = require('react');
@@ -23,18 +24,14 @@ var MultiColumn = Layout.MultiColumn;
 var VideoPage = React.createClass({
   propTypes: {
     autoplay: React.PropTypes.bool,
-    initialVideo: React.PropTypes.shape({
-      id: React.PropTypes.string,
-      title: React.PropTypes.string,
-      url: React.PropTypes.string,
-    }).isRequired,
+    initialVideoID: React.PropTypes.string.isRequired,
   },
 
   getInitialState() {
     return {
       isLoading: false,
       snippets: [],
-      video: this.props.initialVideo,
+      videoID: this.props.initialVideoID,
     };
   },
 
@@ -43,6 +40,7 @@ var VideoPage = React.createClass({
     HistoryManager.onSwitch(this._onHistorySwitch);
 
     this._subscriptions = [
+      VideoDataStore.subscribe(this._update),
       VideoResultsStore.subscribe(this._onStoreChange),
     ];
 
@@ -53,16 +51,42 @@ var VideoPage = React.createClass({
     this._onSearch(query);
   },
 
+  componentWillUpdate(nextProps: Object, nextState: Object) {
+    // Switching to a new video.
+    if (this.state.videoID !== nextState.videoID) {
+      this.updateHistory(nextState.videoID, this._query);
+    }
+
+    // We now have data for a video that was not available before.
+    // if (we have video data now but didn't have it before) {
+    //   this.updateHistory(nextState.videoID, this._query, true);
+    // }
+  },
+
+  componentWillUnmount() {
+    this._subscriptions.forEach(sub => sub.release());
+  },
+
+  // TODO: Move all history-related logic to the history store.
+  updateHistory(videoID: string, query: string, replace?: boolean) {
+    var method = replace ? 'replace' : 'push';
+    HistoryManager[method](
+      {videoID, query},
+      VideoDataStore.getVideoByID(videoID).get('title'),
+      this._buildURL(videoID, query)
+    );
+  },
+
   _onStoreChange() {
     console.log('changed!', arguments);
     if (this._query)
       console.log(VideoResultsStore.getSearchVideos(this._query));
     else
-      console.log(VideoResultsStore.getRelatedVideos(this.state.video.id));
+      console.log(VideoResultsStore.getRelatedVideos(this.state.videoID));
   },
 
-  componentWillUnmount() {
-    this._subscriptions.forEach(sub => sub.release());
+  _update() {
+    this.forceUpdate();
   },
 
   _enableInfiniteScroll() {
@@ -74,8 +98,8 @@ var VideoPage = React.createClass({
   },
 
   _onHistorySwitch(event) {
-    var {query, video} = event.state;
-    this.setState({video});
+    var {query, videoID} = event.state;
+    this.setState({videoID});
     this.refs.searchable.setQuery(query);
     this._onSearch(query);
   },
@@ -87,7 +111,7 @@ var VideoPage = React.createClass({
           <YoutubePlayerContainer
             className="youtube-player-absolute"
             autoplay={this.props.autoplay}
-            video={this.state.video}
+            video={VideoDataStore.getVideoByID(this.state.videoID)}
             onSwitchVideo={this._videoSelectedFromPlayer}
           />
         </Column>
@@ -100,7 +124,7 @@ var VideoPage = React.createClass({
               ref="searchable"
               isLoading={this.state.isLoading}
               videoList={this.state.isLoading ? [] : this.state.snippets}
-              selectedVideoID={this.state.video.id}
+              selectedVideoID={this.state.videoID}
               onSearch={this._onSearch}
               onSnippetClick={this._setVideo}
             />
@@ -136,48 +160,22 @@ var VideoPage = React.createClass({
     this.refs.searchable.setQuery('');
     this._query = '';
 
-    var cachedVideo = VideoDataStore.getVideoByID(videoID);
-    if (cachedVideo) {
-      this._setVideo(cachedVideo);
-      // show related videos
-      this._related(videoID);
-    } else {
-      HistoryManager.push(
-        {video: {id: videoID}, query: this._query},
-        'Loading...',
-        this._buildURL(videoID, this._query)
-      );
-      API.one(videoID, function(video) {
-        this._setVideo(video, true);
-        // show related videos
-        this._related(videoID);
-      }.bind(this));
-    }
+    this.setState({videoID});
+    // this._related(videoID);
   },
 
-  _setVideo(video, replaceState) {
-    this.setState({video});
-    var historyState = {video, query: this._query};
-    var historyURL = this._buildURL(video.id, this._query);
-    if (replaceState) {
-      HistoryManager.replace(historyState, video.title, historyURL);
-    } else {
-      HistoryManager.push(historyState, video.title, historyURL);
-    }
+  _setVideo(videoID) {
+    this.setState({videoID});
   },
 
   _onSearch(query) {
     this._query = query;
 
-    HistoryManager.replace(
-      {video: this.state.video, query: query},
-      this.state.video.title,
-      this._buildURL(this.state.video.id, query)
-    );
+    this.updateHistory(this.state.videoID, query, /*replace*/ true);
     if (query) {
       this._search(query);
     } else {
-      this._related(this.state.video.id);
+      this._related(this.state.videoID);
     }
   },
 
@@ -210,7 +208,7 @@ Actions.receiveVideoData(Server.initialVideo);
 
 React.render(
   <VideoPage
-    initialVideo={Server.initialVideo}
+    initialVideoID={Server.initialVideo.id}
     autoplay={Server.autoplay}
   />,
   DOM.reactPage

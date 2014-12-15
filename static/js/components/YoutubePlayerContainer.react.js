@@ -1,10 +1,11 @@
+var Immutable = require('immutable');
 var React = require('react');
 var YoutubePlayer = require('./YoutubePlayer.react');
 
 var YoutubePlayerContainer = React.createClass({
   propTypes: {
-    autoplay: React.PropTypes.bool,
-    video: React.PropTypes.object.isRequired,
+    autoplay: React.PropTypes.bool.isRequired,
+    video: React.PropTypes.instanceOf(Immutable.Map).isRequired,
     onSwitchVideo: React.PropTypes.func,
   },
 
@@ -20,17 +21,17 @@ var YoutubePlayerContainer = React.createClass({
     };
   },
 
- shouldComponentUpdate({video}, nextState) {
+  shouldComponentUpdate({video}, nextState) {
     return video !== this.props.video || nextState !== this.state;
   },
 
- render() {
+  render() {
     var {video, ...others} = this.props;
     var player =
       <YoutubePlayer
         {...others}
         ref="player"
-        videoID={video.id}
+        videoID={video.get('id')}
         onEnd={this._onEnd}
       />;
 
@@ -52,17 +53,19 @@ var YoutubePlayerContainer = React.createClass({
           {' '}
           Repeat
         </label>
-        <h2 className="youtube-title" dir="auto">{video.title}</h2>
+        <h2 className="youtube-title" dir="auto">
+          {video.get('title')}
+        </h2>
       </div>
       );
   },
 
- _onRepeatChange(event) {
+  _onRepeatChange(event) {
     this.setState({repeat: event.target.checked});
   },
 
- _onEnd() {
-    if (this.state.repeat) {
+  _onEnd() {
+   if (this.state.repeat) {
       this.refs.player.play();
     }
   }

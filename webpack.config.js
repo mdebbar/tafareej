@@ -6,6 +6,8 @@ module.exports = {
     vendor: [
       // JS
       'react',
+      'flux',
+      'immutable',
       'typeahead.js',
       path.join(__dirname, 'static/js/3party/qwest.js'),
       // CSS
