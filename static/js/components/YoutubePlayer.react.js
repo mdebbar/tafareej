@@ -4,27 +4,17 @@ require('../../css/player.css');
 var CSS = require('../util/CSS');
 var React = require('react');
 var Spinner = require('./Spinner.react');
+var Subscriptions = require('../mixins/Subscriptions');
 var URL = require('../util/URL');
-var X = require('../X');
-var YoutubeStore = require('../Stores').YoutubeStore;
+var YoutubeAPILoader = require('../util/YoutubeAPILoader');
 
 const PLAYER_ID = 'ytplayer';
 
 var seqID = 0;
 
-var loaded = false;
-function loadYoutubePlayer() {
-  if (loaded) {
-    return;
-  }
-  loaded = true;
-  return new X(URL.youtubePlayer('ytplayer')).jsonp();
-}
-
-// This must be global because the Youtube API needs to call it.
-window.onYouTubeIframeAPIReady = YoutubeStore.set.bind(YoutubeStore, 'api.ready', true);
-
 var YoutubePlayer = React.createClass({
+  mixins: [Subscriptions],
+
   propTypes: {
     autoplay: React.PropTypes.bool,
     theme: React.PropTypes.oneOf(['dark', 'light']),
@@ -32,6 +22,7 @@ var YoutubePlayer = React.createClass({
     height: React.PropTypes.number,
     videoID: React.PropTypes.string.isRequired,
     onSwitchVideo: React.PropTypes.func,
+
     // Player events:
     onPlay: React.PropTypes.func,
     onPause: React.PropTypes.func,
@@ -51,24 +42,25 @@ var YoutubePlayer = React.createClass({
 
   componentWillMount() {
     this.playerID = PLAYER_ID + String(seqID++);
-    this.playerLoader = loadYoutubePlayer();
   },
 
-  componentDidMount() {
-    if (YoutubeStore.get('api.ready')) {
-      this._onYoutubeAPIReady();
-    } else {
-      this._listener = YoutubeStore.listen('api.ready', this._onYoutubeAPIReady);
-    }
+  getSubscriptions() {
+    return [
+      YoutubeAPILoader.load(this._onYoutubeAPIReady),
+    ];
   },
 
   componentWillUnmount() {
-    this._listener && this._listener.remove();
-    this.playerLoader && this.playerLoader.abandon();
     this.player && this.player.destroy();
   },
 
   componentWillReceiveProps({videoID}) {
+    if (this.player) {
+      this.maybeUpdatePlayer(videoID);
+    }
+  },
+
+  maybeUpdatePlayer(videoID) {
     if (this.player.getVideoData().video_id !== videoID) {
       // If it's a different video => stop current video + load the new one!
       // (loading will automatically play the video)
@@ -104,9 +96,13 @@ var YoutubePlayer = React.createClass({
     );
   },
 
-  _onYoutubeAPIReady() {
+  _onYoutubeAPIReady(YT) {
+    if (!this.isMounted()) {
+      return;
+    }
+    this.YT = YT;
     var {autoplay, videoID, width, height, theme} = this.props;
-    this.player = new YT.Player(this.playerID, {
+    new YT.Player(this.playerID, {
       width: String(width),
       height: String(height),
       videoId: videoID,
@@ -116,31 +112,40 @@ var YoutubePlayer = React.createClass({
         theme: theme,
       },
       events: {
+        onReady: this._onPlayerReady,
         onStateChange: this._onPlayerStateChange,
       },
     });
+  },
+
+  _onPlayerReady(event) {
+    if (!this.isMounted()) {
+      return;
+    }
+    this.player = event.target;
+    this.maybeUpdatePlayer(this.props.videoID);
   },
 
   _onPlayerStateChange(event) {
     // Respond to player events
     // Possible states: {UNSTARTED: -1, ENDED: 0, PLAYING: 1, PAUSED: 2, BUFFERING: 3, CUED: 5}
     switch (event.data) {
-      case YT.PlayerState.UNSTARTED:
+      case this.YT.PlayerState.UNSTARTED:
         var videoID = event.target.getVideoData().video_id;
         if (videoID !== this.props.videoID) {
           this.props.onSwitchVideo(videoID);
         }
         break;
-      case YT.PlayerState.PLAYING:
+      case this.YT.PlayerState.PLAYING:
         this.props.onPlay && this.props.onPlay();
         break;
-      case YT.PlayerState.PAUSED:
+      case this.YT.PlayerState.PAUSED:
         this.props.onPause && this.props.onPause();
         break;
-      case YT.PlayerState.ENDED:
+      case this.YT.PlayerState.ENDED:
         this.props.onEnd && this.props.onEnd();
         break;
-      case YT.PlayerState.BUFFERING:
+      case this.YT.PlayerState.BUFFERING:
         this.props.onBuffering && this.props.onBuffering();
         break;
     }

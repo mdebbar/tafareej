@@ -46,7 +46,7 @@ def content_type(fn, ctype):
 
 @make_decorator
 def json(fn, jsonify=True, allow_jsonp=True, callback='callback'):
-  @content_type('text/javascript')
+  @content_type('application/json')
   def actual(*args, **kwargs):
     out = fn(*args, **kwargs)
     if (jsonify):
