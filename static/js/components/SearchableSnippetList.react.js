@@ -1,5 +1,6 @@
 var CSS = require('../util/CSS');
 var colClass = require('./Layout.react').colClass;
+var Immutable = require('immutable');
 var React = require('react');
 var SearchBox = require('./SearchBox.react');
 var SnippetList = require('./SnippetList.react');
@@ -9,7 +10,7 @@ var SearchableSnippetList = React.createClass({
   propTypes: {
     isLoading: React.PropTypes.bool,
     selectedVideoID: React.PropTypes.string,
-    videoList: React.PropTypes.array.isRequired,
+    videoList: React.PropTypes.instanceOf(Immutable.Seq).isRequired,
     onSearch: React.PropTypes.func.isRequired,
     onSnippetClick: React.PropTypes.func,
   },

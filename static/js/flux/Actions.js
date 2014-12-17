@@ -8,6 +8,8 @@ var ActionTypes = Map.keyMirror({
   RECEIVE_POPULAR_VIDEOS: null,
 });
 
+type Response = {items: Array<Object>; nextPageToken: ?string};
+
 
 module.exports = {
   Types: ActionTypes,
@@ -19,26 +21,29 @@ module.exports = {
     });
   },
 
-  receiveSearchVideos(query: string, videos: Array<Object>) {
+  receiveSearchVideos(query: string, response: Response) {
     TafareejDispatcher.handleServerAction({
       type: ActionTypes.RECEIVE_SEARCH_VIDEOS,
       query: query,
-      videos: videos,
+      videos: response.items,
+      nextPageToken: response.nextPageToken,
     });
   },
 
-  receiveRelatedVideos(videoID: string, videos: Array<Object>) {
+  receiveRelatedVideos(videoID: string, response: Response) {
     TafareejDispatcher.handleServerAction({
       type: ActionTypes.RECEIVE_RELATED_VIDEOS,
       videoID: videoID,
-      videos: videos,
+      videos: response.items,
+      nextPageToken: response.nextPageToken,
     });
   },
 
-  receivePopularVideos(videos: Array<Object>) {
+  receivePopularVideos(response: Response) {
     TafareejDispatcher.handleServerAction({
       type: ActionTypes.RECEIVE_POPULAR_VIDEOS,
-      videos: videos,
+      videos: response.items,
+      nextPageToken: response.nextPageToken,
     });
   },
 };

@@ -2,6 +2,7 @@
 require('../../css/video-grid.css');
 
 var CSS = require('../util/CSS');
+var Immutable = require('immutable');
 var Pinterest = require('./Pinterest.react');
 var PlayableVideo = require('./PlayableVideo.react');
 var React = require('react');
@@ -20,7 +21,7 @@ const STOPPED = 3;
 var VideoGrid = React.createClass({
   propTypes: {
     isLoading: React.PropTypes.bool,
-    videos: React.PropTypes.array.isRequired,
+    videos: React.PropTypes.instanceOf(Immutable.Seq).isRequired,
   },
 
   getInitialState: function() {
@@ -47,7 +48,7 @@ var VideoGrid = React.createClass({
         className={CSS.join(this.props.className, 'video-grid-container')}
         columnWidth={COLUMN_WIDTH}
         columnMargin={COLUMN_MARGIN}>
-        {videos.map(this._renderItem)}
+        {videos.map(this._renderItem).toArray()}
         <Spinner
           className="video-grid-spinner"
           shown={isLoading}
@@ -58,13 +59,13 @@ var VideoGrid = React.createClass({
 
   _renderItem: function(video) {
     var colSpan = 1;
-    if (this.state.players[video.id] === PLAYING) {
+    if (this.state.players[video.get('id')] === PLAYING) {
       colSpan = 2;
     }
     return (
       <PinterestItem columnSpan={colSpan}>
         <PlayableVideo
-          ref={'item_' + video.id}
+          ref={'item_' + video.get('id')}
           className="video-grid-item"
           data-background="white hover"
           data-border="all"

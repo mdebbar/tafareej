@@ -3,12 +3,27 @@ var API = require('../API');
 var BaseStore = require('./BaseStore');
 var Immutable = require('immutable');
 
+var Status = {
+  NONE: null,
+  PENDING: '__pending__',
+  DONE: '__done__',
+};
 
 class VideoDataStore extends BaseStore {
 
   constructor() {
     super();
+
+    // Maps video IDs to video data.
     this.videos = {};
+
+    /**
+     * Maps video IDs to their status. Possible statuses:
+     * - Status.NONE: not requested yet.
+     * - Status.PENDING: the video is being fetched.
+     * - Status.DONE: the video has been fetched.
+     */
+    this.status = {};
   }
 
   getAllVideos(): Object {
@@ -16,11 +31,14 @@ class VideoDataStore extends BaseStore {
   }
 
   getVideoByID(videoID: string): Immutable.Map<string, any> {
-    if (!this.videos[videoID]) {
+    if (this.status[videoID] == Status.NONE) {
       // Fetch data for the video.
-      API.one(videoID);
+      setTimeout(() => API.one(videoID), 0);
+      this.status[videoID] = Status.PENDING;
+    }
+    if (!this.videos[videoID]) {
       // Put temporary video data in place.
-      this._addVideo({id: videoID, title: 'Loading video data...'});
+      this.videos[videoID] = Immutable.Map({id: videoID});
     }
     return this.videos[videoID];
   }
@@ -51,6 +69,7 @@ class VideoDataStore extends BaseStore {
 
   _addVideo(video: Object) {
     this.videos[video.id] = Immutable.Map(video);
+    this.status[video.id] = Status.DONE;
   }
 }
 
