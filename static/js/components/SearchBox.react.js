@@ -3,9 +3,10 @@ require('../../css/typeaheadjs.css');
 require('../../css/search-box.css');
 
 var API = require('../API');
-var debounce = require('../util/debounce');
+var BloodhoundEngine = require('../util/BloodhoundEngine');
 var React = require('react');
-require('typeahead.js');
+
+var debounce = require('../util/debounce');
 
 
 const CLEAN_REGEX = /\s+/g;
@@ -65,12 +66,13 @@ var SearchBox = React.createClass({
   },
 
   componentDidMount() {
+    BloodhoundEngine.initialize();
     this._onSearchDebounced = debounce(this.props.onSearch, 500);
 
     // TODO: implement my own typeahead
     $(this.refs.input.getInputDOMNode()).typeahead(
       {hint: false, minLength: 2},
-      {displayKey: 'value', source: debounce(this._onAutocomplete, 500)}
+      {displayKey: 'value', source: BloodhoundEngine.ttAdapter()}
     ).on(
       'typeahead:selected typeahead:autocompleted',
       this._onTypeaheadSelected
@@ -82,12 +84,6 @@ var SearchBox = React.createClass({
     delete this._onSearchDebounced;
 
     $(this.refs.input.getInputDOMNode()).typeahead('destroy');
-  },
-
-  _onAutocomplete(query, process) {
-    API.autocomplete(query, function(results) {
-      process(results.map((value) => ({value})));
-    });
   },
 
   setQuery(query) {

@@ -72,19 +72,3 @@ def related(video_id, page_token=None, **options):
   if page_token is not None:
     options['pageToken'] = page_token
   return searchWithDetails(None, relatedToVideoId=video_id, **options)
-
-
-AUTOCOMPLETE_URL = 'http://suggestqueries.google.com/complete/search'
-AUTOCOMPLETE_CALLBACK = '__unexpected_callback__'
-
-@retry
-def autocomplete(query):
-  req_options = merge_defaults('autocomplete', {'callback': AUTOCOMPLETE_CALLBACK})
-  req_options['q'] = unicode(query)
-  response = requests.get(AUTOCOMPLETE_URL, params=req_options).text
-  # Strip the callback part
-  return response[
-    response.find(AUTOCOMPLETE_CALLBACK + '(') + len(AUTOCOMPLETE_CALLBACK + '(')
-    :
-    response.rfind(')')
-  ]

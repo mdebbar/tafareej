@@ -3,7 +3,7 @@ var TafareejDispatcher = require('./TafareejDispatcher');
 
 var ActionTypes = Map.keyMirror({
   RECEIVE_VIDEO_DATA:     null,
-  RECEIVE_SEARCH_VIDEOS: null,
+  RECEIVE_SEARCH_VIDEOS:  null,
   RECEIVE_RELATED_VIDEOS: null,
   RECEIVE_POPULAR_VIDEOS: null,
 });

@@ -13,7 +13,7 @@ const API_RELATED_PAGE_URL = '/api/related/' + VIDEO_ID + '/page/' + PAGE_TOKEN 
 const API_POPULAR_URL = '/api/popular/';
 const API_POPULAR_PAGE_URL = '/api/popular/page/' + PAGE_TOKEN + '/';
 const API_VIDEO_URL   = '/api/' + VIDEO_ID + '/';
-const API_AUTOCOMPLETE = '/api/autocomplete/' + QUERY + '/';
+const API_AUTOCOMPLETE = 'http://suggestqueries.google.com/complete/search?client=youtube&hl=en&q=' + QUERY;
 
 // other URLs
 const VIDEO_URL = '/' + VIDEO_ID + '/';
