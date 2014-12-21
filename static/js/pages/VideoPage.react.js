@@ -3,13 +3,17 @@ require('../../css/bootstrap.css');
 require('../../css/global.css');
 require('../../css/flat.am.css');
 
+var Actions = require('../flux/Actions');
 var API = require('../API');
 var HistoryManager = require('../HistoryManager');
+var Immutable = require('immutable');
 var InfiniteScroll = require('../components/InfiniteScroll.react');
 var Layout = require('../components/Layout.react');
 var React = require('react');
 var SearchableSnippetList = require('../components/SearchableSnippetList.react');
-var Stores = require('../Stores');
+var Subscriptions = require('../mixins/Subscriptions');
+var VideoResultsStore = require('../flux/VideoResultsStore');
+var VideoDataStore = require('../flux/VideoDataStore');
 var URI = require('../util/URI');
 var URL = require('../util/URL');
 var YoutubePlayerContainer = require('../components/YoutubePlayerContainer.react');
@@ -17,190 +21,179 @@ var YoutubePlayerContainer = require('../components/YoutubePlayerContainer.react
 
 var Column = Layout.Column;
 var MultiColumn = Layout.MultiColumn;
-var VideoCacheStore = Stores.VideoCacheStore;
+
+var PAGE_SIZE = 15;
 
 var VideoPage = React.createClass({
+  mixins: [Subscriptions],
+
   propTypes: {
     autoplay: React.PropTypes.bool,
-    initialVideo: React.PropTypes.shape({
-      id: React.PropTypes.string,
-      title: React.PropTypes.string,
-      url: React.PropTypes.string,
-    }).isRequired,
+    initialVideoID: React.PropTypes.string.isRequired,
   },
 
   getInitialState() {
     return {
-      isLoading: false,
-      snippets: [],
-      video: this.props.initialVideo,
+      // The video that is being watched.
+      videoID: this.props.initialVideoID,
+      // Show related videos for this video.
+      relatedVideoID: this.props.initialVideoID,
+      query: new URI().getParam('q') || HistoryManager.getState().query || '',
+      limit: PAGE_SIZE,
     };
   },
 
- componentDidMount() {
-   // Initial history state will be set in _onSearch()
-   HistoryManager.onSwitch(this._onHistorySwitch);
-
-   // use initial query on page load
-   // TODO: Move this logic to a store
-   var query = new URI().getParam('q') || HistoryManager.getState().query || '';
-   this.refs.searchable.setQuery(query);
-   this._onSearch(query);
-
-   // cache initial video
-   this._cacheVideo(this.state.video);
- },
-
- _enableInfiniteScroll() {
-    this.refs.scroller.enable();
+  getSubscriptions() {
+    return [
+      VideoResultsStore.subscribe(() => this.forceUpdate()),
+      VideoDataStore.subscribe(() => this.forceUpdate()),
+    ];
   },
 
- _disableInfiniteScroll() {
-    this.refs.scroller.disable();
- },
+  componentDidMount() {
+    this.updateHistory(this.state, true);
+    HistoryManager.onSwitch(this.onHistorySwitch);
 
- _onHistorySwitch(event) {
-   var {query, video} = event.state;
-   this.setState({video});
-   this.refs.searchable.setQuery(query);
-   this._onSearch(query);
- },
+    // use initial query on page load
+    // TODO: Move this logic to a store
+    // var query = new URI().getParam('q') || HistoryManager.getState().query || '';
+    this.refs.searchable.setQuery(this.state.query);
+    this.newSearch(this.state.query);
+  },
 
- render() {
-   return (
-     <MultiColumn>
-       <Column className="sticky-column" size={7} push={5}>
-         <YoutubePlayerContainer
-           className="youtube-player-absolute"
-           autoplay={this.props.autoplay}
-           video={this.state.video}
-           onSwitchVideo={this._videoSelectedFromPlayer}
-         />
-       </Column>
-       <Column size={5}>
-         <InfiniteScroll
-           ref="scroller"
-           buffer={800}
-           onTrigger={this._fetchMoreSnippets}>
-           <SearchableSnippetList
-             ref="searchable"
-             isLoading={this.state.isLoading}
-             videoList={this.state.isLoading ? [] : this.state.snippets}
-             selectedVideoID={this.state.video.id}
-             onSearch={this._onSearch}
-             onSnippetClick={this._setVideo}
-           />
-         </InfiniteScroll>
-       </Column>
-     </MultiColumn>
-   );
- },
+  componentWillUpdate(nextProps: Object, nextState: Object) {
+    if (nextState.updateHistory && this.state.videoID !== nextState.videoID) {
+      // Switching to a new video.
+      this.updateHistory(nextState);
+    } else if (this.state.query !== nextState.query) {
+      // Scroll to the top
+      window.scrollTo(0, 0);
+      this.updateHistory(nextState, /*replace*/ true);
+    }
 
- _buildURL(videoID, query) {
-   var params = new URI().getParams();
-   var url = new URI(URL.video(videoID)).setParams(params);
-   return query ? url.setParam('q', query) : url.removeParam('q');
- },
+    // We now have data for a video that was not available before.
+    // if (we have video data now but didn't have it before) {
+    //   this.updateHistory(nextState.videoID, nextState.query, /*replace*/ true);
+    // }
+  },
 
- _search(query) {
-   this._disableInfiniteScroll();
-   this.setState({isLoading: true});
-   this.api && this.api.abandon();
-   this.api = API.search(query, this._setSnippets);
- },
+  componentDidUpdate() {
+    if (this.isInfiniteScrollEnabled()) {
+      return;
+    }
 
- _related(videoID) {
-   this._disableInfiniteScroll();
-   this.setState({isLoading: true});
-   this.api && this.api.abandon();
-   this.api = API.related(videoID, this._setSnippets);
- },
-
- // Called when the user clicks on a suggestion from inside the player.
-  _videoSelectedFromPlayer(videoID) {
-    // Clear search query
-    this.refs.searchable.setQuery('');
-    this._query = '';
-
-    var cachedVideo = VideoCacheStore.get(videoID);
-    if (cachedVideo) {
-      this._setVideo(cachedVideo);
-      // show related videos
-      this._related(videoID);
-    } else {
-      HistoryManager.push(
-        {video: {id: videoID}, query: this._query},
-        'Loading...',
-        this._buildURL(videoID, this._query)
-      );
-      API.one(videoID, function(video) {
-        this._setVideo(video, true);
-        // show related videos
-        this._related(videoID);
-      }.bind(this));
+    var wantedCount = this.state.limit;
+    var availableCount = this.getVideoIDs(this.state).size;
+    // If we are already showing enough videos, enable the infinite scroll
+    if (availableCount >= wantedCount) {
+      this.enableInfiniteScroll();
     }
   },
 
- _setVideo(video, replaceState) {
-   this.setState({video});
-   var historyState = {video, query: this._query};
-   var historyURL = this._buildURL(video.id, this._query);
-   if (replaceState) {
-     HistoryManager.replace(historyState, video.title, historyURL);
-   } else {
-     HistoryManager.push(historyState, video.title, historyURL);
-   }
- },
+  // TODO: Move all history-related logic to the history store.
+  updateHistory({videoID, query}, replace) {
+    var method = replace ? 'replace' : 'push';
+    HistoryManager[method](
+      {videoID, query},
+      VideoDataStore.getVideoByID(videoID).get('title'),
+      this.buildURL(videoID, query)
+    );
+  },
 
- _onSearch(query) {
-   this._query = query;
+  isInfiniteScrollEnabled() {
+    this.refs.scroller.isEnabled();
+  },
 
-   HistoryManager.replace(
-     {video: this.state.video, query: query},
-     this.state.video.title,
-     this._buildURL(this.state.video.id, query)
-   );
-   if (query) {
-     this._search(query);
-   } else {
-     this._related(this.state.video.id);
-   }
- },
+  enableInfiniteScroll() {
+     this.refs.scroller.enable();
+  },
 
- _fetchMoreSnippets() {
-   if (this.api && typeof this.api.next === 'function') {
-     this.api = this.api.next(this._appendSnippets);
-   }
- },
+  disableInfiniteScroll() {
+     this.refs.scroller.disable();
+  },
 
- _setSnippets(videos) {
-   videos.forEach(this._cacheVideo);
-   this.setState({
-     isLoading: false,
-     snippets: videos
-   }, this._enableInfiniteScroll);
- },
+  onHistorySwitch(event) {
+    var {query, videoID} = event.state;
+    this.setState({
+      videoID: videoID,
+      updateHistory: false,
+    });
+    this.refs.searchable.setQuery(query);
+    this.newSearch(query);
+  },
 
- _appendSnippets(videos) {
-   if (!Array.isArray(videos) || videos.length === 0) {
-     return;
-   }
-   videos.forEach(this._cacheVideo);
-   this.setState(
-     {snippets: this.state.snippets.concat(videos)},
-     this._enableInfiniteScroll
-   );
- },
+  getVideoIDs({relatedVideoID, query, limit}) {
+    return query
+      ? VideoResultsStore.getSearchVideos(query, 0, limit)
+      : VideoResultsStore.getRelatedVideos(relatedVideoID, 0, limit);
+  },
 
- _cacheVideo(video) {
-   VideoCacheStore.set(video.id, video);
- },
+  render() {
+    var videos = this.getVideoIDs(this.state).map(id => VideoDataStore.getVideoByID(id));
+    return (
+      <MultiColumn>
+        <Column className="sticky-column" size={7} push={5}>
+          <YoutubePlayerContainer
+            className="youtube-player-absolute"
+            autoplay={this.props.autoplay}
+            video={VideoDataStore.getVideoByID(this.state.videoID)}
+            onSwitchVideo={this.setVideo}
+          />
+        </Column>
+        <Column size={5}>
+          <InfiniteScroll
+            ref="scroller"
+            buffer={800}
+            onTrigger={this.paginate}>
+            <SearchableSnippetList
+              ref="searchable"
+              isLoading={videos.size === 0}
+              videoList={videos}
+              selectedVideoID={this.state.videoID}
+              onSearch={this.newSearch}
+              onSnippetClick={this.setVideo}
+            />
+          </InfiniteScroll>
+        </Column>
+      </MultiColumn>
+    );
+  },
+
+  buildURL(videoID, query) {
+    var params = new URI().getParams();
+    var url = new URI(URL.video(videoID)).setParams(params);
+    return query ? url.setParam('q', query) : url.removeParam('q');
+  },
+
+  setVideo(videoID) {
+    this.setState({
+      videoID: videoID,
+      updateHistory: true,
+    });
+  },
+
+  newSearch(query) {
+    this.disableInfiniteScroll();
+    this.setState({
+      query: query,
+      limit: PAGE_SIZE,
+    });
+  },
+
+  paginate() {
+    this.disableInfiniteScroll();
+    this.setState({
+      limit: this.state.limit + PAGE_SIZE,
+    });
+  },
 });
 
+// Add the initial video to the VideoDataStore
+Actions.receiveVideoData(Server.initialVideo);
 
 React.render(
   <VideoPage
-    initialVideo={Server.initialVideo}
+    initialVideoID={Server.initialVideo.id}
     autoplay={Server.autoplay}
   />,
   DOM.reactPage

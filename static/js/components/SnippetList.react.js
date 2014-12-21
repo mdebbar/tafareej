@@ -2,6 +2,7 @@
 require('../../css/snippet.css');
 
 var CSS = require('../util/CSS');
+var Immutable = require('immutable');
 var React = require('react');
 var SmartLink= require('./SmartLink.react');
 
@@ -38,7 +39,7 @@ var SnippetImage = React.createClass({
 
 var SnippetItem = React.createClass({
   propTypes: {
-    video: React.PropTypes.object.isRequired,
+    video: React.PropTypes.instanceOf(Immutable.Map).isRequired,
     onClick: React.PropTypes.func,
   },
 
@@ -66,7 +67,7 @@ var SnippetItem = React.createClass({
 
   _switchImage() {
     var newIndex = this.state.imageIndex + 1;
-    if (newIndex === this.props.video.images.length) {
+    if (newIndex === this.props.video.get('images').length) {
       newIndex = 0;
     }
     this.setState({imageIndex: newIndex});
@@ -77,16 +78,16 @@ var SnippetItem = React.createClass({
     return (
       <SmartLink
         className="snippet-link"
-        href={video.url}
-        title={video.title}
+        href={video.get('url')}
+        title={video.get('title')}
         onClick={this.props.onClick}
         onMouseEnter={this._startSwitching}
         onMouseLeave={this._stopSwitching}>
-        <SnippetImage source={video.images[this.state.imageIndex]} duration={video.duration} />
+        <SnippetImage source={video.get('images')[this.state.imageIndex]} duration={video.get('duration')} />
         <div className="snippet-content">
-          <h4 className="snippet-title">{video.title}</h4>
-          <p className="snippet-excerpt" title={video.excerpt}>
-            {video.excerpt}
+          <h4 className="snippet-title">{video.get('title')}</h4>
+          <p className="snippet-excerpt" title={video.get('excerpt')}>
+            {video.get('excerpt')}
           </p>
         </div>
       </SmartLink>
@@ -102,7 +103,7 @@ var SnippetNub = React.createClass({
 
 var SnippetList = React.createClass({
   propTypes: {
-    videoList: React.PropTypes.array.isRequired,
+    videoList: React.PropTypes.instanceOf(Immutable.Seq).isRequired,
     selectedVideoID: React.PropTypes.string,
     onSnippetClick: React.PropTypes.func,
   },
@@ -113,13 +114,13 @@ var SnippetList = React.createClass({
       <ul
         {...other}
         className={CSS.join(className, 'snippet-list')}>
-        {videoList.map(this._renderSnippetItem)}
+        {videoList.map(this._renderSnippetItem).toArray()}
       </ul>
     )
   },
 
   _renderSnippetItem(video) {
-    var isActiveVideo = this.props.selectedVideoID === video.id;
+    var isActiveVideo = this.props.selectedVideoID === video.get('id');
     return (
       <li
         className={CSS.join({
@@ -131,12 +132,12 @@ var SnippetList = React.createClass({
           hover: true,
         })}
         data-border="bottom"
-        key={video.id}
+        key={video.get('id')}
         dir="auto">
         {isActiveVideo && <SnippetNub />}
         <SnippetItem
           video={video}
-          onClick={this.props.onSnippetClick.bind(null, video)}
+          onClick={this.props.onSnippetClick.bind(null, video.get('id'))}
         />
       </li>
     );

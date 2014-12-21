@@ -4,142 +4,156 @@ require('../../css/global.css');
 require('../../css/flat.am.css');
 require('../../css/search-box.css');
 
-var API = require('../API');
 var HistoryManager = require('../HistoryManager');
 var InfiniteScroll = require('../components/InfiniteScroll.react');
 var React = require('react');
+var VideoDataStore = require('../flux/VideoDataStore');
+var VideoResultsStore = require('../flux/VideoResultsStore');
 var SearchBox = require('../components/SearchBox.react');
+var Subscriptions = require('../mixins/Subscriptions');
 var URI = require('../util/URI');
 var VideoGrid = require('../components/VideoGrid.react');
 
 var PropTypes = React.PropTypes;
+var PAGE_SIZE = 15;
 
 var HomePage = React.createClass({
+  mixins: [Subscriptions],
+
   propTypes: {
     siteName: PropTypes.string.isRequired,
   },
 
   getInitialState() {
     return {
-      isLoading: false,
-      videos: [],
+      // Get query from URL or history state or load popular videos
+      query: new URI().getParam('q') || HistoryManager.getState().query || '',
+      limit: PAGE_SIZE,
     };
   },
 
-  componentDidMount() {
-    // setup history management
-    HistoryManager.onSwitch(this._onHistorySwitch);
-
-    // Get query from URL or history state or load popular videos
-    var query = new URI().getParam('q') || HistoryManager.getState().query || '';
-    this.refs.search.setQuery(query);
-    this._onSearch(query);
+  getSubscriptions() {
+    return [
+      VideoResultsStore.subscribe(() => this.forceUpdate()),
+    ];
   },
 
-  _getPageTitle(query) {
+  componentDidMount() {
+    this.updateHistory(this.state);
+    // setup history management
+    HistoryManager.onSwitch(this.onHistorySwitch);
+
+    this.refs.search.setQuery(this.state.query);
+    this.newSearch(this.state.query);
+  },
+
+  componentWillUpdate(nextProps: Object, nextState: Object) {
+    if (nextState.query !== this.state.query) {
+      // Scroll to the top
+      window.scrollTo(0, 0);
+      this.updateHistory(nextState);
+    }
+  },
+
+  componentDidUpdate() {
+    if (this.isInfiniteScrollEnabled()) {
+      return;
+    }
+
+    var wantedCount = this.state.limit;
+    var availableCount = this.getVideoIDs(this.state).size;
+    // If we are already showing enough videos, enable the infinite scroll
+    if (availableCount >= wantedCount) {
+      this.enableInfiniteScroll();
+    }
+  },
+
+  getPageTitle(query) {
     if (query) {
       return this.props.siteName + ' - ' + query;
     }
     return this.props.siteName;
   },
 
-  _enableInfiniteScroll() {
+  updateHistory({query}) {
+    HistoryManager.replace(
+      {query},
+      this.getPageTitle(query),
+      this.buildURL(query)
+    );
+  },
+
+  isInfiniteScrollEnabled() {
+    this.refs.scroller.isEnabled();
+  },
+
+  enableInfiniteScroll() {
     this.refs.scroller.enable();
   },
 
-  _disableInfiniteScroll() {
+  disableInfiniteScroll() {
     this.refs.scroller.disable();
   },
 
-  _onHistorySwitch(event) {
+  onHistorySwitch(event) {
     var {query} = event.state;
     this.refs.search.setQuery(query);
-    this._onSearch(query);
+    this.newSearch(query);
+  },
+
+  getVideoIDs({query, limit}) {
+    return query
+      ? VideoResultsStore.getSearchVideos(query, 0, limit)
+      : VideoResultsStore.getPopularVideos(0, limit);
   },
 
   render() {
+    var videos = this.getVideoIDs(this.state).map(id => VideoDataStore.getVideoByID(id));
     return (
       <div>
         <SearchBox
           ref="search"
           className="sticky-centered-search-box"
           data-background="transparent"
-          onSearch={this._onSearch}
+          onSearch={this.newSearch}
         />
         <InfiniteScroll
           ref="scroller"
           buffer={800}
-          onTrigger={this._fetchMoreVideos}>
+          onTrigger={this.paginate}>
           <VideoGrid
-            isLoading={this.state.isLoading}
-            videos={this.state.isLoading ? [] : this.state.videos}
+            isLoading={videos.size === 0}
+            videos={videos}
           />
         </InfiniteScroll>
       </div>
     );
   },
 
-  _search(query) {
-    this._disableInfiniteScroll();
-    this.setState({isLoading: true});
-    this.api && this.api.abandon();
-    this.api = API.search(query, this._setVideos);
-  },
-
-  _popular() {
-    this._disableInfiniteScroll();
-    this.setState({isLoading: true});
-    this.api && this.api.abandon();
-    this.api = API.popular(this._setVideos);
-  },
-
-  _buildURL(query) {
+  buildURL(query) {
     var url = new URI();
     return query ? url.setParam('q', query) : url.removeParam('q');
   },
 
-  _onSearch(query) {
-    HistoryManager.replace(
-      {query},
-      this._getPageTitle(query),
-      this._buildURL(query)
-    );
-    if (query) {
-      this._search(query);
-    } else {
-      this._popular();
-    }
-  },
-
-  _fetchMoreVideos() {
-    if (this.api && typeof this.api.next === 'function') {
-      this.api = this.api.next(this._appendVideos);
-    }
-  },
-
-  _setVideos(videos) {
+  newSearch(query) {
+    this.disableInfiniteScroll();
     this.setState({
-      videos,
-      isLoading: false,
-    }, this._enableInfiniteScroll);
+      query: query,
+      limit: PAGE_SIZE,
+    });
   },
 
-  _appendVideos(videos) {
-    if (!Array.isArray(videos) || videos.length === 0) {
-      return;
-    }
-    this.setState(
-      {videos: this.state.videos.concat(videos)},
-      this._enableInfiniteScroll
-    );
+  paginate() {
+    this.disableInfiniteScroll();
+    this.setState({
+      limit: this.state.limit + PAGE_SIZE,
+    });
   },
 });
 
 
 React.render(
-  <HomePage
-    siteName={Server.siteName}
-  />,
+  <HomePage siteName={Server.siteName} />,
   DOM.reactPage
 );
 

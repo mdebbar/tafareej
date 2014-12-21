@@ -6,6 +6,8 @@ module.exports = {
     vendor: [
       // JS
       'react',
+      'flux',
+      'immutable',
       'typeahead.js',
       path.join(__dirname, 'static/js/3party/qwest.js'),
       // CSS
@@ -23,7 +25,7 @@ module.exports = {
   },
   module: {
     loaders: [
-      {test: /\.js$/, loader: 'jsx-loader?harmony'},
+      {test: /\.js$/, loader: 'jsx-loader?harmony&stripTypes'},
       {test: /\.css$/, loader: 'style-loader!css-loader'},
       {test: /\.(png|jpg|gif)$/, loader: 'url-loader?limit=8192'},
 

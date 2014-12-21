@@ -1,3 +1,4 @@
+var Immutable = require('immutable');
 var React = require('react');
 var SmartLink = require('./SmartLink.react');
 var YoutubePlayer = require('./YoutubePlayer.react');
@@ -7,7 +8,7 @@ const IMAGE_RATIO = 4/3;
 // TODO: decouple this from VideoGrid.react
 var PlayableVideo = React.createClass({
   propTypes: {
-    video: React.PropTypes.object.isRequired,
+    video: React.PropTypes.instanceOf(Immutable.Map).isRequired,
     width: React.PropTypes.number.isRequired,
     onBeforePlay: React.PropTypes.func,
     onPlay: React.PropTypes.func,
@@ -42,16 +43,17 @@ var PlayableVideo = React.createClass({
         <YoutubePlayer
           ref="player"
           autoplay={true}
-          videoID={video.id}
+          videoID={video.get('id')}
           onPlay={this._onPlay}
           onEnd={this._stop}
         />
       );
     } else {
-      var src = video.thumbnails.high || video.thumbnails.medium || video.thumbnails.default;
+      var thumbnails = video.get('thumbnails');
+      var src = thumbnails.high || thumbnails.medium || thumbnails.default;
       return {
         image: <img className="video-grid-image" src={src} />,
-        duration: <div className="video-grid-duration" data-border-round="all">{video.duration}</div>
+        duration: <div className="video-grid-duration" data-border-round="all">{video.get('duration')}</div>
       };
     }
   },
@@ -70,13 +72,13 @@ var PlayableVideo = React.createClass({
         <SmartLink
           className="video-grid-link video-grid-media-container"
           style={mediaStyle}
-          href={video.url}
+          href={video.get('url')}
           onClick={this._play}>
           {this._renderMedia(video)}
         </SmartLink>
-        <a href={video.url} className="video-grid-link">
+        <a href={video.get('url')} className="video-grid-link">
           <h4 className="video-grid-title">
-            {video.title}
+            {video.get('title')}
           </h4>
         </a>
       </div>
@@ -85,16 +87,16 @@ var PlayableVideo = React.createClass({
 
   _play() {
     this.setState({isPlaying: true});
-    this.props.onBeforePlay && this.props.onBeforePlay(this.props.video.id);
+    this.props.onBeforePlay && this.props.onBeforePlay(this.props.video.get('id'));
   },
 
   _stop() {
     this.setState({isPlaying: false});
-    this.props.onStop && this.props.onStop(this.props.video.id);
+    this.props.onStop && this.props.onStop(this.props.video.get('id'));
   },
 
   _onPlay() {
-    this.props.onPlay && this.props.onPlay(this.props.video.id);
+    this.props.onPlay && this.props.onPlay(this.props.video.get('id'));
   },
 });
 

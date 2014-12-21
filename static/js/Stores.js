@@ -118,5 +118,4 @@ var StoreFactory = {
 
 module.exports = {
   YoutubeStore: StoreFactory.create('YoutubeStore'),
-  VideoCacheStore: StoreFactory.create('VideoCacheStore'),
 };
