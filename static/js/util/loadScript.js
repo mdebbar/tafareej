@@ -6,7 +6,7 @@ var id = 0;
 var emptyFn = () => {};
 
 // TODO: add the ability to handle failures/errors
-window.loadScript = module.exports = function(url, callback, useJsonp) {
+module.exports = function(url, callback, useJsonp) {
   callback = callback || emptyFn;
   var tag = document.createElement('script');
   if (useJsonp) {
