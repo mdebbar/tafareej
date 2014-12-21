@@ -78,7 +78,7 @@ def build_js(production=True):
   """
   mode = '-p' if production else '-d'
   execute(
-    ['webpack', '--colors', '--progress', '--display-err-details', mode],
+    ['webpack', '--colors', '--progress', '--display-error-details', mode],
     'webpack could not build the resources',
   )
 
@@ -96,12 +96,9 @@ def _get_pattern(site_conf):
   return '{{(%s)}}' % '|'.join(site_conf.iterkeys())
 
 def server(ports):
-  # Kill all python processes
-  # subprocess.call('sudo pgrep python | xargs kill -KILL', shell=True)
-  #   'Could not kill running servers'
-  # )
   if os.path.isfile('.pids'):
     subprocess.call('cat .pids | xargs kill -KILL', shell=True)
+
   execute(
     ['./multi_server.sh'] + [str(p) for p in ports],
     'Could not start CherryPy servers',
