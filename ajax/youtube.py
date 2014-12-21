@@ -32,7 +32,6 @@ def one(video_id, **kwargs):
 
 @response.json(jsonify=False)
 def autocomplete(query, **kwargs):
-  cherrypy.response.headers['Content-Type'] = 'application/javascript'
   return api.autocomplete(query, **kwargs)
 
 

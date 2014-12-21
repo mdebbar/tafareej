@@ -1,6 +1,12 @@
 var Actions = require('./flux/Actions');
 var URL = require('./util/URL');
-var X = require('./X');
+
+var rest = require('rest');
+var interceptor = require('rest/interceptor');
+var mime = require('rest/interceptor/mime');
+
+var client = rest.wrap(mime);
+
 
 function autocompleteCallback(callback, response) { // response == [query, results, other]
   callback(
@@ -8,14 +14,9 @@ function autocompleteCallback(callback, response) { // response == [query, resul
   );
 }
 
-function errorHandler(err) {
-  console.error(err);
-}
-
-function logResponse({items}) {
-  console.log(
-    `Received ${items.length} items`
-  );
+function logResponse(response) {
+  console.log(`Received ${response.items.length} items`);
+  return response;
 }
 
 
@@ -29,10 +30,10 @@ var API = {
       console.log('Search page [' + pageToken + '] for:', query);
       url = URL.API.searchPage(query, pageToken);
     }
-    return new X(url)
-      .success(logResponse)
-      .success((response) => Actions.receiveSearchVideos(query, response))
-      .error(errorHandler);
+    return client(url)
+      .entity()
+      .then(logResponse)
+      .then((response) => Actions.receiveSearchVideos(query, response));
   },
 
   related(videoID, pageToken) {
@@ -44,10 +45,10 @@ var API = {
       console.log('Related videos page[' + pageToken + '] for:', videoID);
       url = URL.API.relatedPage(videoID, pageToken);
     }
-    return new X(url)
-      .success(logResponse)
-      .success((response) => Actions.receiveRelatedVideos(videoID, response))
-      .error(errorHandler);
+    return client(url)
+      .entity()
+      .then(logResponse)
+      .then((response) => Actions.receiveRelatedVideos(videoID, response));
   },
 
   popular(pageToken) {
@@ -59,17 +60,17 @@ var API = {
       console.log('Popular videos page[' + pageToken + ']');
       url = URL.API.popularPage(pageToken);
     }
-    return new X(url)
-      .success(logResponse)
-      .success((response) => Actions.receivePopularVideos(response))
-      .error(errorHandler);
+    return client(url)
+      .entity()
+      .then(logResponse)
+      .then((response) => Actions.receivePopularVideos(response));
   },
 
   one(videoID) {
     console.log('Getting info for:', videoID);
-    return new X(URL.API.video(videoID))
-      .success((video) => Actions.receiveVideoData(video))
-      .error(errorHandler);
+    return client(URL.API.video(videoID))
+      .entity()
+      .then((video) => Actions.receiveVideoData(video));
   },
 
   /**
@@ -84,11 +85,9 @@ var API = {
   autocomplete(query, callback) {
     this._autocomplete && this._autocomplete.abandon();
     console.log('autocomplete:', query);
-    this._autocomplete =
-      new X(URL.API.autocomplete(query))
-        .success(autocompleteCallback.bind(null, callback))
-        .error(errorHandler);
-    return this._autocomplete;
+    return client(URL.API.autocomplete(query))
+        .entity()
+        .then(autocompleteCallback.bind(null, callback));
   },
 };
 

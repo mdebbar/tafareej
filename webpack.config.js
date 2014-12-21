@@ -9,7 +9,6 @@ module.exports = {
       'flux',
       'immutable',
       'typeahead.js',
-      path.join(__dirname, 'static/js/3party/qwest.js'),
       // CSS
       path.join(__dirname, 'static/css/bootstrap.css'),
       path.join(__dirname, 'static/css/typeaheadjs.css'),
