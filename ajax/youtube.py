@@ -30,10 +30,6 @@ def popular(page_token=None, **kwargs):
 def one(video_id, **kwargs):
   return api.one_video(video_id).dict()
 
-@response.json(jsonify=False)
-def autocomplete(query, **kwargs):
-  return api.autocomplete(query, **kwargs)
-
 
 routes = (
   ('youtube.search', '/api/search/{query}/', search),
@@ -45,6 +41,5 @@ routes = (
   ('youtube.popular', '/api/popular/', popular),
   ('youtube.popular_page', '/api/popular/page/{page_token}/', popular),
 
-  ('youtube.autocomplete', '/api/autocomplete/{query}/', autocomplete),
   ('youtube.one', '/api/{video_id}/', one),
 )

@@ -27,8 +27,4 @@ DEFAULT_OPTIONS = {
     'part': 'id,snippet,contentDetails,statistics',
     'maxResults': MAX_RESULTS,
   },
-  'autocomplete': {
-    'client': 'youtube',
-    'hl': 'en',
-  }
 }

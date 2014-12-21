@@ -8,12 +8,6 @@ var mime = require('rest/interceptor/mime');
 var client = rest.wrap(mime);
 
 
-function autocompleteCallback(callback, response) { // response == [query, results, other]
-  callback(
-    response[1].map(result => result[0])
-  );
-}
-
 function logResponse(response) {
   console.log(`Received ${response.items.length} items`);
   return response;
@@ -80,14 +74,6 @@ var API = {
    */
   oneAndRelated(videoID) {
     // TODO: implement this so we fetch both the video's details and suggestions in one request
-  },
-
-  autocomplete(query, callback) {
-    this._autocomplete && this._autocomplete.abandon();
-    console.log('autocomplete:', query);
-    return client(URL.API.autocomplete(query))
-        .entity()
-        .then(autocompleteCallback.bind(null, callback));
   },
 };
 
