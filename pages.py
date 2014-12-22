@@ -1,13 +1,19 @@
-from cherrypy import NotFound
+from cherrypy import NotFound, request
 from external.youtube import api
 from util import response
+from util.dict import merge
+
+DEFAULT_SETTINGS = {
+  'site_name': 'Tafareej',
+  'ga_code': 'UA-57910971-1',
+}
 
 
 @response.template('home.html', jschunks=['vendor', 'HomePage'])
 def home_page(**kwargs):
-  return {
-    'sitename': 'Tafareej',
-  }
+  return merge(DEFAULT_SETTINGS, {
+    'url': request.base,
+  })
 
 @response.template('video.html', jschunks=['vendor', 'VideoPage'])
 def video_page(video_id, autoplay=True, **kwargs):
@@ -16,10 +22,11 @@ def video_page(video_id, autoplay=True, **kwargs):
   if not video:
     raise NotFound
 
-  return {
+  return merge(DEFAULT_SETTINGS, {
+    'url': "%s%s" % (request.base, video.get_url()),
     'video': video,
     'autoplay': autoplay not in ['0', 'false', 'no', 'off']
-  }
+  })
 
 
 routes = (

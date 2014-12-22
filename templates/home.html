@@ -1,6 +1,6 @@
 <%inherit file="base.html"/>
 
-<%block name="title">${sitename}</%block>
+<%block name="title">${site_name}</%block>
 
 <%block name="head_js">
   ## jQuery is required for typeahead.js
@@ -14,7 +14,7 @@
 <%block name="body_js">
   <script type="application/javascript">
     var Server = {
-      siteName: '${sitename}'
+      siteName: '${site_name}'
     };
 
     var DOM = {

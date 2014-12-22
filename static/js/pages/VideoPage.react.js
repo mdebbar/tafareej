@@ -150,7 +150,7 @@ var VideoPage = React.createClass({
               isLoading={videos.size === 0}
               videoList={videos}
               selectedVideoID={this.state.videoID}
-              onSearch={this.newSearch}
+              onSearch={this.newSearchOrRelated}
               onSnippetClick={this.setVideo}
             />
           </InfiniteScroll>
@@ -177,6 +177,15 @@ var VideoPage = React.createClass({
     this.setState({
       query: query,
       limit: PAGE_SIZE,
+    });
+  },
+
+  newSearchOrRelated(query, relatedVideoID) {
+    this.disableInfiniteScroll();
+    this.setState({
+      query: query,
+      limit: PAGE_SIZE,
+      relatedVideoID: relatedVideoID || this.state.videoID,
     });
   },
 

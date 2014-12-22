@@ -4,6 +4,13 @@
   <%block name="head">
     <title><%block name="title"/></title>
 
+    ## Default meta tags for all pages
+    <%namespace name="meta" file="meta.html" import="og"/>
+    ${og('site_name', site_name)}
+    % if url:
+      ${og('url', url)}
+    % endif
+
     <%block name="meta"/>
 
     <%block name="css"/>
@@ -14,5 +21,9 @@
 <body>
   ${self.body()}
   <%block name="body_js"/>
+
+  <%block name="google_analytics">
+    <%include file="google-analytics.html" />
+  </%block>
 </body>
 </html>
