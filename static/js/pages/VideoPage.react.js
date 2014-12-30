@@ -163,8 +163,9 @@ var VideoPage = React.createClass({
   },
 
   buildURL(videoID, query) {
+    var video = VideoDataStore.getVideoByID(videoID);
     var params = new URI().getParams();
-    var url = new URI(URL.video(videoID)).setParams(params);
+    var url = new URI(video.get('uri')).setParams(params);
     return query ? url.setParam('q', query) : url.removeParam('q');
   },
 

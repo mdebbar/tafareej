@@ -16,7 +16,6 @@ const API_VIDEO_URL   = '/api/' + VIDEO_ID + '/';
 const API_AUTOCOMPLETE = 'http://suggestqueries.google.com/complete/search?client=youtube&hl=en&q=' + QUERY;
 
 // other URLs
-const VIDEO_URL = '/' + VIDEO_ID + '/';
 const YOUTUBE_PLAYER_URL = 'https://www.youtube.com/player_api?playerapiid=' + PLAYER_API_ID;
 
 function createReplacer(patternURL, ...vars) {
@@ -30,15 +29,14 @@ function createReplacer(patternURL, ...vars) {
 
 module.exports = {
   API: {
-    search: createReplacer(API_SEARCH_URL, QUERY),
-    searchPage: createReplacer(API_SEARCH_PAGE_URL, QUERY, PAGE_TOKEN),
-    related: createReplacer(API_RELATED_URL, VIDEO_ID),
-    relatedPage: createReplacer(API_RELATED_PAGE_URL, VIDEO_ID, PAGE_TOKEN),
-    popular: createReplacer(API_POPULAR_URL),
-    popularPage: createReplacer(API_POPULAR_PAGE_URL, PAGE_TOKEN),
-    video: createReplacer(API_VIDEO_URL, VIDEO_ID),
+    search      : createReplacer(API_SEARCH_URL, QUERY),
+    searchPage  : createReplacer(API_SEARCH_PAGE_URL, QUERY, PAGE_TOKEN),
+    related     : createReplacer(API_RELATED_URL, VIDEO_ID),
+    relatedPage : createReplacer(API_RELATED_PAGE_URL, VIDEO_ID, PAGE_TOKEN),
+    popular     : createReplacer(API_POPULAR_URL),
+    popularPage : createReplacer(API_POPULAR_PAGE_URL, PAGE_TOKEN),
+    video       : createReplacer(API_VIDEO_URL, VIDEO_ID),
     autocomplete: createReplacer(API_AUTOCOMPLETE, QUERY)
   },
-  video: createReplacer(VIDEO_URL, VIDEO_ID),
   youtubePlayer: createReplacer(YOUTUBE_PLAYER_URL, PLAYER_API_ID)
 };

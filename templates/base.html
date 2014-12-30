@@ -2,13 +2,22 @@
 <html>
 <head>
   <%block name="head">
-    <title><%block name="title"/></title>
+    <title><%block name="title">${page_title}</%block></title>
 
     ## Default meta tags for all pages
     <%namespace name="meta" file="meta.html" import="og"/>
+
     ${og('site_name', site_name)}
-    % if url:
-      ${og('url', url)}
+    % if page_title:
+      ${og('title', page_title)}
+    %endif
+
+    % if page_url:
+      ${og('url', page_url)}
+    % endif
+
+    % if page_image:
+      ${og('image', page_image)}
     % endif
 
     <%block name="meta"/>

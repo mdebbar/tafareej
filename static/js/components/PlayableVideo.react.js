@@ -49,8 +49,8 @@ var PlayableVideo = React.createClass({
         />
       );
     } else {
-      var thumbnails = video.get('thumbnails');
-      var src = thumbnails.high || thumbnails.medium || thumbnails.default;
+      var pictures = video.get('pictures');
+      var src = pictures[pictures.length - 1].url;
       return {
         image: <img className="video-grid-image" src={src} />,
         duration: <div className="video-grid-duration" data-border-round="all">{video.get('duration')}</div>
@@ -72,11 +72,11 @@ var PlayableVideo = React.createClass({
         <SmartLink
           className="video-grid-link video-grid-media-container"
           style={mediaStyle}
-          href={video.get('url')}
+          href={video.get('uri')}
           onClick={this._play}>
           {this._renderMedia(video)}
         </SmartLink>
-        <a href={video.get('url')} className="video-grid-link">
+        <a href={video.get('uri')} className="video-grid-link">
           <h4 className="video-grid-title">
             {video.get('title')}
           </h4>

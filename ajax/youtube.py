@@ -1,34 +1,22 @@
-import cherrypy
 from external.youtube import api
 from util import response
 
 
-def process_items(response):
-  response['items'] = tuple(video.dict() for video in response['items'])
-  return response
-
-
 @response.json()
 def search(query, page_token=None, **kwargs):
-  return process_items(
-    api.searchWithDetails(query, page_token)
-  )
+  return api.search(query, page_token)
 
 @response.json()
 def related(video_id, page_token=None, **kwargs):
-  return process_items(
-    api.related(video_id, page_token)
-  )
+  return api.related(video_id, page_token)
 
 @response.json()
 def popular(page_token=None, **kwargs):
-  return process_items(
-    api.popular(page_token)
-  )
+  return api.popular(page_token)
 
 @response.json()
 def one(video_id, **kwargs):
-  return api.one_video(video_id).dict()
+  return api.one_video(video_id)
 
 
 routes = (

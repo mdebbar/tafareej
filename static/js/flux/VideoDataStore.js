@@ -38,7 +38,10 @@ class VideoDataStore extends BaseStore {
     }
     if (!this.videos[videoID]) {
       // Put temporary video data in place.
-      this.videos[videoID] = Immutable.Map({id: videoID});
+      this.videos[videoID] = Immutable.Map({
+        id: videoID,
+        uri: `/yt/${videoID}/`,
+      });
     }
     return this.videos[videoID];
   }
