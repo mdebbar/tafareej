@@ -1,14 +1,14 @@
 import re
 from operator import itemgetter
-from util.dict import xget
+from external import Sources
 
 def transform(video):
   return {
-    'id'   : video['id'],
-    'type' : 'yt',
-    'uri'  : '/%s/%s/' % ('yt', video['id']),
-    'title': video['snippet']['title'],
-    'desc' : video['snippet']['description'],
+    'id'    : video['id'],
+    'source': Sources.YOUTUBE,
+    'uri'   : '/%s/%s/' % ('yt', video['id']),
+    'title' : video['snippet']['title'],
+    'desc'  : video['snippet']['description'],
     'duration': _parse_duration(video['contentDetails']['duration']),
     # a list of the main picture in different sizes
     'pictures': get_pictures(video),
@@ -65,5 +65,5 @@ def genImage(video_id, img_num):
 
 def get_frames(video):
   pictures = video['snippet']['thumbnails']
-  default_pic = xget(pictures, 'default', 'medium', 'high')['url']
+  default_pic = pictures['default']['url']
   return [default_pic] + [genImage(video['id'], ii) for ii in range(1, MAX_IMG_NUM + 1)]

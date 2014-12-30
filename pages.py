@@ -2,6 +2,7 @@ from cherrypy import NotFound, request
 from external.youtube import api
 from util import response
 from util.dict import merge
+from external import Sources
 
 DEFAULT_SETTINGS = {
   'site_name': 'Tafareej',
@@ -21,8 +22,10 @@ def home_page(**kwargs):
   })
 
 @response.template('video.html', jschunks=['vendor', 'VideoPage'])
-def video_page(video_id, type='yt', autoplay=True, **kwargs):
-  video = api.one_video(video_id)
+def video_page(video_id, source=Sources.YOUTUBE, autoplay=True, **kwargs):
+  video = None
+  if source == Sources.YOUTUBE:
+    video = api.one_video(video_id)
 
   if not video:
     raise NotFound
@@ -40,6 +43,6 @@ routes = (
   ('home.view', '/', home_page),
   ('video.view', '/{video_id}', video_page),
   ('video.view', '/{video_id}/', video_page),
-  ('video.view', '/{type}/{video_id}', video_page),
-  ('video.view', '/{type}/{video_id}/', video_page),
+  ('video.view', '/{source}/{video_id}', video_page),
+  ('video.view', '/{source}/{video_id}/', video_page),
 )
