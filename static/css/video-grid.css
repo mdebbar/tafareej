@@ -13,23 +13,21 @@
 }
 
 .video-grid-item {
-  padding: 4px;
+  border-radius: 100%;
+  overflow: hidden;
   text-align: start;
 }
 
 .video-grid-link {
   display: block;
-  overflow: hidden;
+  position: relative;
+  width: 100%;
 }
 
 .video-grid-link,
 .video-grid-link:focus,
 .video-grid-link:hover {
   text-decoration: none;
-}
-
-.video-grid-media-container {
-  position: relative;
 }
 
 .video-grid-image {
@@ -40,22 +38,16 @@
 .video-grid-duration {
   background-color: #000;
   bottom: 0;
+  box-shadow: 0 -1px 1px #fff;
   color: #fff;
   font-size: 11px;
   left: 0;
   line-height: 1;
-  margin: 4px;
-  opacity: .75;
+  opacity: .8;
   padding: 4px;
   position: absolute;
-}
-
-.video-grid-title {
-  color: #737373;
-  font-size: 13px;
-  font-weight: bold;
-  margin-top: 8px;
-  text-shadow: 1px 1px 1px #fff;
+  right: 0;
+  text-align: center;
 }
 
 

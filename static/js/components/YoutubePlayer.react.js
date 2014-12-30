@@ -5,7 +5,6 @@ var CSS = require('../util/CSS');
 var React = require('react');
 var Spinner = require('./Spinner.react');
 var Subscriptions = require('../mixins/Subscriptions');
-var URL = require('../util/URL');
 var YoutubeAPILoader = require('../util/YoutubeAPILoader');
 
 const PLAYER_ID = 'ytplayer';
@@ -109,6 +108,9 @@ var YoutubePlayer = React.createClass({
       playerVars: {
         // `autoplay` only accepts 1 or 0
         autoplay: autoplay ? 1 : 0,
+        // 0: don't hide, 1: hide all, 2: hide only progress bar (default)
+        autohide: 1,
+        modestbranding: 1,
         theme: theme,
       },
       events: {

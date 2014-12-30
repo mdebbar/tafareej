@@ -122,6 +122,7 @@ var HomePage = React.createClass({
           buffer={800}
           onTrigger={this.paginate}>
           <VideoGrid
+            query={this.state.query}
             isLoading={videos.size === 0}
             videos={videos}
           />

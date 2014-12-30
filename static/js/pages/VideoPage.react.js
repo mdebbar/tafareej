@@ -33,6 +33,7 @@ var VideoPage = React.createClass({
   },
 
   getInitialState() {
+    var uri = new URI();
     return {
       // The video that is being watched.
       videoID: this.props.initialVideoID,
@@ -40,7 +41,9 @@ var VideoPage = React.createClass({
       relatedVideoID: this.props.initialVideoID,
       // use initial query on page load
       // TODO: Move this logic to a store
-      query: new URI().getParam('q') || '',
+      query: uri.getParam('q') || '',
+      // TODO: this should be passed as a prop
+      popular: uri.getParam('pop') == 1,
       limit: PAGE_SIZE,
     };
   },
@@ -94,12 +97,12 @@ var VideoPage = React.createClass({
   },
 
   // TODO: Move all history-related logic to the history store.
-  updateHistory({videoID, query}, replace) {
+  updateHistory({videoID, query, popular}, replace) {
     var method = replace ? 'replace' : 'push';
     HistoryManager[method](
-      {videoID, query},
+      {videoID, query, popular},
       VideoDataStore.getVideoByID(videoID).get('title'),
-      this.buildURL(videoID, query)
+      this.buildURL(videoID, query, popular)
     );
   },
 
@@ -116,19 +119,24 @@ var VideoPage = React.createClass({
   },
 
   onHistorySwitch(event) {
-    var {query, videoID} = event.state;
+    var {query, videoID, popular} = event.state;
     this.setState({
       videoID: videoID,
+      popular: popular,
       updateHistory: false,
     });
     this.refs.searchable.setQuery(query);
     this.newSearch(query);
   },
 
-  getVideoIDs({relatedVideoID, query, limit}) {
-    return query
-      ? VideoResultsStore.getSearchVideos(query, 0, limit)
-      : VideoResultsStore.getRelatedVideos(relatedVideoID, 0, limit);
+  getVideoIDs({relatedVideoID, query, popular, limit}) {
+    if (query) {
+      return VideoResultsStore.getSearchVideos(query, 0, limit);
+    }
+    if (popular) {
+      return VideoResultsStore.getPopularVideos(0, limit);
+    }
+    return VideoResultsStore.getRelatedVideos(relatedVideoID, 0, limit);
   },
 
   render() {
@@ -162,11 +170,13 @@ var VideoPage = React.createClass({
     );
   },
 
-  buildURL(videoID, query) {
+  buildURL(videoID, query, popular) {
     var video = VideoDataStore.getVideoByID(videoID);
     var params = new URI().getParams();
     var url = new URI(video.get('uri')).setParams(params);
-    return query ? url.setParam('q', query) : url.removeParam('q');
+    url = query ? url.setParam('q', query) : url.removeParam('q');
+    url = popular ? url.setParam('pop', 1) : url.removeParam('pop');
+    return url;
   },
 
   setVideo(videoID) {
@@ -189,6 +199,7 @@ var VideoPage = React.createClass({
     this.setState({
       query: query,
       limit: PAGE_SIZE,
+      popular: false,
       relatedVideoID: relatedVideoID || this.state.videoID,
     });
   },
