@@ -71,7 +71,6 @@ var VideoPage = React.createClass({
     }
 
     if (this.state.videoID !== nextState.videoID) {
-      debugger;
       ga('send', 'pageview');
     }
 
