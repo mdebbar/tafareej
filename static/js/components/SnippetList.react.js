@@ -67,7 +67,7 @@ var SnippetItem = React.createClass({
 
   _switchImage() {
     var newIndex = this.state.imageIndex + 1;
-    if (newIndex === this.props.video.get('images').length) {
+    if (newIndex === this.props.video.get('frames').length) {
       newIndex = 0;
     }
     this.setState({imageIndex: newIndex});
@@ -78,16 +78,16 @@ var SnippetItem = React.createClass({
     return (
       <SmartLink
         className="snippet-link"
-        href={video.get('url')}
+        href={video.get('uri')}
         title={video.get('title')}
         onClick={this.props.onClick}
         onMouseEnter={this._startSwitching}
         onMouseLeave={this._stopSwitching}>
-        <SnippetImage source={video.get('images')[this.state.imageIndex]} duration={video.get('duration')} />
+        <SnippetImage source={video.get('frames')[this.state.imageIndex]} duration={video.get('duration')} />
         <div className="snippet-content">
           <h4 className="snippet-title">{video.get('title')}</h4>
-          <p className="snippet-excerpt" title={video.get('excerpt')}>
-            {video.get('excerpt')}
+          <p className="snippet-excerpt" title={video.get('desc')}>
+            {video.get('desc')}
           </p>
         </div>
       </SmartLink>

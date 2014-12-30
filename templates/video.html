@@ -1,12 +1,8 @@
 <%inherit file="base.html"/>
 <%namespace name="meta" file="meta.html" import="og"/>
 
-<%block name="title">${video.get_title()}</%block>
-
 <%block name="meta">
-   ${og('title', video.get_title())}
-   ${og('image', video.get_large_image())}
-   ${og('description', video.get_excerpt())}
+   ${og('description', video['desc'])}
 </%block>
 
 <%block name="head_js">
@@ -18,10 +14,12 @@
   <div id="reactpage"></div>
 </%block>
 
+<%! import json %>
+
 <%block name="body_js">
   <script type="application/javascript">
     var Server = {
-      initialVideo: ${video.jsonify()},
+      initialVideo: ${json.dumps(video)},
       autoplay: ${'true' if autoplay else 'false'}
     };
 
