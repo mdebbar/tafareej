@@ -38,7 +38,9 @@ var VideoPage = React.createClass({
       videoID: this.props.initialVideoID,
       // Show related videos for this video.
       relatedVideoID: this.props.initialVideoID,
-      query: new URI().getParam('q') || HistoryManager.getState().query || '',
+      // use initial query on page load
+      // TODO: Move this logic to a store
+      query: new URI().getParam('q') || '',
       limit: PAGE_SIZE,
     };
   },
@@ -54,9 +56,6 @@ var VideoPage = React.createClass({
     this.updateHistory(this.state, true);
     HistoryManager.onSwitch(this.onHistorySwitch);
 
-    // use initial query on page load
-    // TODO: Move this logic to a store
-    // var query = new URI().getParam('q') || HistoryManager.getState().query || '';
     this.refs.searchable.setQuery(this.state.query);
     this.newSearch(this.state.query);
   },
@@ -69,6 +68,11 @@ var VideoPage = React.createClass({
       // Scroll to the top
       window.scrollTo(0, 0);
       this.updateHistory(nextState, /*replace*/ true);
+    }
+
+    if (this.state.videoID !== nextState.videoID) {
+      debugger;
+      ga('send', 'pageview');
     }
 
     // We now have data for a video that was not available before.

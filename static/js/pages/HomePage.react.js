@@ -26,8 +26,8 @@ var HomePage = React.createClass({
 
   getInitialState() {
     return {
-      // Get query from URL or history state or load popular videos
-      query: new URI().getParam('q') || HistoryManager.getState().query || '',
+      // Get query from URL or load popular videos
+      query: new URI().getParam('q') || '',
       limit: PAGE_SIZE,
     };
   },
