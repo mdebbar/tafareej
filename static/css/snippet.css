@@ -34,7 +34,6 @@
 .snippet-item-selected:hover,
 .snippet-item-selected:focus {
   opacity: 1;
-  pointer-events: none;
 }
 
 .snippet-link {

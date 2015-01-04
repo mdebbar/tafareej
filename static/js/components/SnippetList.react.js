@@ -2,40 +2,11 @@
 require('../../css/snippet.css');
 
 var CSS = require('../util/CSS');
+var ImageSwitcher = require('./ImageSwitcher.react');
 var Immutable = require('immutable');
 var React = require('react');
 var SmartLink= require('./SmartLink.react');
 
-const IMAGE_SWITCHING_INTERVAL = 1000;
-
-var SnippetImage = React.createClass({
-  propTypes: {
-    source: React.PropTypes.string,
-    duration: React.PropTypes.string,
-    forceRender: React.PropTypes.bool,
-  },
-
-  getDefaultProps() {
-    return {
-      forceRender: true,
-    };
-  },
-
-  render() {
-    if (this.props.source) {
-      return (
-        <div className="snippet-image-container">
-          <img className="snippet-image" src={this.props.source} />
-          <div className="snippet-duration" data-border-round="all">{this.props.duration}</div>
-        </div>
-      );
-    } else if (this.props.forceRender) {
-      return <div className="snippet-image-container"></div>;
-    } else {
-      return <noscript />;
-    }
-  },
-});
 
 var SnippetItem = React.createClass({
   propTypes: {
@@ -45,32 +16,16 @@ var SnippetItem = React.createClass({
 
   getInitialState() {
     return {
-      imageIndex: 0,
+      hovering: false,
     };
   },
 
-  componentWillUnmount() {
-    this._stopSwitching(false);
+  onHover() {
+    this.setState({hovering: true});
   },
 
-  _startSwitching() {
-    this.imageSwitcher = setInterval(this._switchImage, IMAGE_SWITCHING_INTERVAL);
-    this._switchImage();
-  },
-
-  _stopSwitching(resetImageIndex) {
-    this.imageSwitcher && clearInterval(this.imageSwitcher);
-    if (resetImageIndex !== false) {
-      this.setState({imageIndex: 0});
-    }
-  },
-
-  _switchImage() {
-    var newIndex = this.state.imageIndex + 1;
-    if (newIndex === this.props.video.get('frames').length) {
-      newIndex = 0;
-    }
-    this.setState({imageIndex: newIndex});
+  onLeave() {
+    this.setState({hovering: false});
   },
 
   render() {
@@ -81,9 +36,16 @@ var SnippetItem = React.createClass({
         href={video.get('uri')}
         title={video.get('title')}
         onClick={this.props.onClick}
-        onMouseEnter={this._startSwitching}
-        onMouseLeave={this._stopSwitching}>
-        <SnippetImage source={video.get('frames')[this.state.imageIndex]} duration={video.get('duration')} />
+        onMouseEnter={this.onHover}
+        onMouseLeave={this.onLeave}>
+        <div className="snippet-image-container">
+          <ImageSwitcher
+            className="snippet-image"
+            images={video.get('frames')}
+            enabled={this.state.hovering}
+          />
+          <div className="snippet-duration" data-border-round="all">{video.get('duration')}</div>
+        </div>
         <div className="snippet-content">
           <h4 className="snippet-title">{video.get('title')}</h4>
           <p className="snippet-excerpt" title={video.get('desc')}>
@@ -127,10 +89,7 @@ var SnippetList = React.createClass({
           'snippet-item': true,
           'snippet-item-selected': isActiveVideo,
         })}
-        data-background={CSS.join({
-          white: !isActiveVideo,
-          hover: true,
-        })}
+        data-background={isActiveVideo ? '' : CSS.join('white', 'hover')}
         data-border="bottom"
         key={video.get('id')}
         dir="auto">
