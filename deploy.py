@@ -7,6 +7,9 @@ import subprocess
 DIR = os.path.dirname(os.path.abspath(__file__))
 SITE_CONF = os.path.join(DIR, 'deployment/sites.json')
 
+STATIC_PUBLIC = os.path.join(DIR, 'static/public/')
+ROBOTS_TXT = os.path.join(STATIC_PUBLIC, 'robots.txt')
+
 SITE_CONF_TEMPLATE = os.path.join(DIR, 'deployment/nginx.site.conf.template')
 NGINX_SITES = '/etc/nginx/conf.d/extra'
 
@@ -19,6 +22,7 @@ def main(site, branch='master'):
   build_js()
   # new_assets = get_current_assets()
   # now let's remove/archive the assets we don't need anymore.
+  robots_txt(site_conf)
   setup_nginx(site, site_conf)
   server(site_conf['ports'])
 
@@ -81,6 +85,12 @@ def build_js(production=True):
     ['webpack', '--colors', '--progress', '--display-error-details', mode],
     'webpack could not build the resources',
   )
+
+def robots_txt(site_conf):
+  if 'robots.txt' not in site_conf:
+    return
+  with open(ROBOTS_TXT, 'w+') as f:
+    f.write(site_conf['robots.txt'])
 
 def setup_nginx(site, site_conf):
   with open(SITE_CONF_TEMPLATE) as f:
