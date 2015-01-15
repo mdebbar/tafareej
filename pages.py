@@ -5,14 +5,17 @@ from util.dict import merge
 from external import Sources
 
 DEFAULT_SETTINGS = {
-  'site_name': 'Tafareej',
+  'site_info': {
+    'name': 'Tafareej',
+    'domain': 'http://tafareej.com',
+  },
   'ga_code': 'UA-57910971-1',
 }
 
 
 @response.template('home.html', jschunks=['vendor', 'HomePage'])
 def home_page(**kwargs):
-  title = DEFAULT_SETTINGS['site_name']
+  title = DEFAULT_SETTINGS['site_info']['name']
   if kwargs.get('q'):
     title = '%s - %s' % (title, kwargs['q'])
 

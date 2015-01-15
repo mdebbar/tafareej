@@ -1,5 +1,7 @@
-.youtube-player-section {
-  margin-top: 16px;
+@media (min-width: 992px) {
+  .youtube-player-section {
+    padding-top: 10px;
+  }
 }
 
 .youtube-player-container {
@@ -28,14 +30,11 @@
 
 .youtube-title {
   clear: both;
+  font-size: 22px;
 }
 
 .youtube-repeat {
   float: right;
-  margin: 0 -1px 10px 10px;
+  margin: 0 0 10px 10px;
   padding: 10px;
-}
-
-.youtube-repeat input {
-  vertical-align: top;
 }

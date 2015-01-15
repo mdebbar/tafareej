@@ -7,7 +7,7 @@
     ## Default meta tags for all pages
     <%namespace name="meta" file="meta.html" import="og"/>
 
-    ${og('site_name', site_name)}
+    ${og('site_name', site_info['name'])}
     % if page_title:
       ${og('title', page_title)}
     %endif
@@ -24,6 +24,10 @@
 
     <%block name="css"/>
 
+    <%! import json %>
+    <script>
+      window.SiteInfo = ${json.dumps(site_info)};
+    </script>
     <%block name="head_js"/>
   </%block>
 </head>

@@ -12,6 +12,7 @@ var Layout = require('../components/Layout.react');
 var React = require('react');
 var SearchableSnippetList = require('../components/SearchableSnippetList.react');
 var Subscriptions = require('../mixins/Subscriptions');
+var VideoHeader = require('../components/VideoHeader.react');
 var VideoResultsStore = require('../flux/VideoResultsStore');
 var VideoDataStore = require('../flux/VideoDataStore');
 var URI = require('../util/URI');
@@ -132,14 +133,16 @@ var VideoPage = React.createClass({
   },
 
   render() {
+    var activeVideo = VideoDataStore.getVideoByID(this.state.videoID);
     var videos = this.getVideoIDs(this.state).map(id => VideoDataStore.getVideoByID(id));
     return (
       <MultiColumn>
         <Column className="sticky-column" size={7} push={5}>
+          <VideoHeader video={activeVideo} />
           <YoutubePlayerContainer
             className="youtube-player-absolute"
             autoplay={this.props.autoplay}
-            video={VideoDataStore.getVideoByID(this.state.videoID)}
+            video={activeVideo}
             onSwitchVideo={this.setVideo}
           />
         </Column>
@@ -202,14 +205,14 @@ var VideoPage = React.createClass({
 });
 
 // Add the initial video to the VideoDataStore
-Actions.receiveVideoData(Server.initialVideo);
+Actions.receiveVideoData(FromServer.initialVideo);
 
 React.render(
   <VideoPage
-    initialVideoID={Server.initialVideo.id}
-    autoplay={Server.autoplay}
+    initialVideoID={FromServer.initialVideo.id}
+    autoplay={FromServer.autoplay}
   />,
-  DOM.reactPage
+  window.DOM.reactPage
 );
 
 

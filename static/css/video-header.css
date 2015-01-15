@@ -1,0 +1,23 @@
+.video-header {
+  box-sizing: content-box;
+  height: 20px;
+  margin: 16px 0 12px 0;
+  overflow: hidden;
+  padding: 7px 8px;
+}
+
+.video-header-site-link {
+  float: right;
+}
+
+.video-header-site-link:hover,
+.video-header-site-link:focus {
+  text-decoration: none;
+}
+
+.video-header-site-name {
+  color: #737373;
+  font-size: 20px;
+  line-height: 20px;
+  margin: 0 4px;
+}

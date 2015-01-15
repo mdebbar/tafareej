@@ -10,6 +10,7 @@ var React = require('react');
 var VideoDataStore = require('../flux/VideoDataStore');
 var VideoResultsStore = require('../flux/VideoResultsStore');
 var SearchBox = require('../components/SearchBox.react');
+var SiteInfo = require('../SiteInfo');
 var Subscriptions = require('../mixins/Subscriptions');
 var URI = require('../util/URI');
 var VideoGrid = require('../components/VideoGrid.react');
@@ -19,10 +20,6 @@ var PAGE_SIZE = 15;
 
 var HomePage = React.createClass({
   mixins: [Subscriptions],
-
-  propTypes: {
-    siteName: PropTypes.string.isRequired,
-  },
 
   getInitialState() {
     return {
@@ -70,9 +67,9 @@ var HomePage = React.createClass({
 
   getPageTitle(query) {
     if (query) {
-      return this.props.siteName + ' - ' + query;
+      return SiteInfo.name + ' - ' + query;
     }
-    return this.props.siteName;
+    return SiteInfo.name;
   },
 
   updateHistory({query}) {
@@ -153,8 +150,8 @@ var HomePage = React.createClass({
 
 
 React.render(
-  <HomePage siteName={Server.siteName} />,
-  DOM.reactPage
+  <HomePage />,
+  window.DOM.reactPage
 );
 
 
