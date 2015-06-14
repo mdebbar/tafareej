@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+</head>
+
+<body>
+  <div id="reactpage"></div>
+
+  <script type="text/javascript">
+    var DOM = {
+      reactPage: document.getElementById('reactpage')
+    };
+  </script>
+
+  % for entry in jsentries:
+    <script src="/build/${entry}"></script>
+  % endfor
+</body>
+</html>

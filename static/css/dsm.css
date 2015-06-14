@@ -1,0 +1,43 @@
+.dsm-container {
+  background: #111;
+  border-radius: 2px;
+  position: relative;
+  margin: 30px;
+}
+
+.zoom-controls {
+  display: none;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+
+.dsm-container:hover .zoom-controls {
+  display: block;
+}
+
+.zoom-controls button {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 2px;
+  padding: 0;
+  text-align: center;
+  width: 20px;
+  height: 20px;
+  line-height: 1;
+}
+
+.zoom-controls button:focus {
+  outline: none;
+}
+
+.ortho-image,
+.dsm-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.ortho-image {
+  width: 100%;
+}

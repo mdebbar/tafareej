@@ -41,11 +41,17 @@ def video_page(video_id, source=Sources.YOUTUBE, autoplay=True, **kwargs):
     'autoplay': autoplay not in ['0', 'false', 'no', 'off']
   })
 
+@response.template('dsm.html', jschunks=['vendor', 'DSMPage'])
+def dsm_page(**kwargs):
+  return {}
+
 
 routes = (
   ('home.view', '/', home_page),
+  ('dsm.view', '/dsm/', dsm_page),
   ('video.view', '/{video_id}', video_page),
   ('video.view', '/{video_id}/', video_page),
   ('video.view', '/{source}/{video_id}', video_page),
   ('video.view', '/{source}/{video_id}/', video_page),
+
 )

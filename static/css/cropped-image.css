@@ -1,0 +1,13 @@
+.cropped-image-container {
+  border: 1px solid #ccc;
+  border-radius: 100%;
+  cursor: move;
+  overflow: hidden;
+  position: relative;
+}
+
+.cropped-image {
+  position: relative;
+  /* -1px on top and left to accomodate the border on the container */
+  margin: -1px 0 0 -1px;
+}

@@ -15,6 +15,7 @@ module.exports = {
     ],
     VideoPage: path.join(__dirname, 'static/js/pages/VideoPage.react'),
     HomePage: path.join(__dirname, 'static/js/pages/HomePage.react'),
+    DSMPage: path.join(__dirname, 'static/js/pages/DSMPage.react'),
   },
   output: {
     path: path.join(__dirname, 'static/build'),
